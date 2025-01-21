@@ -1,0 +1,59 @@
+name: Build and Deploy Docker Image
+
+on:
+  push:
+    branches:
+      - main  # 메인 브랜치에 푸시될 때 실행
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+    # 1. GitHub에서 코드 체크아웃
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    # 2. Docker Hub에 로그인
+    - name: Log in to Docker Hub
+      run: |
+        echo "${{ secrets.DOCKER_HUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_HUB_USERNAME }}" --password-stdin
+
+    # 3. Docker 이미지 빌드 및 태그 (no-cache 옵션 추가)
+    - name: Build and tag Docker image
+      run: |
+        docker build --no-cache -t ${{ secrets.DOCKER_HUB_USERNAME }}/kws_fe:latest .
+        docker tag ${{ secrets.DOCKER_HUB_USERNAME }}/kws_fe:latest ${{ secrets.DOCKER_HUB_USERNAME }}/kws_fe:latest
+
+    # 4. Docker Hub로 푸시
+    - name: Push Docker image to Docker Hub
+      run: |
+        docker push ${{ secrets.DOCKER_HUB_USERNAME }}/kws_fe:latest
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build-and-push  # 'build-and-push' 작업이 완료되면 실행
+
+    steps:
+    - name: Install SSH and sshpass
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y openssh-client sshpass
+
+    # 5. Docker Hub에 로그인 (서버에서 이미지 풀링 전)
+    - name: Log in to Docker Hub on the server
+      run: |
+        echo "${{ secrets.DOCKER_HUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_HUB_USERNAME }}" --password-stdin
+
+    # 6. SSH 접속 및 Docker 이미지 Pull & Run
+    - name: Deploy to Server
+      run: |
+        echo "Starting deployment..."
+        sshpass -p "${{ secrets.SSH_PASSWORD }}" ssh -o StrictHostKeyChecking=no -p ${{ secrets.SSH_PORT  }} ${{ secrets.SSH_ID }}@${{ secrets.SSH_SERVER_IP }} << 'EOF'
+          IMAGE="${{ secrets.DOCKER_HUB_USERNAME }}/kws_fe:latest"
+          echo "${{ secrets.SSH_PASSWORD }}" | sudo -S docker pull $IMAGE
+          echo "${{ secrets.SSH_PASSWORD }}" | sudo -S docker stop KWS_FE || true
+          echo "${{ secrets.SSH_PASSWORD }}" | sudo -S docker rm KWS_FE || true
+          echo "${{ secrets.SSH_PASSWORD }}" | sudo -S docker run -d --name KWS_FE -p 25120:80 $IMAGE
+          echo "${{ secrets.SSH_PASSWORD }}" | sudo -S docker system prune -af
+        EOF
