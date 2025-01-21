@@ -1,9 +1,6 @@
 # Stage 1: Build the React app
 FROM node:14 AS build
 
-# 작업 디렉터리 설정
-WORKDIR /app/meetokey
-
 # 패키지 파일 복사 및 설치
 COPY meetokey/package*.json ./
 RUN npm install
