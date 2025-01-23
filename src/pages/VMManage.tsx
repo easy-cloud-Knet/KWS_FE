@@ -90,9 +90,17 @@ const VMManage: React.FC = () => {
   return (
     <div className="vm-manage">
       <div className="j-content-end">
-        <button onClick={() => window.location.reload()}>갱신</button>
-        <button onClick={() => navigate("/create")}>생성</button>
-        <button onClick={() => setShowDeleteDialog(true)} disabled={!(checkedVMs.length > 0)}>
+        <button className="default-button" onClick={() => window.location.reload()}>
+          갱신
+        </button>
+        <button className="default-button" onClick={() => navigate("/create")}>
+          생성
+        </button>
+        <button
+          className="default-button"
+          onClick={() => setShowDeleteDialog(true)}
+          disabled={!(checkedVMs.length > 0)}
+        >
           삭제
         </button>
       </div>
