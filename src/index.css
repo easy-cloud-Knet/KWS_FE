@@ -74,3 +74,17 @@ h1 {
     background-color: #f9f9f9;
   }
 }
+
+/* 자동완성 스타일 제거 */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:active,
+input:-webkit-autofill:focus,
+input:autofill,
+input:autofill:hover,
+input:autofill:active,
+input:autofill:focus {
+  -webkit-text-fill-color: black;
+  -webkit-box-shadow: 0 0 0 1000px white inset !important;
+  box-shadow: 0 0 0px 1000px white inset;
+}

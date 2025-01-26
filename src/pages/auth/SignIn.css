@@ -1,0 +1,14 @@
+.signin .button-wrap {
+  gap: 19px;
+}
+
+.signin .button-wrap hr {
+  height: 20px;
+  border: 1.5px solid #bababa;
+}
+
+.signin .text-button {
+  border: none;
+  background: none;
+  cursor: pointer;
+}

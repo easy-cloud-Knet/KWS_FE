@@ -1,0 +1,12 @@
+.signup-default .signup-container {
+  width: 300px;
+}
+
+.signup-default .button-wrap {
+  width: 100%;
+}
+
+/* label과 helperText 간격 조절 */
+.signup-default .set-bottom-margin {
+  margin-bottom: 10px;
+}
