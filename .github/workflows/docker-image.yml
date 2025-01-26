@@ -49,6 +49,7 @@ jobs:
     - name: Deploy to Server
       run: |
         echo "Starting deployment..."
+        echo "Port value: [${{ secrets.SSH_PORT }}]"
         sshpass -p "${{ secrets.SSH_PASSWORD }}" ssh -o StrictHostKeyChecking=no -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_ID }}@${{ secrets.SSH_SERVER_IP }} << 'EOF'
           IMAGE="${{ secrets.DOCKER_HUB_USERNAME }}/kws_fe:latest"
           echo "${{ secrets.SSH_PASSWORD }}" | sudo -S docker pull $IMAGE
