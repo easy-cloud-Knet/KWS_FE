@@ -7,7 +7,7 @@ import SignUp4 from "./SignUp4";
 
 import { UserInfo } from "../../../types/auth";
 
-import "./AuthDefault.css";
+import "../AuthDefault.css";
 import "./SignUpDefault.css";
 
 const SignUpDefault = () => {
