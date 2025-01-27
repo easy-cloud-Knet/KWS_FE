@@ -1,5 +1,7 @@
 import { Button, InputAdornment } from "@mui/material";
+
 import AuthTextField from "./AuthTextField";
+
 import { AuthSideBtnTextFieldProps } from "./types/textField";
 
 /**
@@ -8,44 +10,15 @@ import { AuthSideBtnTextFieldProps } from "./types/textField";
  * @param {string} props.sideBtnText - text
  * @param {() => void} props.sideBtnOnClick - onClick
  * @param {boolean} props.sideBtnDisabled - disabled
- *
- * @param {AuthTextFieldProps} props
- * @param {string} props.label - label
- * @param {string} props.value - value
- * @param {string} props.placeholder - placeholder
- * @param {() => void} [props.onBlur] - onBlur
- * @param {(e: React.ChangeEvent<HTMLInputElement>) => void} [props.onChange] - onChange
- * @param {boolean} props.error - error
- * @param {string} props.helperText - helperText
- * @param {string} [props.className] - className?
- * @param {string} [props.id] - id?
- * @returns {JSX.Element}
  */
 const AuthSideBtnTextField: React.FC<AuthSideBtnTextFieldProps> = ({
-  label,
-  value,
-  placeholder,
-  onBlur,
-  onChange,
-  error,
-  helperText,
   sideBtnText = "",
   sideBtnOnClick,
   sideBtnDisabled = false,
-  className,
-  id,
+  ...props
 }) => {
   return (
     <AuthTextField
-      label={label}
-      value={value}
-      placeholder={placeholder}
-      onBlur={onBlur}
-      onChange={onChange}
-      error={error}
-      helperText={helperText}
-      className={className}
-      id={id}
       slotProps={{
         input: {
           endAdornment: (
@@ -57,6 +30,7 @@ const AuthSideBtnTextField: React.FC<AuthSideBtnTextFieldProps> = ({
           ),
         },
       }}
+      {...props}
     />
   );
 };

@@ -7,48 +7,27 @@ import { AuthSideBtnTextFieldProps } from "./types/textField";
 
 import "./AuthTimerSideBtnTextField.css";
 
-interface AuthTimerSideBtnTextFieldProps extends AuthSideBtnTextFieldProps {
+type AuthTimerSideBtnTextFieldProps = AuthSideBtnTextFieldProps & {
   timerStart: boolean;
   timerStop: boolean;
   timerReset: boolean;
   setTimerValue: (value: number) => void;
-}
+};
 
 /**
  * 커스텀 side btn + timer TextField component (MUI TextField 기반)
  * MUI TextField props 참고하여 그대로 사용
- *
- *
- *
- * @param {string} props.sideBtnText - text
- * @param {() => void} props.sideBtnOnClick - onClick
- * @param {boolean} props.sideBtnDisabled - disabled
- *
  * @param {boolean} props.timerStart - 타이머 시작 제어
  * @param {boolean} props.timerStop - 타이머 정지 제어
  * @param {boolean} props.timerReset - 타이머 리셋 제어
  * @param {(value: number) => void} props.setTimerValue - 타이머 값 설정
  *
- * @param {AuthTextFieldProps} props
- * @param {string} props.label - label
- * @param {string} props.value - value
- * @param {string} props.placeholder - placeholder
- * @param {() => void} [props.onBlur] - onBlur
- * @param {(e: React.ChangeEvent<HTMLInputElement>) => void} [props.onChange] - onChange
- * @param {boolean} props.error - error
- * @param {string} props.helperText - helperText
- * @param {string} [props.className] - className?
- * @param {string} [props.id] - id?
- * @returns {JSX.Element}
+ * @param {string} props.sideBtnText - text
+ * @param {() => void} props.sideBtnOnClick - onClick
+ * @param {boolean} props.sideBtnDisabled - disabled
  */
 const AuthTimerSideBtnTextField: React.FC<AuthTimerSideBtnTextFieldProps> = ({
-  label,
-  value,
-  placeholder,
-  onBlur,
-  onChange,
-  error,
-  helperText,
+  className = "",
   sideBtnText = "",
   sideBtnOnClick,
   sideBtnDisabled = false,
@@ -56,8 +35,7 @@ const AuthTimerSideBtnTextField: React.FC<AuthTimerSideBtnTextFieldProps> = ({
   timerStop,
   timerReset,
   setTimerValue,
-  className,
-  id,
+  ...props
 }) => {
   const [timerId, setTimerId] = useState<NodeJS.Timeout | number>(0);
   const [timeLeft, setTimeLeft] = useState(300); // 300초 = 5분
@@ -107,15 +85,7 @@ const AuthTimerSideBtnTextField: React.FC<AuthTimerSideBtnTextFieldProps> = ({
 
   return (
     <AuthTextField
-      label={label}
-      value={value}
-      placeholder={placeholder}
-      onBlur={onBlur}
-      onChange={onChange}
-      error={error}
-      helperText={helperText}
       className={"__timer-text-field " + className}
-      id={id}
       slotProps={{
         input: {
           endAdornment: (
@@ -134,6 +104,7 @@ const AuthTimerSideBtnTextField: React.FC<AuthTimerSideBtnTextFieldProps> = ({
           ),
         },
       }}
+      {...props}
     />
   );
 };
