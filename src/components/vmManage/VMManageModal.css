@@ -1,0 +1,15 @@
+.vm-manage-modal .vm-manage-modal-title {
+  margin-bottom: 16px;
+}
+
+.vm-manage-modal .vm-manage-modal-title .title-btn-wrap {
+  gap: 16px;
+}
+
+.vm-manage-modal .vm-modal-inside {
+  padding-right: 32px;
+}
+
+.vm-manage-modal .vm-modal-inside .vm-modal-column {
+  gap: 16px;
+}

@@ -7,9 +7,7 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
-  MenuItem,
   Paper,
-  Select,
   Snackbar,
   Table,
   TableBody,
@@ -21,18 +19,9 @@ import {
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-type Status = "시작" | "중지" | "재부팅" | "삭제";
+import { Status, VM } from "../types/vm";
 
-interface VM {
-  id: string;
-  vmName: string;
-  status: Status;
-  publicIP?: string;
-  key: string;
-  os: string;
-  startTime: string;
-  runTime: string;
-}
+import VMDetailModal from "../components/vmManage/VMManageModal";
 
 const VMManage: React.FC = () => {
   const [vmList, setVmList] = useState<VM[]>([]);
@@ -44,6 +33,11 @@ const VMManage: React.FC = () => {
     success: false,
   });
 
+  const [showDetailModal, setShowDetailModal] = useState(false);
+  const [selectedVMId, setSelectedVMId] = useState<string | null>(null);
+
+  const selectedVM = vmList.find((vm) => vm.id === selectedVMId) || null;
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -52,6 +46,7 @@ const VMManage: React.FC = () => {
         id: "123e4567-e89b-12d3-a456-426614174000",
         vmName: "VM1",
         status: "시작",
+        instanceType: "t2.micro",
         publicIP: "192.168.1.1",
         key: "key example",
         os: "Ubuntu 24.04 LTS",
@@ -62,11 +57,12 @@ const VMManage: React.FC = () => {
         id: "123e4567-e89b-12d3-a456-426614174001",
         vmName: "VM2",
         status: "시작",
+        instanceType: "t2.medium",
         publicIP: "192.168.1.1",
         key: "key example",
         os: "Ubuntu 24.04 LTS",
         startTime: "2025-01-18 10:00",
-        runTime: "5시간",
+        runTime: "5시간 30분",
       },
     ];
 
@@ -85,6 +81,22 @@ const VMManage: React.FC = () => {
 
     setDeleteAlert({ show: true, success: true });
     onCloseDeleteDialog();
+  };
+
+  // modal 관련 함수들
+  const onCloseDetailModal = () => {
+    setShowDetailModal(false);
+    setSelectedVMId(null);
+  };
+
+  const onChangeName = (id: string, newName: string) => {
+    setVmList((prevList) => prevList.map((vm) => (vm.id === id ? { ...vm, vmName: newName } : vm)));
+  };
+
+  const onChangeStatus = (id: string, newStatus: Status) => {
+    setVmList((prevList) =>
+      prevList.map((vm) => (vm.id === id ? { ...vm, status: newStatus } : vm))
+    );
   };
 
   return (
@@ -137,6 +149,17 @@ const VMManage: React.FC = () => {
         </Alert>
       </Snackbar>
 
+      {/* VM 상세 정보 Modal */}
+      {showDetailModal && (
+        <VMDetailModal
+          open={showDetailModal}
+          vm={selectedVM}
+          onClose={onCloseDetailModal}
+          onChangeStatus={onChangeStatus}
+          onChangeName={onChangeName}
+        />
+      )}
+
       <TableContainer component={Paper} style={{ marginTop: "20px" }}>
         <Table>
           <TableHead>
@@ -158,17 +181,24 @@ const VMManage: React.FC = () => {
               <TableCell>VM 이름</TableCell>
               <TableCell>인스턴스 ID(UUID)</TableCell>
               <TableCell>인스턴스 상태</TableCell>
+              <TableCell>인스턴스 유형</TableCell>
               <TableCell>Public IP 주소</TableCell>
-              <TableCell>키 이름</TableCell>
-              <TableCell>OS</TableCell>
-              <TableCell>시작 시간</TableCell>
               <TableCell>실행 시간</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {vmList.map((vm) => (
-              <TableRow key={vm.id} hover selected={checkedVMs.includes(vm.id)}>
-                <TableCell padding="checkbox">
+              <TableRow
+                key={vm.id}
+                hover
+                selected={checkedVMs.includes(vm.id)}
+                onClick={() => {
+                  setSelectedVMId(vm.id);
+                  setShowDetailModal(true);
+                }}
+                sx={{ cursor: "pointer" }}
+              >
+                <TableCell padding="checkbox" onClick={(event) => event.stopPropagation()}>
                   <Checkbox
                     checked={checkedVMs.includes(vm.id)}
                     onChange={() => {
@@ -184,31 +214,10 @@ const VMManage: React.FC = () => {
                 </TableCell>
                 <TableCell>{vm.vmName}</TableCell>
                 <TableCell>{vm.id}</TableCell>
-                <TableCell>
-                  <Select
-                    sx={{ minWidth: "100px" }}
-                    value={vm.status}
-                    onChange={(event) => {
-                      setVmList((prevList) =>
-                        prevList.map((prevVM) =>
-                          prevVM.id === vm.id
-                            ? { ...prevVM, status: event.target.value as Status }
-                            : prevVM
-                        )
-                      );
-                    }}
-                  >
-                    <MenuItem value="시작">시작</MenuItem>
-                    <MenuItem value="중지">중지</MenuItem>
-                    <MenuItem value="재부팅">재부팅</MenuItem>
-                    <MenuItem value="삭제">삭제</MenuItem>
-                  </Select>
-                </TableCell>
+                <TableCell>{vm.status}</TableCell>
+                <TableCell>{vm.instanceType}</TableCell>
                 <TableCell>{vm.publicIP || "-"}</TableCell>
-                <TableCell>{vm.key}</TableCell>
-                <TableCell>{vm.os}</TableCell>
-                <TableCell>{vm.startTime}</TableCell>
-                <TableCell align="center">{vm.runTime}</TableCell>
+                <TableCell>{vm.runTime}</TableCell>
               </TableRow>
             ))}
           </TableBody>
