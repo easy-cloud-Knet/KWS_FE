@@ -4,6 +4,8 @@ import DefaultLayout from "./layouts/DefaultLayout";
 
 import VMCreate from "./pages/VMCreate";
 import VMManage from "./pages/VMManage";
+import SignUpDefault from "./pages/auth/signUp/SignUpDefault";
+import SignIn from "./pages/auth/SignIn";
 
 import "./App.css";
 import "./styles/colors.css";
@@ -18,6 +20,9 @@ function App() {
           <Route path="/" element={<DefaultLayout />}>
             <Route index element={<VMManage />} />
             <Route path="create" element={<VMCreate />} />
+
+            <Route path="signin" element={<SignIn />} />
+            <Route path="signup" element={<SignUpDefault />} />
           </Route>
         </Routes>
       </BrowserRouter>

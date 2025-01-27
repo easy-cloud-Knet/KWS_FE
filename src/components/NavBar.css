@@ -1,0 +1,83 @@
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  height: 6.481vh;
+  padding-left: 4.583vw;
+  padding-right: 2.292vw;
+  font-family: "Noto_Sans_KR";
+  background-color: #ffffff;
+
+  border-bottom: 1px solid var(--blue);
+}
+
+.navbar a {
+  text-decoration: none;
+  color: black;
+}
+
+.navbar .navbar_logo {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.navbar .navbar_menu {
+  display: flex;
+  list-style: none;
+  padding-left: 0;
+}
+
+.navbar .navbar_menu li {
+  display: flex;
+  align-items: center;
+
+  padding: 8px 30px;
+}
+
+.navbar .navbar_menu .li {
+  color: #000;
+
+  /* H5/Regular */
+  font-family: "Noto Sans KR";
+  font-size: 1.852vh;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 2.593vh; /* 140% */
+}
+
+.navbar .navbar_login {
+  display: flex;
+  align-items: center;
+
+  position: relative;
+}
+
+.navbar .navbar_login img {
+  height: 2.593vh;
+
+  position: absolute;
+  left: -4vw;
+  cursor: pointer;
+}
+
+.navbar .signin_btn {
+  border-radius: 30px;
+  border: 2.5px solid var(--blue);
+  width: 13.889vh;
+  height: 4.074vh;
+  background-color: #fdfaff;
+
+  cursor: pointer;
+
+  color: var(--blue);
+
+  /* Paragraph/Large/Regular */
+  font-size: 1.667vh;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 2.593vh; /* 155.556% */
+
+  text-align: center;
+}

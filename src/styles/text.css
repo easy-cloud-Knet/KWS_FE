@@ -230,6 +230,10 @@
   color: #ffffff;
 }
 
+.c-blue {
+  color: var(--blue);
+}
+
 .t-underline {
   text-decoration-line: underline;
 }
