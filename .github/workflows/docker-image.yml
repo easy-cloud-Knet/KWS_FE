@@ -46,13 +46,12 @@ jobs:
         sshpass -p "${{ secrets.SSH_PASSWORD }}" ssh -o StrictHostKeyChecking=no -p ${{ secrets.SSH_PORT }}  ${{ secrets.SSH_ID }}@${{ secrets.SSH_SERVER_IP }} << 'EOF'
           IMAGE="${{ secrets.DOCKER_HUB_USERNAME }}/kws_fe:latest"
           CONTAINER_NAME="KWS_FE"
-          PORT=80  # Vite를 Nginx로 서빙하기 위해 80 포트 사용
 
           echo "${{ secrets.SSH_PASSWORD }}" | sudo -S docker pull $IMAGE
           echo "${{ secrets.SSH_PASSWORD }}" | sudo -S docker stop $CONTAINER_NAME || true
           echo "${{ secrets.SSH_PASSWORD }}" | sudo -S docker rm $CONTAINER_NAME || true
 
-          echo "${{ secrets.SSH_PASSWORD }}" | sudo -S docker run -d --name $CONTAINER_NAME -p 25120:$PORT $IMAGE
+          echo "${{ secrets.SSH_PASSWORD }}" | sudo -S docker run -d --name $CONTAINER_NAME -p 25120:5173 $IMAGE
 
           echo "${{ secrets.SSH_PASSWORD }}" | sudo -S docker system prune -af
         EOF
