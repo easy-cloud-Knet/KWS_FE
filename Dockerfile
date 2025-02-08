@@ -5,13 +5,13 @@ WORKDIR /app
 
 # 패키지 파일 복사 및 설치
 COPY package*.json ./
-RUN npm install --legacy-peer-deps
 
-# axios 타입 정의 설치
-RUN npm install --save-dev @types/axios
+# 기존 node_modules 제거 후 패키지 설치
+RUN rm -rf node_modules package-lock.json && npm install --legacy-peer-deps
 
 # Vite 애플리케이션 코드 복사 및 빌드
 COPY . .
+RUN rm -rf node_modules package-lock.json && npm install --legacy-peer-deps
 RUN npm run build
 
 # Stage 2: Serve the Vite app with Nginx
