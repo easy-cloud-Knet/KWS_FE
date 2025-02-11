@@ -33,8 +33,7 @@ const SignUpDefault = () => {
   };
 
   // 회원가입 완료 버튼 클릭 시
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const onClickRegisterAllowButton = async (email: string, emailCode: string) => {
+  const onClickRegisterAllowButton = async () => {
     setIsLoading(true);
     //   try {
     //     await axios.post(`${SERVER_URL}auth/signup`, {

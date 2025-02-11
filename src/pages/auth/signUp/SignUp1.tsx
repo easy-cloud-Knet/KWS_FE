@@ -35,8 +35,8 @@ const SignUp1: React.FC<SignUp1Props> = ({ onNext, userInfo, setUserInfo }) => {
     }));
   }, [id]);
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const checkIdDuplicated = async (id: string) => {
+    console.log(id);
     if (!idChecker.format || !idChecker.length) {
       return;
     }
