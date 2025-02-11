@@ -1,13 +1,13 @@
-import { useContext } from "react";
 import { Link } from "react-router-dom";
 import { useLocation, useNavigate } from "react-router-dom";
 
-import AuthContext from "../contexts/AuthContext";
+// import AuthContext from "../contexts/AuthContext";
 
 import "./NavBar.css";
 
 const NavBar = () => {
-  const { isAuthenticated, logout } = useContext(AuthContext);
+  // const { isAuthenticated, logout } = useContext(AuthContext);
+  const isAuthenticated = false;
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -47,7 +47,7 @@ const NavBar = () => {
           <button
             onClick={() => {
               // context 호출
-              logout();
+              // logout();
               navigate("/");
             }}
             className="signin_btn"
