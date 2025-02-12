@@ -1,5 +1,5 @@
-# Stage 1: Setup the Vite development server
-FROM node:20 AS dev
+# Step 1: Build the Vite app
+FROM node:20 AS build
 
 WORKDIR /app
 
@@ -7,8 +7,20 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm install --legacy-peer-deps
 
-# Vite 애플리케이션 코드 복사
+# 애플리케이션 코드 복사 및 빌드
 COPY . .
+RUN npm run build
 
-# Vite 개발 서버 실행
-CMD ["npm", "run", "dev"]
+# Step 2: Serve the built app with Nginx
+FROM nginx:latest
+
+# Nginx 설정 적용 (기본 설정 파일 삭제 후 사용자 설정 적용)
+RUN rm /etc/nginx/conf.d/default.conf
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+# React/Vite 빌드된 정적 파일 복사
+COPY --from=build /app/dist /usr/share/nginx/html
+
+# Nginx 실행
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
