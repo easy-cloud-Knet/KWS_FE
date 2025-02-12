@@ -15,7 +15,7 @@ RUN npm run build
 FROM nginx:latest
 
 # Nginx 설정 파일 복사
-COPY nginx.conf /etc/nginx/nginx.conf  # 올바른 위치로 복사
+COPY nginx.conf /etc/nginx/nginx.conf  # nginx.conf가 루트 디렉토리에 있어야 함
 
 # React/Vite 빌드된 정적 파일 복사
 COPY --from=build /app/dist /usr/share/nginx/html
