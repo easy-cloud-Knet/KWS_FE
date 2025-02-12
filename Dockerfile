@@ -14,9 +14,8 @@ RUN npm run build
 # Step 2: Serve the built app with Nginx
 FROM nginx:latest
 
-# Nginx 설정 적용 (기본 설정 파일 삭제 후 사용자 설정 적용)
-RUN rm /etc/nginx/conf.d/default.conf
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+# Nginx 설정 파일 복사
+COPY nginx.conf /etc/nginx/nginx.conf  # 올바른 위치로 복사
 
 # React/Vite 빌드된 정적 파일 복사
 COPY --from=build /app/dist /usr/share/nginx/html
