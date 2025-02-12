@@ -53,5 +53,5 @@ jobs:
 
           echo "${{ secrets.SSH_PASSWORD }}" | sudo -S docker run -d --name $CONTAINER_NAME -p 25120:80 $IMAGE
 
-          echo "${{ secrets.SSH_PASSWORD }}" | sudo -S docker system prune -af
+          #echo "${{ secrets.SSH_PASSWORD }}" | sudo -S docker system prune -af
         EOF
