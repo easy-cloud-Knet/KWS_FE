@@ -12,13 +12,14 @@ const AuthTextFieldV2: React.FC<AuthTextFieldV2Props> = ({
   label,
   //   error,
   //   helperText,
+  style,
   rightElement,
   ...props
 }) => {
   return (
     <div className="auth-text-field f-dir-column">
       {typeof label === "string" && <label htmlFor={label}>{label}</label>}
-      <div className="input-wrap">
+      <div className="input-wrap" style={label ? { marginTop: "12px", ...style } : { ...style }}>
         <input className={rightElement ? "right" : ""} {...props} />
         {rightElement && <div className="right-element">{rightElement}</div>}
       </div>
