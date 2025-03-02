@@ -13,7 +13,7 @@
   line-height: normal;
 }
 
-.auth-text-field .input-wrap {
+.auth-text-field .__input-wrap__ {
   display: flex;
   align-items: center;
 
@@ -32,7 +32,7 @@
   background: #ecf2ff;
 }
 
-.auth-text-field input.right {
+.auth-text-field input.__right__ {
   padding-right: 30px;
 }
 
@@ -41,7 +41,7 @@
   border: 1px solid #007bff;
 }
 
-.auth-text-field .input-wrap .right-element {
+.auth-text-field .__input-wrap__ .__right-element__ {
   position: absolute;
   right: 14px;
 }

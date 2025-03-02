@@ -19,9 +19,12 @@ const AuthTextFieldV2: React.FC<AuthTextFieldV2Props> = ({
   return (
     <div className="auth-text-field f-dir-column">
       {typeof label === "string" && <label htmlFor={label}>{label}</label>}
-      <div className="input-wrap" style={label ? { marginTop: "12px", ...style } : { ...style }}>
-        <input className={rightElement ? "right" : ""} {...props} />
-        {rightElement && <div className="right-element">{rightElement}</div>}
+      <div
+        className="__input-wrap__"
+        style={label ? { marginTop: "12px", ...style } : { ...style }}
+      >
+        <input className={rightElement ? "__right__" : ""} {...props} />
+        {rightElement && <div className="__right-element__">{rightElement}</div>}
       </div>
     </div>
   );
