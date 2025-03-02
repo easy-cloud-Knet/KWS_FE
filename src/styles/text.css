@@ -184,6 +184,20 @@
   line-height: 28px; /* 155.556% */
 }
 
+.p-20-400 {
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+
+.p-40-400 {
+  font-size: 40px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+
 .t-align-center,
 .t-center {
   text-align: center;
@@ -194,7 +208,7 @@
 }
 
 .c-black {
-  color: #000;
+  color: #222;
 }
 
 .c-main {

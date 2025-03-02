@@ -1,0 +1,49 @@
+.auth-text-field {
+  width: 100%;
+}
+
+.auth-text-field label {
+  margin-left: 5px;
+
+  color: #222;
+
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+
+.auth-text-field .input-wrap {
+  display: flex;
+  align-items: center;
+
+  position: relative;
+
+  margin-top: 12px;
+}
+
+.auth-text-field input {
+  flex: 1;
+
+  padding: 0 32px;
+
+  height: 61px;
+
+  border: 1px solid #ecf2ff;
+  border-radius: 17px;
+  background: #ecf2ff;
+}
+
+.auth-text-field input.right {
+  padding-right: 30px;
+}
+
+.auth-text-field input:focus {
+  outline: none;
+  border: 1px solid #007bff;
+}
+
+.auth-text-field .input-wrap .right-element {
+  position: absolute;
+  right: 14px;
+}

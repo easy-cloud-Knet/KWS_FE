@@ -5,3 +5,10 @@ export type AuthSideBtnTextFieldProps = TextFieldProps & {
   sideBtnOnClick: () => void;
   sideBtnDisabled: boolean;
 };
+
+export interface AuthTextFieldV2Props extends React.InputHTMLAttributes<HTMLInputElement> {
+  label?: string | React.ReactNode;
+  error?: boolean;
+  helperText?: string | React.ReactNode;
+  rightElement?: React.ReactNode;
+}
