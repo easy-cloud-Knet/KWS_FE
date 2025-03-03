@@ -1,4 +1,5 @@
 @import "@fontsource/pretendard/index.css";
+@import "@fontsource/inter/index.css";
 
 h1,
 h2,
@@ -19,7 +20,7 @@ hr {
   margin: 0;
 
   /* 전역 설정 */
-  font-family: "pretendard", "Apple SD Gothic Neo", Sans-serif;
+  font-family: "inter", "pretendard", "Apple SD Gothic Neo", Sans-serif;
 }
 
 *,
