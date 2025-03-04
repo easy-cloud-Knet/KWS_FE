@@ -1,14 +1,44 @@
+.signin-wrap {
+  height: calc(100vh - 6.481vh);
+}
+
+.signin {
+  width: 489px;
+}
+
+.signin .title {
+  margin-bottom: 8.241vh; /* 89px */
+}
+
+.signin .input-wrap {
+  gap: 2.685vh; /* 29px */
+
+  width: 100%;
+}
+
+.signin .utils-wrap {
+  margin-top: 1.6667vh; /* 18px */
+  margin-left: 5px;
+  margin-bottom: 7.4074vh; /* 80px */
+
+  width: 100%;
+}
+
+.signin .utils-wrap .id-save {
+  gap: 2px;
+}
+
 .signin .button-wrap {
-  gap: 19px;
+  gap: 2.2222vh; /* 24px */
+
+  margin-top: 7.6852vh; /* 83px */
 }
 
 .signin .button-wrap hr {
-  height: 20px;
-  border: 1.5px solid #bababa;
+  width: 418px;
+  border: 1px solid #bfbfbf;
 }
 
-.signin .text-button {
-  border: none;
-  background: none;
-  cursor: pointer;
+.signin .button-wrap .register-btn-wrap {
+  gap: 6px;
 }

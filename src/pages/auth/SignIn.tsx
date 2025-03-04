@@ -1,77 +1,89 @@
-import { Visibility, VisibilityOff } from "@mui/icons-material";
-import {
-  Button,
-  FormControl,
-  IconButton,
-  InputAdornment,
-  InputLabel,
-  OutlinedInput,
-  Stack,
-} from "@mui/material";
-import { useState } from "react";
+import { Checkbox } from "@mui/material";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import add2Whitespaces from "../../utils/add2Whitespaces";
+import AuthTextFieldV2 from "../../components/auth/textField/AuthTextFieldV2";
+import AuthPwTextFieldV2 from "../../components/auth/textField/AuthPwTextFieldV2";
+import BottomBtn from "../../components/button/BottomBtn";
+import TextBtn from "../../components/button/TextBtn";
 
-import "./AuthDefault.css";
 import "./SignIn.css";
 
 const SignIn: React.FC = () => {
-  const [id, setId] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
   const [pw, setPw] = useState<string>("");
-  const [showPassword, setShowPassword] = useState<boolean>(false);
+
+  const [checked, setChecked] = useState(true);
 
   const navigate = useNavigate();
 
+  useEffect(() => {
+    const savedEmail = localStorage.getItem("savedEmail");
+    if (savedEmail) {
+      setEmail(savedEmail);
+      setChecked(true);
+    }
+  }, []);
+
+  const onClickCheckBox = () => {
+    setChecked(!checked);
+  };
+
   return (
-    <div className="signin auth-default f-dir-column a-items-center">
-      <Stack spacing={2} sx={{ width: 300 }}>
-        <h2 className="h2-medium t-center">로그인</h2>
+    <div className="signin-wrap f-dir-column f-center">
+      <div className="signin f-dir-column a-items-center">
+        <p className="title p-40-400 c-black t-center">로그인</p>
 
-        <FormControl sx={{ m: 1, width: 300 }} variant="outlined">
-          <InputLabel htmlFor="outlined-adornment-id">아이디</InputLabel>
-          <OutlinedInput
-            id="outlined-adornment-id"
+        <div className="input-wrap f-dir-column">
+          <AuthTextFieldV2
+            placeholder="E-mail"
             type="text"
-            onChange={(event) => setId(event.target.value)}
-            label={add2Whitespaces("아이디")}
+            value={email}
+            onChange={(event) => setEmail(event.target.value)}
           />
-        </FormControl>
-        <FormControl sx={{ m: 1, width: 300 }} variant="outlined">
-          <InputLabel htmlFor="outlined-adornment-password">비밀번호</InputLabel>
-          <OutlinedInput
-            id="outlined-adornment-password"
-            type={showPassword ? "text" : "password"}
+
+          <AuthPwTextFieldV2
+            placeholder="Password"
+            value={pw}
             onChange={(event) => setPw(event.target.value)}
-            endAdornment={
-              <InputAdornment position="end">
-                <IconButton
-                  aria-label={showPassword ? "hide the password" : "display the password"}
-                  onClick={() => setShowPassword((show) => !show)}
-                  onMouseDown={(event) => event.preventDefault()}
-                  onMouseUp={(event) => event.preventDefault()}
-                  edge="end"
-                >
-                  {showPassword ? <VisibilityOff /> : <Visibility />}
-                </IconButton>
-              </InputAdornment>
-            }
-            label={add2Whitespaces("비밀번호")}
           />
-        </FormControl>
-
-        <Button variant="contained" disabled={!(id.length > 0 && pw.length > 0)}>
-          로그인
-        </Button>
-
-        <div className="button-wrap j-content-center">
-          <button className="text-button p-small-regular">아이디 / 비밀번호 찾기</button>
-          <hr></hr>
-          <button className="text-button p-small-regular" onClick={() => navigate("/signup")}>
-            회원가입
-          </button>
         </div>
-      </Stack>
+
+        <div className="utils-wrap j-content-between a-items-center">
+          <div className="id-save a-items-center c-pointer" onClick={onClickCheckBox}>
+            <Checkbox checked={checked} onChange={onClickCheckBox} sx={{ padding: "0" }} />
+            <p className="p-20-400">아이디 저장</p>
+          </div>
+          <TextBtn className="p-20-400">비밀번호를 잊으셨나요?</TextBtn>
+        </div>
+
+        <BottomBtn
+          variant="contained"
+          disabled={!(email.length > 0 && pw.length > 0)}
+          onClick={() => {
+            // TODO: 로그인 API 호출
+
+            // 성공할 경우
+            if (checked) {
+              localStorage.setItem("savedEmail", email);
+            } else {
+              localStorage.removeItem("savedEmail");
+            }
+          }}
+        >
+          로그인
+        </BottomBtn>
+
+        <div className="button-wrap f-dir-column">
+          <hr></hr>
+          <div className="register-btn-wrap j-content-center">
+            <p className="p-20-400">계정이 없으신가요?</p>
+            <TextBtn className="p-20-400 c-grey" onClick={() => navigate("/signup")}>
+              회원가입하기
+            </TextBtn>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
