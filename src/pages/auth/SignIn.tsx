@@ -52,9 +52,9 @@ const SignIn: React.FC = () => {
         <div className="utils-wrap j-content-between a-items-center">
           <div className="id-save a-items-center c-pointer" onClick={onClickCheckBox}>
             <Checkbox checked={checked} onChange={onClickCheckBox} sx={{ padding: "0" }} />
-            <p className="p-20-400">아이디 저장</p>
+            <p className="p-16-400">아이디 저장</p>
           </div>
-          <TextBtn className="p-20-400">비밀번호를 잊으셨나요?</TextBtn>
+          <TextBtn className="p-16-400">비밀번호를 잊으셨나요?</TextBtn>
         </div>
 
         <BottomBtn
@@ -77,8 +77,8 @@ const SignIn: React.FC = () => {
         <div className="button-wrap f-dir-column">
           <hr></hr>
           <div className="register-btn-wrap j-content-center">
-            <p className="p-20-400">계정이 없으신가요?</p>
-            <TextBtn className="p-20-400 c-grey" onClick={() => navigate("/signup")}>
+            <p className="p-16-400">계정이 없으신가요?</p>
+            <TextBtn className="p-16-400 c-grey" onClick={() => navigate("/signup")}>
               회원가입하기
             </TextBtn>
           </div>
