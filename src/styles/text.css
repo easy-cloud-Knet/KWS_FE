@@ -185,7 +185,7 @@
 }
 
 .p-20-400 {
-  font-size: 20px;
+  font-size: 16px;
   font-style: normal;
   font-weight: 400;
   line-height: normal;
@@ -215,6 +215,10 @@
   color: var(--Main, #9e30f4);
 }
 
+.c-grey {
+  color: #b4b4b4;
+}
+
 .c-grey4 {
   color: var(--grey4, #bababa);
 }
@@ -223,7 +227,6 @@
   color: var(--grey5, #9e9e9e);
 }
 
-.c-grey,
 .c-grey6 {
   color: var(--grey6, #777);
 }
