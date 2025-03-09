@@ -191,8 +191,29 @@
   line-height: normal;
 }
 
+.p-20-400 {
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+
+.p-36-400 {
+  font-size: 36px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+
 .p-40-400 {
   font-size: 40px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+
+.p-48-400 {
+  font-size: 48px;
   font-style: normal;
   font-weight: 400;
   line-height: normal;
@@ -216,7 +237,7 @@
 }
 
 .c-grey {
-  color: #b4b4b4;
+  color: #898989;
 }
 
 .c-grey4 {
@@ -241,6 +262,10 @@
 
 .c-red {
   color: #ff0000;
+}
+
+.c-green {
+  color: #00c850;
 }
 
 .c-white {

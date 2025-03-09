@@ -1,18 +1,14 @@
-import { Button } from "@mui/material";
 import { useEffect, useState } from "react";
 
 import Form from "../../../components/auth/Form";
-import Selector from "../../../components/auth/Selector";
-import AuthPwTextField from "../../../components/auth/textField/AuthPwTextField";
+import AuthPwTextFieldV2 from "../../../components/auth/textField/AuthPwTextFieldV2";
+import AuthBtn from "../../../components/button/AuthBtn";
 
 import { UserInfo } from "../../../types/auth";
 
-import {
-  PW_ALPHABET_REGEX,
-  PW_LENGTH_REGEX,
-  PW_NUMBER_REGEX,
-  PW_SPECIAL_REGEX,
-} from "../../../constants/regex";
+import { PW_REGEX } from "../../../constants/regex";
+
+import "./SignUp2.css";
 
 interface SignUp2Props {
   onPrevious: () => void;
@@ -25,10 +21,7 @@ const SignUp2: React.FC<SignUp2Props> = ({ onPrevious, onNext, userInfo, setUser
   const [pw, setPw] = useState(userInfo.pw);
   const [pwChecker, setPwChecker] = useState({
     show: false,
-    alphabet: false,
-    number: false,
-    special: false,
-    length: false,
+    format: false,
   });
 
   const [pwCheck, setPwCheck] = useState(userInfo.pwCheck);
@@ -40,10 +33,8 @@ const SignUp2: React.FC<SignUp2Props> = ({ onPrevious, onNext, userInfo, setUser
   useEffect(() => {
     setPwChecker((prevPwChecker) => ({
       ...prevPwChecker,
-      alphabet: PW_ALPHABET_REGEX.test(pw),
-      number: PW_NUMBER_REGEX.test(pw),
-      special: PW_SPECIAL_REGEX.test(pw),
-      length: PW_LENGTH_REGEX.test(pw),
+      show: pw.length > 0,
+      format: PW_REGEX.test(pw),
     }));
   }, [pw]);
 
@@ -57,13 +48,7 @@ const SignUp2: React.FC<SignUp2Props> = ({ onPrevious, onNext, userInfo, setUser
   }, [pw, pwCheck]);
 
   const onClickNext = async () => {
-    if (
-      pwChecker.alphabet &&
-      pwChecker.number &&
-      pwChecker.special &&
-      pwChecker.length &&
-      pwCheckChecker.equal
-    ) {
+    if (pwChecker.format && pwCheckChecker.equal) {
       setUserInfo({ ...userInfo, pw: pw, pwCheck: pwCheck });
       onNext();
     }
@@ -71,70 +56,45 @@ const SignUp2: React.FC<SignUp2Props> = ({ onPrevious, onNext, userInfo, setUser
 
   return (
     <Form className="signup2" onSubmit={onClickNext}>
-      <Selector index={2} />
+      <div className="input-wrap f-dir-column">
+        <AuthPwTextFieldV2
+          label="비밀번호"
+          value={pw}
+          placeholder="비밀번호를 입력해 주세요."
+          onChange={(event) => {
+            setPw(event.target.value);
+          }}
+          errorMessageCondition={pwChecker.show && !pwChecker.format}
+          errorMessageContent="(영문, 숫자, 특수문자 포함 8자~100자)"
+        />
+        <AuthPwTextFieldV2
+          label="비밀번호 확인"
+          value={pwCheck}
+          placeholder="비밀번호를 한번 더 입력해 주세요."
+          onChange={(event) => {
+            setPwCheck(event.target.value);
+            if (pw.length > 0) {
+              setPwCheckChecker({ ...pwCheckChecker, show: true });
+            }
+          }}
+          checkMessageCondition={pwCheckChecker.show && pwCheckChecker.equal}
+          checkMessageContent="비밀번호가 일치합니다."
+          errorMessageCondition={pwCheckChecker.show && !pwCheckChecker.equal}
+          errorMessageContent="비밀번호가 일치하지 않습니다."
+        />
+      </div>
 
-      <AuthPwTextField
-        className="set-bottom-margin"
-        label="비밀번호"
-        value={pw}
-        placeholder="대소문자, 숫자, 특수문자 5~11자"
-        onBlur={() => {
-          setPwChecker({ ...pwChecker, show: true });
-        }}
-        onChange={(event) => {
-          setPw(event.target.value);
-        }}
-        error={
-          pwChecker.show &&
-          (!pwChecker.alphabet || !pwChecker.number || !pwChecker.special || !pwChecker.length)
-        }
-        helperText={
-          pwChecker.show &&
-          (!pwChecker.alphabet || !pwChecker.number || !pwChecker.special || !pwChecker.length)
-            ? "대소문자, 숫자, 특수문자(@$!%*#?&) 5~11자"
-            : ""
-        }
-      />
-
-      <AuthPwTextField
-        label="비밀번호 확인&nbsp;"
-        value={pwCheck}
-        placeholder="비밀번호 확인"
-        onBlur={() => {
-          return;
-        }}
-        onChange={(event) => {
-          setPwCheck(event.target.value);
-          if (pw.length > 0) {
-            setPwCheckChecker({ ...pwCheckChecker, show: true });
-          }
-        }}
-        error={pwCheckChecker.show && !pwCheckChecker.equal}
-        helperText={
-          pwCheckChecker.show && !pwCheckChecker.equal ? "비밀번호가 일치하지 않습니다." : ""
-        }
-      />
       <div className="button-wrap j-content-between">
-        <Button variant="outlined" onClick={onPrevious} style={{ borderRadius: 20 }}>
+        <AuthBtn variant="outlined" onClick={onPrevious}>
           이전
-        </Button>
-
-        <Button
+        </AuthBtn>
+        <AuthBtn
           variant="contained"
           onClick={onClickNext}
-          style={{ borderRadius: 20 }}
-          disabled={
-            !(
-              pwChecker.alphabet &&
-              pwChecker.number &&
-              pwChecker.special &&
-              pwChecker.length &&
-              pwCheckChecker.equal
-            )
-          }
+          disabled={!(pw && pwChecker.format && pwCheck && pwCheckChecker.equal)}
         >
           다음
-        </Button>
+        </AuthBtn>
 
         {/* 엔터키 입력을 위한 보이지 않는 버튼 */}
         <button type="submit" style={{ display: "none" }}></button>

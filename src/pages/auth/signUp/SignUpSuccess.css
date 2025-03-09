@@ -1,0 +1,9 @@
+.signup-success .signup-container h2 {
+  margin-bottom: 3.4259vh; /* 37px */
+}
+
+.signup-success .bottom-btn-wrap {
+  gap: 3.3333vh; /* 36px */
+
+  margin-top: 10.8333vh; /* 117px */
+}

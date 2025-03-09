@@ -11,4 +11,8 @@ export interface AuthTextFieldV2Props extends React.InputHTMLAttributes<HTMLInpu
   error?: boolean;
   helperText?: string | React.ReactNode;
   rightElement?: React.ReactNode;
+  checkMessageCondition?: boolean;
+  checkMessageContent?: string;
+  errorMessageCondition?: boolean;
+  errorMessageContent?: string;
 }

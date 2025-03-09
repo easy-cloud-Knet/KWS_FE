@@ -4,13 +4,6 @@
 
 .auth-text-field label {
   margin-left: 5px;
-
-  color: #222;
-
-  font-size: 20px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: normal;
 }
 
 .auth-text-field .__input-wrap__ {

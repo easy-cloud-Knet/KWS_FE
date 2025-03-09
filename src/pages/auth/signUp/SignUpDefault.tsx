@@ -1,9 +1,11 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import SignUp1 from "./SignUp1";
 import SignUp2 from "./SignUp2";
 import SignUp3 from "./SignUp3";
-import SignUp4 from "./SignUp4";
+import SignUp4 from "./SignUpSuccess";
+import Selector from "../../../components/auth/Selector";
 
 import { UserInfo } from "../../../types/auth";
 
@@ -11,17 +13,19 @@ import "../AuthDefault.css";
 import "./SignUpDefault.css";
 
 const SignUpDefault = () => {
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState(3); // TODO: 1로 변경
   const [userInfo, setUserInfo] = useState<UserInfo>({
-    id: "",
-    pw: "",
-    pwCheck: "",
     email: "",
     emailCode: "",
+    pw: "",
+    pwCheck: "",
+    name: "",
   });
 
   // loading state
   const [isLoading, setIsLoading] = useState(false);
+
+  const navigate = useNavigate();
 
   // 이전 단계
   const onPrevious = () => {
@@ -49,7 +53,7 @@ const SignUpDefault = () => {
     //     alert(error.response.data.error);
     //     console.log(userInfo);
     //   } finally {
-    onNext();
+    navigate("/signup/success");
     setIsLoading(false);
     //   }
   };
@@ -60,11 +64,10 @@ const SignUpDefault = () => {
   }
 
   return (
-    <div className="signup-default auth-default j-content-center">
+    <div className="signup-default f-center">
       <div className="signup-container">
-        <h2 className="h2-medium t-align-center" id="title">
-          회원가입
-        </h2>
+        <Selector index={step} />
+        <h2 className="title p-36-400 t-align-center">회원가입</h2>
         {step === 1 && <SignUp1 onNext={onNext} userInfo={userInfo} setUserInfo={setUserInfo} />}
         {step === 2 && (
           <SignUp2

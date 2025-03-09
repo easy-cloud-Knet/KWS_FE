@@ -1,7 +1,5 @@
 import { firstSelect, secondSelect, thirdSelect, fourthSelect } from "./../../assets/image/auth";
 
-import "./Selector.css";
-
 const Selector = ({ index = 1 }) => {
   let select;
   switch (index) {
