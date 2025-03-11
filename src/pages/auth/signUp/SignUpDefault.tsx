@@ -13,7 +13,7 @@ import "../AuthDefault.css";
 import "./SignUpDefault.css";
 
 const SignUpDefault = () => {
-  const [step, setStep] = useState(3); // TODO: 1로 변경
+  const [step, setStep] = useState(1);
   const [userInfo, setUserInfo] = useState<UserInfo>({
     email: "",
     emailCode: "",
