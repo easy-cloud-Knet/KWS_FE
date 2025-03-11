@@ -54,7 +54,7 @@ const SignIn: React.FC = () => {
             <Checkbox checked={checked} onChange={onClickCheckBox} sx={{ padding: "0" }} />
             <p className="p-16-400">아이디 저장</p>
           </div>
-          <TextBtn className="p-16-400">비밀번호를 잊으셨나요?</TextBtn>
+          <TextBtn className="p-16-400 c-blue">비밀번호를 잊으셨나요?</TextBtn>
         </div>
 
         <BottomBtn
@@ -78,7 +78,7 @@ const SignIn: React.FC = () => {
           <hr></hr>
           <div className="register-btn-wrap j-content-center">
             <p className="p-16-400">계정이 없으신가요?</p>
-            <TextBtn className="p-16-400 c-grey" onClick={() => navigate("/signup")}>
+            <TextBtn className="p-16-400 c-blue" onClick={() => navigate("/signup")}>
               회원가입하기
             </TextBtn>
           </div>

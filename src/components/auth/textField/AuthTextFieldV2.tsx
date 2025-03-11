@@ -2,8 +2,11 @@ import React from "react";
 
 import CheckMessage from "./bottomMessages/CheckMessage";
 import ErrorMessage from "./bottomMessages/ErrorMessage";
+import ImageBtn from "../../button/ImageBtn";
 
 import { AuthTextFieldV2Props } from "./types/textField";
+
+import remove from "../../../assets/image/input/remove.svg";
 
 import "./AuthTextFieldV2.css";
 /**
@@ -27,6 +30,20 @@ const AuthTextFieldV2: React.FC<AuthTextFieldV2Props> = ({
   errorMessageContent,
   ...props
 }) => {
+  let className = "";
+  if (props.className) {
+    className += props.className;
+    delete props.className;
+  }
+  if (rightElement) {
+    className += " __right__";
+  }
+  if (checkMessageCondition) {
+    className += " __valid__";
+  } else if (errorMessageCondition) {
+    className += " __invalid__";
+  }
+
   return (
     <div className="auth-text-field f-dir-column">
       {typeof label === "string" && (
@@ -38,8 +55,24 @@ const AuthTextFieldV2: React.FC<AuthTextFieldV2Props> = ({
         className="__input-wrap__"
         style={label ? { marginTop: "12px", ...style } : { ...style }}
       >
-        <input className={rightElement ? "__right__" : ""} {...props} />
-        {rightElement && <div className="__right-element__">{rightElement}</div>}
+        <input className={className} {...props} />
+        {rightElement ? (
+          <div className="__right-element__">{rightElement}</div>
+        ) : (
+          props.value &&
+          String(props.value).length > 0 && (
+            <ImageBtn
+              className="__right-element__"
+              src={remove}
+              alt="X"
+              onClick={() => {
+                if (props.onChange) {
+                  props.onChange({ target: { value: "" } } as React.ChangeEvent<HTMLInputElement>);
+                }
+              }}
+            />
+          )
+        )}
       </div>
 
       {(checkMessageContent || errorMessageContent) && <div style={{ height: "8px" }}></div>}

@@ -20,9 +20,8 @@
 
   height: 61px;
 
-  border: 1px solid #ecf2ff;
+  border: 1px solid var(--Line, #e6e7eb);
   border-radius: 17px;
-  background: #ecf2ff;
 
   font-size: 16px;
   font-style: normal;
@@ -36,10 +35,20 @@
 
 .auth-text-field input:focus {
   outline: none;
-  border: 1px solid #007bff;
+  border: 2px solid #007bff;
+}
+
+.auth-text-field input.__invalid__ {
+  border: 2px solid var(--Red, #f00);
+}
+.auth-text-field input.__valid__ {
+  border: 2px solid var(--Sub_Green1, #28c76f);
 }
 
 .auth-text-field .__input-wrap__ .__right-element__ {
   position: absolute;
+  top: 50%;
   right: 14px;
+
+  transform: translateY(-50%);
 }

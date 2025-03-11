@@ -17,6 +17,7 @@ const AuthPwTextFieldV2: React.FC<AuthTextFieldV2Props> = ({ ...props }) => {
           onClick={() => setShowPassword(!showPassword)}
           onMouseDown={(event) => event.preventDefault()}
           edge="end"
+          sx={{ marginRight: "0px" }}
         >
           {showPassword ? <Visibility /> : <VisibilityOff />}
         </IconButton>
