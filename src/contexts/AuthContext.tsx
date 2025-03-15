@@ -1,10 +1,11 @@
-import axios from "axios";
 import Cookies from "js-cookie";
 import React, { createContext, useState, useEffect, ReactNode } from "react";
 import { useLocation } from "react-router-dom";
 
+import axiosClient from "../services/api";
+
 import { setupAxiosInterceptors } from "../utils/AxiosInterceptors";
-import { SERVER_URL } from "../constants/serverUrl";
+
 import { ACCESS_TOKEN_EXP_TIME, REFRESH_TOKEN_EXP_TIME } from "../constants/tokenExpireTime";
 
 // AuthContext에서 사용할 인터페이스 정의
@@ -75,12 +76,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
 
     try {
-      const response = await axios.post(
-        `${SERVER_URL}auth/newToken`,
+      const response = await axiosClient.post(
+        "users/refresh-access-token",
         {},
         {
-          headers: {
-            Authorization: `Bearer ${refreshToken}`,
+          params: {
+            refresh_token: refreshToken,
           },
         }
       );

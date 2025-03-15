@@ -1,6 +1,9 @@
 import { InputLabel, MenuItem, Select, Stack, TextField } from "@mui/material";
+import Cookies from "js-cookie";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+
+import axiosClient from "../services/api";
 
 import "./VMCreate.css";
 
@@ -17,6 +20,25 @@ const VMCreate: React.FC = () => {
   const [os, setOs] = useState<string>("Ubuntu");
 
   const navigate = useNavigate();
+
+  const onCreateVM = async () => {
+    try {
+      await axiosClient.post(
+        "/vm",
+        {},
+        {
+          headers: { Authorization: `Bearer ${Cookies.get("accessToken")}` },
+          params: {
+            name: vmName.value,
+            os: os,
+            ip: "",
+          },
+        }
+      );
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <div className="vm-create f-dir-column">
@@ -59,6 +81,7 @@ const VMCreate: React.FC = () => {
               return;
             }
             // TODO: API 호출
+            onCreateVM();
             navigate("/");
           }}
         >

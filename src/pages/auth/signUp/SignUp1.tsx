@@ -12,6 +12,7 @@ import { UserInfo } from "../../../types/auth";
 import { EMAIL_REGEX } from "../../../constants/regex";
 
 import "./SignUp1.css";
+import axiosClient from "../../../services/api";
 
 interface SignUp1Props {
   onNext: () => void;
@@ -45,29 +46,35 @@ const SignUp1: React.FC<SignUp1Props> = ({ onNext, userInfo, setUserInfo }) => {
     }));
   }, [email]);
 
-  const checkEmailDuplicated = async (email: string) => {
-    console.log(email);
-    if (!emailChecker.format) {
-      return;
-    }
-
+  const onClickEmailSend = async () => {
     // initialize
-    setHasIdDuplicateChecked(false);
+    setEmailSended(false);
+    setEmailChecker((prevEmailChecker) => ({ ...prevEmailChecker, duplicated: false }));
 
-    // try {
-    //   const response = await axios.post(`${SERVER_URL}auth/checkUserId`, {
-    //     userId: id,
-    //     check: true,
-    //   });
-    //   if (response.data === true) {
-    //     setIdDuplicated(false);
-    //   }
-    // } catch (error) {
-    //   setIdDuplicated(true);
-    // } finally {
-    setHasIdDuplicateChecked(true);
-    // }
-    setIdDuplicated(false);
+    // 이메일 발송 API 호출
+    try {
+      await axiosClient.post(
+        "/users/send-email",
+        {},
+        {
+          params: {
+            email: email,
+            purpose: "register",
+          },
+        }
+      );
+
+      setEmailSended(true);
+    } catch (error) {
+      const err = error as { response?: { data: { error: string } } };
+
+      if (err.response?.data.error === "이메일 중복") {
+        setEmailChecker((prevEmailChecker) => ({ ...prevEmailChecker, duplicated: true }));
+      } else {
+        alert("이메일 전송에 실패했습니다.");
+      }
+      setEmailSended(false);
+    }
   };
 
   useEffect(() => {
@@ -76,8 +83,29 @@ const SignUp1: React.FC<SignUp1Props> = ({ onNext, userInfo, setUserInfo }) => {
   }, [emailCode]);
 
   const checkEmailCode = async () => {
-    setEmailCodeChecker({ show: true, match: true });
-    setEmailCodeChecked(true);
+    if (!emailCode) {
+      setEmailCodeChecker({ show: false, match: false });
+      return;
+    }
+
+    try {
+      await axiosClient.post(
+        "/users/verify-code",
+        {},
+        {
+          params: {
+            email: email,
+            code: emailCode,
+          },
+        }
+      );
+
+      setEmailCodeChecker({ show: true, match: true });
+    } catch {
+      setEmailCodeChecker({ show: true, match: false });
+    } finally {
+      setEmailCodeChecked(true);
+    }
   };
 
   const onClickNext = async () => {
@@ -108,7 +136,7 @@ const SignUp1: React.FC<SignUp1Props> = ({ onNext, userInfo, setUserInfo }) => {
             disabled={!(emailChecker.show && emailChecker.format)}
             onClick={() => {
               setEmailSendPressed(true);
-              checkEmailDuplicated(email);
+              onClickEmailSend();
               setTimeout(() => {
                 setEmailSended(true);
               }, 2000);

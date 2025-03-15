@@ -7,6 +7,8 @@ import SignUp3 from "./SignUp3";
 import SignUp4 from "./SignUpSuccess";
 import Selector from "../../../components/auth/Selector";
 
+import axiosClient from "../../../services/api";
+
 import { UserInfo } from "../../../types/auth";
 
 import "../AuthDefault.css";
@@ -39,23 +41,26 @@ const SignUpDefault = () => {
   // 회원가입 완료 버튼 클릭 시
   const onClickRegisterAllowButton = async () => {
     setIsLoading(true);
-    //   try {
-    //     await axios.post(`${SERVER_URL}auth/signup`, {
-    //       userId: userInfo.id,
-    //       password: userInfo.pw,
-    //       confirmPassword: userInfo.pwCheck,
-    //       nickname: userInfo.name,
-    //       email: userInfo.email || email,
-    //       authNum: userInfo.emailCode || emailCode,
-    //     });
-    //     navigate("/signup/success");
-    //   } catch (error) {
-    //     alert(error.response.data.error);
-    //     console.log(userInfo);
-    //   } finally {
-    navigate("/signup/success");
-    setIsLoading(false);
-    //   }
+    try {
+      await axiosClient.post(
+        "/users/register",
+        {},
+        {
+          params: {
+            email: userInfo.email,
+            password: userInfo.pw,
+            username: userInfo.name,
+          },
+        }
+      );
+      navigate("/signup/success");
+    } catch (error) {
+      const err = error as { response?: { data: { detail?: Array<{ msg: string }> } } };
+      alert(err.response?.data.detail?.[0].msg || "회원가입 실패");
+    } finally {
+      navigate("/signup/success");
+      setIsLoading(false);
+    }
   };
 
   if (isLoading) {

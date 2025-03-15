@@ -22,6 +22,7 @@ import { useNavigate } from "react-router-dom";
 import { Status, VM } from "../types/vm";
 
 import VMDetailModal from "../components/vmManage/VMManageModal";
+import axiosClient from "../services/api";
 
 const VMManage: React.FC = () => {
   const [vmList, setVmList] = useState<VM[]>([]);
@@ -73,11 +74,12 @@ const VMManage: React.FC = () => {
     setShowDeleteDialog(false);
   };
 
-  const onClickDeleteBtn = () => {
+  const onClickDeleteBtn = async () => {
+    // TODO: API 연결
+    await axiosClient.delete(`/vm/$`);
+
     setVmList((prevList) => prevList.filter((vm) => !checkedVMs.includes(vm.id)));
     setCheckedVMs([]);
-
-    // TODO: API 연결
 
     setDeleteAlert({ show: true, success: true });
     onCloseDeleteDialog();
