@@ -2,12 +2,17 @@ import { Button } from "@mui/material";
 import { useEffect, useState } from "react";
 
 import Form from "../../../components/auth/Form";
-import AuthTextField from "../../../components/auth/textField/AuthTextField";
-import Selector from "../../../components/auth/Selector";
+import AuthTextFieldV2 from "../../../components/auth/textField/AuthTextFieldV2";
+import CheckMessage from "../../../components/auth/textField/bottomMessages/CheckMessage";
+import ErrorMessage from "../../../components/auth/textField/bottomMessages/ErrorMessage";
+import AuthBtn from "../../../components/button/AuthBtn";
 
 import { UserInfo } from "../../../types/auth";
 
-import { ID_REGEX } from "../../../constants/regex";
+import { EMAIL_REGEX } from "../../../constants/regex";
+
+import "./SignUp1.css";
+import axiosClient from "../../../services/api";
 
 interface SignUp1Props {
   onNext: () => void;
@@ -16,94 +21,178 @@ interface SignUp1Props {
 }
 
 const SignUp1: React.FC<SignUp1Props> = ({ onNext, userInfo, setUserInfo }) => {
-  const [id, setId] = useState(userInfo.id);
-  const [idChecker, setIdChecker] = useState({
+  const [email, setEmail] = useState(userInfo.email);
+  const [emailChecker, setEmailChecker] = useState({
     show: false,
     format: false,
-    length: false,
+    duplicated: false,
   });
-  const [idDuplicated, setIdDuplicated] = useState(false);
-  // enter 키 입력 시 중복 체크를 위한 flag: 중복 체크를 했는지 여부
-  const [hasIdDuplicateChecked, setHasIdDuplicateChecked] = useState(false);
+  const [emailSendPressed, setEmailSendPressed] = useState(false);
+  const [emailSended, setEmailSended] = useState(false);
+
+  const [emailCode, setEmailCode] = useState(userInfo.emailCode);
+  const [emailCodeChecker, setEmailCodeChecker] = useState({
+    show: false,
+    match: false,
+  });
+  const [emailCodeChecked, setEmailCodeChecked] = useState(false);
 
   useEffect(() => {
-    setIdChecker((prevIdChecker) => ({
-      // 기존 show가 true면 그대로 유지
+    setEmailChecker((prevIdChecker) => ({
       ...prevIdChecker,
-      format: ID_REGEX.test(id),
-      length: ID_REGEX.test(id),
+      show: email.length > 0,
+      format: EMAIL_REGEX.test(email),
+      duplicated: false,
     }));
-  }, [id]);
+  }, [email]);
 
-  const checkIdDuplicated = async (id: string) => {
-    console.log(id);
-    if (!idChecker.format || !idChecker.length) {
+  const onClickEmailSend = async () => {
+    // initialize
+    setEmailSended(false);
+    setEmailChecker((prevEmailChecker) => ({ ...prevEmailChecker, duplicated: false }));
+
+    // 이메일 발송 API 호출
+    try {
+      await axiosClient.post(
+        "/users/send-email",
+        {},
+        {
+          params: {
+            email: email,
+            purpose: "register",
+          },
+        }
+      );
+
+      setEmailSended(true);
+    } catch (error) {
+      const err = error as { response?: { data: { error: string } } };
+
+      if (err.response?.data.error === "이메일 중복") {
+        setEmailChecker((prevEmailChecker) => ({ ...prevEmailChecker, duplicated: true }));
+      } else {
+        alert("이메일 전송에 실패했습니다.");
+      }
+      setEmailSended(false);
+    }
+  };
+
+  useEffect(() => {
+    setEmailCodeChecked(false);
+    setEmailCodeChecker({ show: false, match: false });
+  }, [emailCode]);
+
+  const checkEmailCode = async () => {
+    if (!emailCode) {
+      setEmailCodeChecker({ show: false, match: false });
       return;
     }
 
-    // initialize
-    setHasIdDuplicateChecked(false);
+    try {
+      await axiosClient.post(
+        "/users/verify-code",
+        {},
+        {
+          params: {
+            email: email,
+            code: emailCode,
+          },
+        }
+      );
 
-    // try {
-    //   const response = await axios.post(`${SERVER_URL}auth/checkUserId`, {
-    //     userId: id,
-    //     check: true,
-    //   });
-    //   if (response.data === true) {
-    //     setIdDuplicated(false);
-    //   }
-    // } catch (error) {
-    //   setIdDuplicated(true);
-    // } finally {
-    setHasIdDuplicateChecked(true);
-    // }
-    setIdDuplicated(false);
+      setEmailCodeChecker({ show: true, match: true });
+    } catch {
+      setEmailCodeChecker({ show: true, match: false });
+    } finally {
+      setEmailCodeChecked(true);
+    }
   };
 
   const onClickNext = async () => {
-    // await checkIdDuplicated(id); // 중복 체크 실행
-    setHasIdDuplicateChecked(true);
+    if (!emailCodeChecked) {
+      checkEmailCode();
+    }
 
-    if (hasIdDuplicateChecked && idChecker.format && idChecker.length && !idDuplicated) {
-      setUserInfo({ ...userInfo, id: id });
+    if (emailChecker.format && !emailChecker.duplicated && emailCodeChecker.match) {
+      setUserInfo({ ...userInfo, email: email });
       onNext();
     }
   };
 
   return (
-    <Form onSubmit={onClickNext} className="f-dir-column f-center">
-      <Selector index={1} />
+    <Form onSubmit={onClickNext} className="signup-1 f-dir-column f-center">
+      <div className="field">
+        <div className="email-field a-items-end">
+          <div className="email">
+            <AuthTextFieldV2
+              label="아이디(이메일)"
+              value={email}
+              placeholder="kws@kw.ac.kr"
+              onChange={(event) => setEmail(event.target.value)}
+            />
+          </div>
+          <Button
+            variant="outlined"
+            disabled={!(emailChecker.show && emailChecker.format)}
+            onClick={() => {
+              setEmailSendPressed(true);
+              onClickEmailSend();
+              setTimeout(() => {
+                setEmailSended(true);
+              }, 2000);
+            }}
+            style={{ width: "93px", height: "61px", borderRadius: 12 }}
+          >
+            <p className="p-16-400">인증</p>
+          </Button>
+        </div>
 
-      <AuthTextField
-        label="아이디(학번)"
-        value={id}
-        placeholder="학번"
-        onBlur={() => {
-          checkIdDuplicated(id);
-          setIdChecker({ ...idChecker, show: true });
-        }}
-        onChange={(event) => setId(event.target.value)}
-        error={idChecker.show && (!idChecker.format || !idChecker.length || idDuplicated)}
-        helperText={
-          idChecker.show
-            ? !idChecker.format || !idChecker.length
-              ? "학번 형식과 맞지 않습니다."
-              : idDuplicated
-              ? "중복된 아이디입니다."
-              : "\u00A0"
-            : "\u00A0"
-        }
-      />
+        <div style={{ height: "8px" }}></div>
 
-      <div className="button-wrap j-content-end">
-        <Button
-          variant="contained"
-          onClick={onClickNext}
-          style={{ borderRadius: 20 }}
-          disabled={!(idChecker.format && idChecker.length && !idDuplicated)}
-        >
-          다음
-        </Button>
+        {/* 이메일 관련 메시지 */}
+        {!emailSendPressed ? (
+          emailChecker.show && !emailChecker.format ? (
+            <ErrorMessage>이메일 형식과 맞지 않습니다.</ErrorMessage>
+          ) : (
+            <p className="p-16-400">&nbsp;</p>
+          )
+        ) : emailSended ? (
+          <CheckMessage>이메일이 전송되었습니다.</CheckMessage>
+        ) : emailChecker.duplicated ? (
+          <ErrorMessage>중복된 이메일입니다.</ErrorMessage>
+        ) : (
+          <CheckMessage>이메일 전송중...</CheckMessage>
+        )}
+
+        <div style={{ height: "3.0556vh" }}></div>
+
+        <AuthTextFieldV2
+          label="인증번호"
+          value={emailCode}
+          placeholder="인증번호"
+          onBlur={() => {
+            if (!emailCodeChecked) {
+              checkEmailCode();
+            }
+          }}
+          onChange={(event) => setEmailCode(event.target.value)}
+          checkMessageCondition={emailCodeChecker.show && emailCodeChecker.match}
+          checkMessageContent="인증이 완료되었습니다."
+          errorMessageCondition={emailCodeChecker.show && !emailCodeChecker.match}
+          errorMessageContent="인증번호가 일치하지 않습니다."
+        />
+
+        <div className="button-wrap j-content-end">
+          <AuthBtn
+            variant="contained"
+            onClick={onClickNext}
+            disabled={!email && emailChecker.format && emailChecker.duplicated && !emailCode}
+          >
+            다음
+          </AuthBtn>
+        </div>
+        {/* 엔터키 입력을 위한 보이지 않는 버튼 */}
+        <button type="submit" style={{ display: "none" }}></button>
       </div>
     </Form>
   );

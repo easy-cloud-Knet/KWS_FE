@@ -1,52 +1,9 @@
 .__default-layout__ {
-  display: grid;
-  grid-template-columns: 320px 1fr 320px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 
-  margin-top: 1rem;
-
-  min-height: calc(100vh - 1rem);
+  min-height: calc(100vh - 6.481vh);
 
   box-sizing: border-box;
-}
-
-/* 콘텐츠 영역을 중앙에 배치 */
-.__default-layout__ > * {
-  grid-column: 2 / 3;
-  max-width: 1280px;
-}
-
-@media (max-width: 1920px) {
-  .__default-layout__ {
-    grid-template-columns: 320px 1fr 320px;
-  }
-}
-
-@media (max-width: 1600px) {
-  .__default-layout__ {
-    grid-template-columns: 160px 1fr 160px;
-  }
-}
-
-@media (max-width: 1280px) {
-  .__default-layout__ {
-    grid-template-columns: 80px 1fr 80px;
-  }
-}
-
-@media (max-width: 1024px) {
-  .__default-layout__ {
-    grid-template-columns: 40px 1fr 40px;
-  }
-}
-
-@media (max-width: 768px) {
-  .__default-layout__ {
-    grid-template-columns: 20px 1fr 20px;
-  }
-}
-
-@media (max-width: 480px) {
-  .__default-layout__ {
-    grid-template-columns: 10px 1fr 10px;
-  }
 }

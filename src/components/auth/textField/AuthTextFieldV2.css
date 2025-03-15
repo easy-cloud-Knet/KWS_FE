@@ -1,0 +1,54 @@
+.auth-text-field {
+  width: 100%;
+}
+
+.auth-text-field label {
+  margin-left: 5px;
+}
+
+.auth-text-field .__input-wrap__ {
+  display: flex;
+  align-items: center;
+
+  position: relative;
+}
+
+.auth-text-field input {
+  flex: 1;
+
+  padding: 0 32px;
+
+  height: 61px;
+
+  border: 1px solid var(--Line, #e6e7eb);
+  border-radius: 17px;
+
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+
+.auth-text-field input.__right__ {
+  padding-right: 30px;
+}
+
+.auth-text-field input:focus {
+  outline: none;
+  border: 2px solid #007bff;
+}
+
+.auth-text-field input.__invalid__ {
+  border: 2px solid var(--Red, #f00);
+}
+.auth-text-field input.__valid__ {
+  border: 2px solid var(--Sub_Green1, #28c76f);
+}
+
+.auth-text-field .__input-wrap__ .__right-element__ {
+  position: absolute;
+  top: 50%;
+  right: 14px;
+
+  transform: translateY(-50%);
+}

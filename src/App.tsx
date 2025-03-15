@@ -6,6 +6,7 @@ import VMCreate from "./pages/VMCreate";
 import VMManage from "./pages/VMManage";
 import SignUpDefault from "./pages/auth/signUp/SignUpDefault";
 import SignIn from "./pages/auth/SignIn";
+import SignUpSuccess from "./pages/auth/signUp/SignUpSuccess.tsx";
 
 import "./App.css";
 import "./styles/colors.css";
@@ -23,6 +24,7 @@ function App() {
 
             <Route path="signin" element={<SignIn />} />
             <Route path="signup" element={<SignUpDefault />} />
+            <Route path="signup/success" element={<SignUpSuccess />} />
           </Route>
         </Routes>
       </BrowserRouter>
