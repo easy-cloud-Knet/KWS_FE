@@ -38,9 +38,13 @@ const SignUp1: React.FC<SignUp1Props> = ({ onNext, userInfo, setUserInfo }) => {
     }));
   }, [email]);
 
-  const onClickEmailSend = async () => {
+  const onClickEmailSend = () => {
     alert("입력하신 이메일로 인증번호를 발송하였습니다.");
     // 이메일 발송 API 호출
+    sendEmail();
+  };
+
+  const sendEmail = async () => {
     try {
       await axiosClient.post(
         "/users/send-email",
@@ -72,9 +76,7 @@ const SignUp1: React.FC<SignUp1Props> = ({ onNext, userInfo, setUserInfo }) => {
     }
   };
 
-  const checkEmailCode = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault(); // redirection 방지
-
+  const checkEmailCode = async () => {
     if (!emailCode) {
       return;
     }
@@ -92,6 +94,7 @@ const SignUp1: React.FC<SignUp1Props> = ({ onNext, userInfo, setUserInfo }) => {
       );
 
       alert("이메일이 인증되었습니다.");
+      console.log("인증 성공, onClickNext 실행");
       onClickNext();
     } catch {
       alert("인증번호가 일치하지 않습니다.");
