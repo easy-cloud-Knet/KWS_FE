@@ -56,7 +56,7 @@ const SignUp2: React.FC<SignUp2Props> = ({ onNext, userInfo, setUserInfo }) => {
         <AuthPwTextFieldV2
           label="비밀번호"
           value={pw}
-          placeholder="비밀번호를 입력해 주세요."
+          placeholder="영문, 숫자, 특수문자 포함 8자~100자"
           onBlur={() => {
             setPwChecker({ ...pwChecker, show: true });
           }}
@@ -66,7 +66,7 @@ const SignUp2: React.FC<SignUp2Props> = ({ onNext, userInfo, setUserInfo }) => {
           checkMessageCondition={pwChecker.format}
           checkMessageContent="사용 가능한 비밀번호입니다."
           errorMessageCondition={pwChecker.show && !pwChecker.format}
-          errorMessageContent="(영문, 숫자, 특수문자 포함 8자~100자)"
+          errorMessageContent="영문, 숫자, 특수문자 포함 8자~100자"
         />
         <AuthPwTextFieldV2
           label="비밀번호 확인"
