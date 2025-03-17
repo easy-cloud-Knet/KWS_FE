@@ -39,6 +39,7 @@ const SignUp1: React.FC<SignUp1Props> = ({ onNext, userInfo, setUserInfo }) => {
   }, [email]);
 
   const onClickEmailSend = () => {
+    console.log("이메일 전송 버튼 클릭");
     alert("입력하신 이메일로 인증번호를 발송하였습니다.");
     // 이메일 발송 API 호출
     sendEmail();
