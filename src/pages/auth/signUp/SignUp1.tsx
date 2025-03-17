@@ -39,7 +39,6 @@ const SignUp1: React.FC<SignUp1Props> = ({ onNext, userInfo, setUserInfo }) => {
   }, [email]);
 
   const onClickEmailSend = () => {
-    console.log("이메일 전송 버튼 클릭");
     alert("입력하신 이메일로 인증번호를 발송하였습니다.");
     // 이메일 발송 API 호출
     sendEmail();
@@ -95,7 +94,7 @@ const SignUp1: React.FC<SignUp1Props> = ({ onNext, userInfo, setUserInfo }) => {
           }
         );
 
-        alert("이메일이 인증되었습니다.");
+        // alert("이메일이 인증되었습니다.");
       } catch {
         alert("인증번호가 일치하지 않습니다.");
       }
@@ -107,7 +106,6 @@ const SignUp1: React.FC<SignUp1Props> = ({ onNext, userInfo, setUserInfo }) => {
 
   const onClickNext = () => {
     setUserInfo({ ...userInfo, email: email, emailCode: emailCode });
-    console.log(userInfo);
     onNext();
   };
 
