@@ -72,7 +72,9 @@ const SignUp1: React.FC<SignUp1Props> = ({ onNext, userInfo, setUserInfo }) => {
     }
   };
 
-  const checkEmailCode = async () => {
+  const checkEmailCode = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault(); // redirection 방지
+
     if (!emailCode) {
       return;
     }
@@ -156,12 +158,10 @@ const SignUp1: React.FC<SignUp1Props> = ({ onNext, userInfo, setUserInfo }) => {
               </Button>
             </div>
             <div className="button-wrap j-content-end">
-              <BottomBtn variant="contained" onClick={checkEmailCode} disabled={!emailCode}>
+              <BottomBtn variant="contained" type="submit" disabled={!emailCode}>
                 인증
               </BottomBtn>
             </div>
-            {/* 엔터키 입력을 위한 보이지 않는 버튼 */}
-            <button type="submit" style={{ display: "none" }}></button>
           </>
         )}
       </div>
