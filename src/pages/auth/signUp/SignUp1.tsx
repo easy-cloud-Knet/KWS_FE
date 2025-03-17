@@ -30,10 +30,6 @@ const SignUp1: React.FC<SignUp1Props> = ({ onNext, userInfo, setUserInfo }) => {
   const [emailSended, setEmailSended] = useState(false);
 
   const [emailCode, setEmailCode] = useState(userInfo.emailCode);
-  const [emailCodeChecker, setEmailCodeChecker] = useState({
-    show: false,
-    match: false,
-  });
 
   useEffect(() => {
     setEmailChecker((prevIdChecker) => ({
@@ -76,13 +72,8 @@ const SignUp1: React.FC<SignUp1Props> = ({ onNext, userInfo, setUserInfo }) => {
     }
   };
 
-  useEffect(() => {
-    setEmailCodeChecker({ show: false, match: false });
-  }, [emailCode]);
-
   const checkEmailCode = async () => {
     if (!emailCode) {
-      setEmailCodeChecker({ show: false, match: false });
       return;
     }
 
@@ -99,19 +90,15 @@ const SignUp1: React.FC<SignUp1Props> = ({ onNext, userInfo, setUserInfo }) => {
       );
 
       alert("이메일이 인증되었습니다.");
-      setEmailCodeChecker({ show: true, match: true });
       onClickNext();
     } catch {
       alert("인증번호가 일치하지 않습니다.");
-      setEmailCodeChecker({ show: true, match: false });
     }
   };
 
   const onClickNext = async () => {
-    if (emailChecker.format && emailCodeChecker.match) {
-      setUserInfo({ ...userInfo, email: email });
-      onNext();
-    }
+    setUserInfo({ ...userInfo, email: email, emailCode: emailCode });
+    onNext();
   };
 
   return (
