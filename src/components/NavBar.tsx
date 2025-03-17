@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useLocation, useNavigate } from "react-router-dom";
 
+import MuiBtn from "./button/MuiBtn";
 // import AuthContext from "../contexts/AuthContext";
 
 import "./NavBar.css";
@@ -24,7 +25,7 @@ const NavBar = () => {
     <nav className="navbar">
       <Link
         to="/"
-        className="navbar_logo h5-bold"
+        className="navbar_logo"
         onClick={(event) => {
           onClickLink(event, "/");
         }}
@@ -33,14 +34,15 @@ const NavBar = () => {
       </Link>
       {!isAuthenticated ? (
         <div className="navbar_login">
-          <button
+          <MuiBtn
+            variant="contained"
+            className="signin_btn"
             onClick={() => {
               navigate("/signin");
             }}
-            className="signin_btn"
           >
             로그인
-          </button>
+          </MuiBtn>
         </div>
       ) : (
         <div className="navbar_login">

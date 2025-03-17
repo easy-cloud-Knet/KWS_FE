@@ -1,9 +1,11 @@
 .signup-default {
-  height: calc(100vh - 6.481vh);
+  height: calc(100vh - 9.537vh);
 }
 
 .signup-default .signup-container {
-  width: 489px;
+  margin-top: 10.5556vh; /* 114px */
+
+  width: 452px;
 }
 
 .signup-default .title {
@@ -22,5 +24,5 @@
 
 /* 입력창과 하단 버튼 간격 */
 .signup-default .button-wrap {
-  margin-top: 6.2963vh; /* 68px */
+  margin-top: 3.7037vh; /* 40px */
 }

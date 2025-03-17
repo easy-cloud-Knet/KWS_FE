@@ -1,17 +1,17 @@
 import { Button, ButtonProps } from "@mui/material";
 
-const AuthBtn: React.FC<ButtonProps> = ({ children, variant, ...props }) => {
+const MuiBtn: React.FC<ButtonProps> = ({ children, variant, sx, ...props }) => {
   return (
     <Button
       variant={variant}
       sx={{
-        width: "135px",
-        height: "61px",
+        height: "54px",
         borderRadius: "12px",
         ...(variant === "contained" && {
           backgroundColor: "#007bff",
           color: "#fff",
         }),
+        ...sx,
       }}
       {...props}
     >
@@ -20,4 +20,4 @@ const AuthBtn: React.FC<ButtonProps> = ({ children, variant, ...props }) => {
   );
 };
 
-export default AuthBtn;
+export default MuiBtn;

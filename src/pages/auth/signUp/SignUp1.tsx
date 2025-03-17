@@ -1,18 +1,19 @@
 import { Button } from "@mui/material";
+import { AxiosError } from "axios";
 import { useEffect, useState } from "react";
 
 import Form from "../../../components/auth/Form";
 import AuthTextFieldV2 from "../../../components/auth/textField/AuthTextFieldV2";
-import CheckMessage from "../../../components/auth/textField/bottomMessages/CheckMessage";
-import ErrorMessage from "../../../components/auth/textField/bottomMessages/ErrorMessage";
-import AuthBtn from "../../../components/button/AuthBtn";
+import BottomBtn from "../../../components/button/BottomBtn";
+
+import axiosClient from "../../../services/api";
 
 import { UserInfo } from "../../../types/auth";
+import { ServerError } from "../../../types/axios";
 
 import { EMAIL_REGEX } from "../../../constants/regex";
 
 import "./SignUp1.css";
-import axiosClient from "../../../services/api";
 
 interface SignUp1Props {
   onNext: () => void;
@@ -25,9 +26,7 @@ const SignUp1: React.FC<SignUp1Props> = ({ onNext, userInfo, setUserInfo }) => {
   const [emailChecker, setEmailChecker] = useState({
     show: false,
     format: false,
-    duplicated: false,
   });
-  const [emailSendPressed, setEmailSendPressed] = useState(false);
   const [emailSended, setEmailSended] = useState(false);
 
   const [emailCode, setEmailCode] = useState(userInfo.emailCode);
@@ -35,22 +34,15 @@ const SignUp1: React.FC<SignUp1Props> = ({ onNext, userInfo, setUserInfo }) => {
     show: false,
     match: false,
   });
-  const [emailCodeChecked, setEmailCodeChecked] = useState(false);
 
   useEffect(() => {
     setEmailChecker((prevIdChecker) => ({
       ...prevIdChecker,
-      show: email.length > 0,
       format: EMAIL_REGEX.test(email),
-      duplicated: false,
     }));
   }, [email]);
 
   const onClickEmailSend = async () => {
-    // initialize
-    setEmailSended(false);
-    setEmailChecker((prevEmailChecker) => ({ ...prevEmailChecker, duplicated: false }));
-
     // 이메일 발송 API 호출
     try {
       await axiosClient.post(
@@ -63,22 +55,28 @@ const SignUp1: React.FC<SignUp1Props> = ({ onNext, userInfo, setUserInfo }) => {
           },
         }
       );
-
+      alert("입력하신 이메일로 인증번호를 발송하였습니다.");
       setEmailSended(true);
     } catch (error) {
-      const err = error as { response?: { data: { error: string } } };
+      const err = error as AxiosError<ServerError>;
 
-      if (err.response?.data.error === "이메일 중복") {
-        setEmailChecker((prevEmailChecker) => ({ ...prevEmailChecker, duplicated: true }));
-      } else {
-        alert("이메일 전송에 실패했습니다.");
+      // 에러 응답이 detail 배열 형태인 경우 처리
+      if (err.response?.data?.detail && Array.isArray(err.response.data.detail)) {
+        const duplicateError = err.response.data.detail.find(
+          (detail: { msg: string }) => detail.msg === "이메일 중복"
+        );
+        if (duplicateError) {
+          alert("이미 사용 중인 이메일입니다.");
+          return;
+        }
       }
+      alert("이메일 전송에 실패했습니다.");
+
       setEmailSended(false);
     }
   };
 
   useEffect(() => {
-    setEmailCodeChecked(false);
     setEmailCodeChecker({ show: false, match: false });
   }, [emailCode]);
 
@@ -100,99 +98,85 @@ const SignUp1: React.FC<SignUp1Props> = ({ onNext, userInfo, setUserInfo }) => {
         }
       );
 
+      alert("이메일이 인증되었습니다.");
       setEmailCodeChecker({ show: true, match: true });
+      onClickNext();
     } catch {
+      alert("인증번호가 일치하지 않습니다.");
       setEmailCodeChecker({ show: true, match: false });
-    } finally {
-      setEmailCodeChecked(true);
     }
   };
 
   const onClickNext = async () => {
-    if (!emailCodeChecked) {
-      checkEmailCode();
-    }
-
-    if (emailChecker.format && !emailChecker.duplicated && emailCodeChecker.match) {
+    if (emailChecker.format && emailCodeChecker.match) {
       setUserInfo({ ...userInfo, email: email });
       onNext();
     }
   };
 
   return (
-    <Form onSubmit={onClickNext} className="signup-1 f-dir-column f-center">
+    <Form onSubmit={checkEmailCode} className="signup-1 f-dir-column f-center">
       <div className="field">
-        <div className="email-field a-items-end">
-          <div className="email">
-            <AuthTextFieldV2
-              label="아이디(이메일)"
-              value={email}
-              placeholder="kws@kw.ac.kr"
-              onChange={(event) => setEmail(event.target.value)}
-            />
-          </div>
-          <Button
-            variant="outlined"
-            disabled={!(emailChecker.show && emailChecker.format)}
-            onClick={() => {
-              setEmailSendPressed(true);
-              onClickEmailSend();
-              setTimeout(() => {
-                setEmailSended(true);
-              }, 2000);
-            }}
-            style={{ width: "93px", height: "61px", borderRadius: 12 }}
-          >
-            <p className="p-16-400">인증</p>
-          </Button>
-        </div>
-
-        <div style={{ height: "8px" }}></div>
-
-        {/* 이메일 관련 메시지 */}
-        {!emailSendPressed ? (
-          emailChecker.show && !emailChecker.format ? (
-            <ErrorMessage>이메일 형식과 맞지 않습니다.</ErrorMessage>
-          ) : (
-            <p className="p-16-400">&nbsp;</p>
-          )
-        ) : emailSended ? (
-          <CheckMessage>이메일이 전송되었습니다.</CheckMessage>
-        ) : emailChecker.duplicated ? (
-          <ErrorMessage>중복된 이메일입니다.</ErrorMessage>
-        ) : (
-          <CheckMessage>이메일 전송중...</CheckMessage>
-        )}
-
-        <div style={{ height: "3.0556vh" }}></div>
-
-        <AuthTextFieldV2
-          label="인증번호"
-          value={emailCode}
-          placeholder="인증번호"
-          onBlur={() => {
-            if (!emailCodeChecked) {
-              checkEmailCode();
+        <>
+          <AuthTextFieldV2
+            label="아이디(이메일)"
+            value={email}
+            placeholder="kws@kw.ac.kr"
+            disabled={emailSended}
+            onBlur={() =>
+              setEmailChecker((prevEmailChecker) => ({ ...prevEmailChecker, show: true }))
             }
-          }}
-          onChange={(event) => setEmailCode(event.target.value)}
-          checkMessageCondition={emailCodeChecker.show && emailCodeChecker.match}
-          checkMessageContent="인증이 완료되었습니다."
-          errorMessageCondition={emailCodeChecker.show && !emailCodeChecker.match}
-          errorMessageContent="인증번호가 일치하지 않습니다."
-        />
+            onChange={(event) => setEmail(event.target.value)}
+            checkMessageCondition={emailChecker.show && emailChecker.format}
+            checkMessageContent="사용 가능한 이메일입니다."
+            errorMessageCondition={emailChecker.show && !emailChecker.format}
+            errorMessageContent="이메일 형식과 맞지 않습니다."
+          />
+          <div style={{ height: "3.333vh" }}></div> {/* 36px */}
+          {!emailSended && (
+            <BottomBtn
+              variant="contained"
+              onClick={onClickEmailSend}
+              disabled={!emailChecker.format}
+            >
+              인증코드 발송
+            </BottomBtn>
+          )}
+        </>
 
-        <div className="button-wrap j-content-end">
-          <AuthBtn
-            variant="contained"
-            onClick={onClickNext}
-            disabled={!email && emailChecker.format && emailChecker.duplicated && !emailCode}
-          >
-            다음
-          </AuthBtn>
-        </div>
-        {/* 엔터키 입력을 위한 보이지 않는 버튼 */}
-        <button type="submit" style={{ display: "none" }}></button>
+        {emailSended && (
+          <>
+            <div className="email-code-wrap j-content-between a-items-end">
+              <div className="email-code-field">
+                <AuthTextFieldV2
+                  label="인증번호"
+                  value={emailCode}
+                  placeholder="인증번호"
+                  onChange={(event) => setEmailCode(event.target.value)}
+                />
+              </div>
+              <Button
+                variant="outlined"
+                sx={{
+                  width: "82px",
+                  height: "48px",
+                  borderRadius: "12px",
+                  border: "1px solid var(--Main_Blue, #007BFF)",
+                }}
+                onClick={onClickEmailSend}
+              >
+                재전송
+              </Button>
+            </div>
+            <div className="button-wrap j-content-end">
+              <BottomBtn variant="contained" onClick={checkEmailCode} disabled={!emailCode}>
+                인증
+              </BottomBtn>
+            </div>
+            {/* 엔터키 입력을 위한 보이지 않는 버튼 */}
+            <button type="submit" style={{ display: "none" }}></button>
+          </>
+        )}
       </div>
     </Form>
   );

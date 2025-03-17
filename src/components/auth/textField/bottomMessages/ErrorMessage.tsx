@@ -2,9 +2,9 @@ import invalid from "../../../../assets/image/input/invalid.svg";
 
 const ErrorMessage = ({ children }: { children: React.ReactNode }) => {
   return (
-    <div className="a-items-center" style={{ gap: "5px", paddingLeft: "3px" }}>
+    <div className="a-items-center">
       <img src={invalid} alt="" />
-      <p className="p-16-400 c-red">{children}</p>
+      <p className="p-12-400 c-red">{children}</p>
     </div>
   );
 };

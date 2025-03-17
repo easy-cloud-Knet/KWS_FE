@@ -16,9 +16,9 @@
 .auth-text-field input {
   flex: 1;
 
-  padding: 0 32px;
+  padding: 0 20px;
 
-  height: 61px;
+  height: 48px;
 
   border: 1px solid var(--Line, #e6e7eb);
   border-radius: 17px;
@@ -43,6 +43,11 @@
 }
 .auth-text-field input.__valid__ {
   border: 2px solid var(--Sub_Green1, #28c76f);
+}
+
+.auth-text-field input:disabled {
+  border: none;
+  background: var(--Grey2, #eceff3);
 }
 
 .auth-text-field .__input-wrap__ .__right-element__ {

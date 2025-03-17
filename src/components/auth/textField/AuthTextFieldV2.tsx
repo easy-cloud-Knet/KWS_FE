@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 import CheckMessage from "./bottomMessages/CheckMessage";
 import ErrorMessage from "./bottomMessages/ErrorMessage";
@@ -23,6 +23,8 @@ import "./AuthTextFieldV2.css";
 const AuthTextFieldV2: React.FC<AuthTextFieldV2Props> = ({
   label,
   style,
+  onBlur,
+  onClick,
   rightElement,
   checkMessageCondition = false,
   checkMessageContent,
@@ -30,6 +32,8 @@ const AuthTextFieldV2: React.FC<AuthTextFieldV2Props> = ({
   errorMessageContent,
   ...props
 }) => {
+  const [showDeleteBtn, setShowDeleteBtn] = useState(false);
+
   let className = "";
   if (props.className) {
     className += props.className;
@@ -55,35 +59,57 @@ const AuthTextFieldV2: React.FC<AuthTextFieldV2Props> = ({
         className="__input-wrap__"
         style={label ? { marginTop: "12px", ...style } : { ...style }}
       >
-        <input className={className} {...props} />
+        <input
+          className={className}
+          onBlur={(event: React.FocusEvent<HTMLInputElement>) => {
+            setShowDeleteBtn(false);
+            if (onBlur) {
+              onBlur(event);
+            }
+          }}
+          onClick={(event: React.MouseEvent<HTMLInputElement>) => {
+            setShowDeleteBtn(true);
+            if (onClick) {
+              onClick(event);
+            }
+          }}
+          {...props}
+        />
         {rightElement ? (
           <div className="__right-element__">{rightElement}</div>
         ) : (
-          props.value &&
-          String(props.value).length > 0 && (
-            <ImageBtn
-              className="__right-element__"
-              src={remove}
-              alt="X"
-              onClick={() => {
-                if (props.onChange) {
-                  props.onChange({ target: { value: "" } } as React.ChangeEvent<HTMLInputElement>);
-                }
-              }}
-            />
+          showDeleteBtn &&
+          props.value && (
+            <div onMouseDown={(event: React.MouseEvent<HTMLDivElement>) => event.preventDefault()}>
+              {/* 클릭해도 input의 onBlur가 작동하지 않도록*/}
+              <ImageBtn
+                className="__right-element__"
+                src={remove}
+                alt="X"
+                onClick={() => {
+                  if (props.onChange) {
+                    props.onChange({
+                      target: { value: "" },
+                    } as React.ChangeEvent<HTMLInputElement>);
+                  }
+                }}
+              />
+            </div>
           )
         )}
       </div>
 
-      {(checkMessageContent || errorMessageContent) && <div style={{ height: "8px" }}></div>}
-
       {checkMessageContent || errorMessageContent ? (
         checkMessageCondition ? (
-          <CheckMessage>{checkMessageContent}</CheckMessage>
+          <div style={{ marginTop: "8px" }}>
+            <CheckMessage>{checkMessageContent}</CheckMessage>
+          </div>
         ) : errorMessageCondition ? (
-          <ErrorMessage>{errorMessageContent}</ErrorMessage>
+          <div style={{ marginTop: "4px" }}>
+            <ErrorMessage>{errorMessageContent}</ErrorMessage>
+          </div>
         ) : (
-          <p className="p-16-400">&nbsp;</p>
+          <p style={{ height: "28px" }}>&nbsp;</p>
         )
       ) : null}
     </div>
