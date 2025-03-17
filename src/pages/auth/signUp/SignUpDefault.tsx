@@ -30,9 +30,9 @@ const SignUpDefault = () => {
   const navigate = useNavigate();
 
   // 이전 단계
-  const onPrevious = () => {
-    setStep(step - 1);
-  };
+  // const onPrevious = () => {
+  //   setStep(step - 1);
+  // };
   // 다음 단계
   const onNext = () => {
     setStep(step + 1);
@@ -58,7 +58,6 @@ const SignUpDefault = () => {
       const err = error as { response?: { data: { detail?: Array<{ msg: string }> } } };
       alert(err.response?.data.detail?.[0].msg || "회원가입 실패");
     } finally {
-      navigate("/signup/success");
       setIsLoading(false);
     }
   };
@@ -77,7 +76,6 @@ const SignUpDefault = () => {
         {step === 2 && <SignUp2 onNext={onNext} userInfo={userInfo} setUserInfo={setUserInfo} />}
         {step === 3 && (
           <SignUp3
-            onPrevious={onPrevious}
             userInfo={userInfo}
             setUserInfo={setUserInfo}
             onClickRegisterAllowButton={onClickRegisterAllowButton}
