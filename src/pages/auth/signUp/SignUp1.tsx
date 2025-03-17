@@ -93,16 +93,14 @@ const SignUp1: React.FC<SignUp1Props> = ({ onNext, userInfo, setUserInfo }) => {
         }
       );
 
-      alert("이메일이 인증되었습니다.");
-      console.log("인증 성공, onClickNext 실행");
       onClickNext();
+      alert("이메일이 인증되었습니다.");
     } catch {
       alert("인증번호가 일치하지 않습니다.");
     }
   };
 
   const onClickNext = async () => {
-    console.log("onClickNext");
     setUserInfo({ ...userInfo, email: email, emailCode: emailCode });
     onNext();
   };
