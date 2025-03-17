@@ -76,28 +76,32 @@ const SignUp1: React.FC<SignUp1Props> = ({ onNext, userInfo, setUserInfo }) => {
     }
   };
 
-  const checkEmailCode = async () => {
+  const checkEmailCode = () => {
     if (!emailCode) {
       return;
     }
 
-    try {
-      await axiosClient.post(
-        "/users/verify-code",
-        {},
-        {
-          params: {
-            email: email,
-            code: emailCode,
-          },
-        }
-      );
+    const verifyCode = async () => {
+      try {
+        await axiosClient.post(
+          "/users/verify-code",
+          {},
+          {
+            params: {
+              email: email,
+              code: emailCode,
+            },
+          }
+        );
 
-      onClickNext();
-      alert("이메일이 인증되었습니다.");
-    } catch {
-      alert("인증번호가 일치하지 않습니다.");
-    }
+        alert("이메일이 인증되었습니다.");
+      } catch {
+        alert("인증번호가 일치하지 않습니다.");
+      }
+    };
+
+    verifyCode();
+    onClickNext();
   };
 
   const onClickNext = async () => {

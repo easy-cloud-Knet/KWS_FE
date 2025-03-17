@@ -1,6 +1,6 @@
 interface FormProps {
   children: React.ReactNode;
-  onSubmit?: (event: React.FormEvent<HTMLFormElement>) => Promise<void>;
+  onSubmit?: (event: React.FormEvent<HTMLFormElement>) => Promise<void> | void;
   className?: string;
   id?: string;
 }
