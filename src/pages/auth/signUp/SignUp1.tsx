@@ -108,6 +108,7 @@ const SignUp1: React.FC<SignUp1Props> = ({ onNext, userInfo, setUserInfo }) => {
 
   return (
     <Form onSubmit={checkEmailCode} className="signup-1 f-dir-column f-center">
+      에이 설마 이게 안나오겠어?
       <div className="field">
         <>
           <AuthTextFieldV2
