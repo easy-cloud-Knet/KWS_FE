@@ -3,13 +3,12 @@
   justify-content: space-between;
   align-items: center;
 
-  height: 6.481vh;
-  padding-left: 4.583vw;
-  padding-right: 2.292vw;
-  font-family: "Noto_Sans_KR";
+  height: 9.537vh; /* 103px */
+  padding: 0 3.125vw; /* 60px */
+
   background-color: #ffffff;
 
-  border-bottom: 1px solid var(--blue);
+  border-bottom: 1px solid #bfbfbf;
 }
 
 .navbar a {
@@ -21,6 +20,11 @@
   display: flex;
   align-items: center;
   gap: 1.5rem;
+
+  font-size: 2.963vh; /* 32px */
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
 }
 
 .navbar .navbar_menu {
@@ -63,21 +67,13 @@
 }
 
 .navbar .signin_btn {
-  border-radius: 30px;
-  border: 2.5px solid var(--blue);
-  width: 13.889vh;
-  height: 4.074vh;
-  background-color: #fdfaff;
+  width: 10.3704vh; /* 112px */
+  height: 5vh; /* 54px */
 
-  cursor: pointer;
-
-  color: var(--blue);
-
-  /* Paragraph/Large/Regular */
-  font-size: 1.667vh;
+  font-size: 1.6667vh; /* 18px */
   font-style: normal;
-  font-weight: 500;
-  line-height: 2.593vh; /* 155.556% */
+  font-weight: 400;
+  line-height: normal;
 
   text-align: center;
 }

@@ -1,3 +1,208 @@
+.h1-regular {
+  /* H1/Regular */
+  font-size: 36px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 44px; /* 122.222% */
+}
+
+.h1-medium {
+  /* H1/Medium */
+  font-size: 36px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 44px; /* 122.222% */
+  letter-spacing: -0.72px;
+}
+
+.h1-bold {
+  /* H1/Bold */
+  font-size: 36px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 44px; /* 122.222% */
+}
+
+.h2-medium {
+  /* H2/Medium */
+  font-size: 32px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 40px; /* 125% */
+}
+
+.h3-regular {
+  /* H3/Regular */
+  font-size: 28px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 36px; /* 128.571% */
+}
+
+.h3-bold {
+  /* H3/Bold */
+  font-size: 28px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 36px; /* 128.571% */
+}
+
+.h4-regular {
+  /* H4/Regular */
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 32px; /* 133.333% */
+}
+
+.h4-bold {
+  /* H4/Bold */
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 32px; /* 133.333% */
+}
+
+.h5-regular {
+  /* H5/Regular */
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 28px; /* 140% */
+}
+
+.h5-bold {
+  /* H5/Bold */
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 28px; /* 140% */
+}
+
+.h5-medium {
+  /* H5/Medium */
+  font-family: "Noto Sans KR";
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 28px; /* 140% */
+}
+
+.p-xs-regular {
+  /* Paragraph/XS/Regular */
+  font-size: 0.625rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 0.875rem; /* 140% */
+}
+
+.p-xs-medium {
+  /* Paragraph/XS/Medium */
+  font-size: 10px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 14px; /* 140% */
+}
+
+.p-xs-under {
+  /* Paragraph/XS/Under */
+  font-size: 0.625rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 0.875rem; /* 140% */
+  text-decoration-line: underline;
+}
+
+.p-xs-bold {
+  /* Paragraph/XS/Bold */
+  font-family: "Noto Sans KR";
+  font-size: 10px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 14px; /* 140% */
+}
+
+.p-small-under {
+  /* Paragraph/Small/Under */
+  font-size: 0.875rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.25rem; /* 142.857% */
+  text-decoration-line: underline;
+}
+
+.p-small-regular {
+  /* Paragraph/Small/Regular */
+  font-size: 0.875rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.25rem; /* 142.857% */
+}
+
+.p-small-medium {
+  /* Paragraph/Small/Medium */
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 20px; /* 142.857% */
+}
+
+.p-small-bold {
+  /* Paragraph/Small/Bold */
+  font-size: 0.875rem;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 1.25rem; /* 142.857% */
+}
+
+.p-medium-regular {
+  /* Paragraph/Medium/Regular */
+  font-size: 1rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.5rem; /* 150% */
+}
+
+.p-medium-medium {
+  /* Paragraph/Medium/Medium */
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 24px; /* 150% */
+}
+
+.p-medium-bold {
+  /* Paragraph/Medium/Bold */
+  font-size: 1rem;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 1.5rem; /* 150% */
+}
+
+.p-large-regular {
+  /* Paragraph/Large/Regular */
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 28px; /* 155.556% */
+}
+
+.p-large-medium {
+  /* Paragraph/Large/Medium */
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 28px; /* 155.556% */
+}
+
+.p-large-bold {
+  /* Paragraph/Large/Bold */
+  font-size: 1.125rem;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 1.75rem; /* 155.556% */
+}
+
 .p-12-400 {
   font-size: 12px;
   font-style: normal;
@@ -21,6 +226,13 @@
 
 .p-20-400 {
   font-size: 20px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+
+.p-32-400 {
+  font-size: 32px;
   font-style: normal;
   font-weight: 400;
   line-height: normal;
