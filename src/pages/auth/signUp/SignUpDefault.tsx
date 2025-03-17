@@ -68,7 +68,7 @@ const SignUpDefault = () => {
   }
 
   return (
-    <div className="signup-default f-center">
+    <div className="signup-default j-content-center">
       <div className="signup-container">
         <Selector index={step} />
         <h2 className="title p-36-400 t-align-center">회원가입</h2>
