@@ -14,7 +14,7 @@ const BottomBtn: React.FC<ButtonProps> = ({ children, variant, ...props }) => {
       }
       {...props}
     >
-      {children}
+      <p className="p-18-400">{children}</p>
     </Button>
   );
 };

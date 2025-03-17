@@ -32,11 +32,12 @@ const ImageBtn: React.FC<ImageBtnProps> = ({
   id = "",
   size,
   imgProps = {},
+  ...props
 }) => {
   const { style: imgStyle, ...restImgProps } = imgProps;
 
   return (
-    <button id={id} className={`${className} image-btn c-pointer`} onClick={onClick}>
+    <button id={id} className={`${className} image-btn c-pointer`} onClick={onClick} {...props}>
       <img
         src={src}
         alt={alt}

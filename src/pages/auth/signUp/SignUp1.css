@@ -1,11 +1,17 @@
 .signup-1 .field {
-  width: 489px;
+  width: 100%;
 }
 
 .signup-1 .email-field {
   gap: 13px;
 }
 
-.signup-1 .email-field .email {
-  width: 383px;
+.signup-1 .email-code-wrap {
+  gap: 8px;
+
+  height: fit-content;
+}
+
+.signup-1 .email-code-wrap .email-code-field {
+  width: 362px;
 }
