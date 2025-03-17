@@ -39,6 +39,7 @@ const SignUp1: React.FC<SignUp1Props> = ({ onNext, userInfo, setUserInfo }) => {
   }, [email]);
 
   const onClickEmailSend = async () => {
+    alert("입력하신 이메일로 인증번호를 발송하였습니다.");
     // 이메일 발송 API 호출
     try {
       await axiosClient.post(
@@ -51,7 +52,6 @@ const SignUp1: React.FC<SignUp1Props> = ({ onNext, userInfo, setUserInfo }) => {
           },
         }
       );
-      alert("입력하신 이메일로 인증번호를 발송하였습니다.");
       setEmailSended(true);
     } catch (error) {
       const err = error as AxiosError<ServerError>;
@@ -99,6 +99,7 @@ const SignUp1: React.FC<SignUp1Props> = ({ onNext, userInfo, setUserInfo }) => {
   };
 
   const onClickNext = async () => {
+    console.log("onClickNext");
     setUserInfo({ ...userInfo, email: email, emailCode: emailCode });
     onNext();
   };
