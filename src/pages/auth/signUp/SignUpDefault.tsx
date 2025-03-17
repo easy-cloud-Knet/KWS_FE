@@ -74,14 +74,7 @@ const SignUpDefault = () => {
         <Selector index={step} />
         <h2 className="title p-36-400 t-align-center">회원가입</h2>
         {step === 1 && <SignUp1 onNext={onNext} userInfo={userInfo} setUserInfo={setUserInfo} />}
-        {step === 2 && (
-          <SignUp2
-            onPrevious={onPrevious}
-            onNext={onNext}
-            userInfo={userInfo}
-            setUserInfo={setUserInfo}
-          />
-        )}
+        {step === 2 && <SignUp2 onNext={onNext} userInfo={userInfo} setUserInfo={setUserInfo} />}
         {step === 3 && (
           <SignUp3
             onPrevious={onPrevious}

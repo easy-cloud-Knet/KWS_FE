@@ -39,7 +39,6 @@ const SignUp1: React.FC<SignUp1Props> = ({ onNext, userInfo, setUserInfo }) => {
     setEmailChecker((prevIdChecker) => ({
       ...prevIdChecker,
       format: EMAIL_REGEX.test(email),
-      duplicated: false,
     }));
   }, [email]);
 
