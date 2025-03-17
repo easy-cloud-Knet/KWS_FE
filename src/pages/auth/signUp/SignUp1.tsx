@@ -107,6 +107,7 @@ const SignUp1: React.FC<SignUp1Props> = ({ onNext, userInfo, setUserInfo }) => {
 
   const onClickNext = () => {
     setUserInfo({ ...userInfo, email: email, emailCode: emailCode });
+    console.log(userInfo);
     onNext();
   };
 
