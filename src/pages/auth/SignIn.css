@@ -11,7 +11,7 @@
 }
 
 .signin .input-wrap {
-  gap: 2.685vh; /* 29px */
+  gap: 1.8519vh; /* 20px */
 
   width: 100%;
 }
@@ -32,10 +32,11 @@
   gap: 2.2222vh; /* 24px */
 
   margin-top: 7.6852vh; /* 83px */
+  width: 100%;
 }
 
 .signin .button-wrap hr {
-  width: 418px;
+  width: 100%;
   border: 1px solid #bfbfbf;
 }
 

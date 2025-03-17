@@ -33,6 +33,13 @@
   line-height: normal;
 }
 
+.p-36-600 {
+  font-size: 36px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+}
+
 .p-40-400 {
   font-size: 40px;
   font-style: normal;
@@ -101,7 +108,7 @@
 }
 
 .c-blue {
-  color: var(--blue);
+  color: var(--Main_Blue);
 }
 
 .t-underline {

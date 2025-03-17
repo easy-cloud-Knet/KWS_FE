@@ -32,7 +32,7 @@ const SignIn: React.FC = () => {
   return (
     <div className="signin-wrap f-dir-column f-center">
       <div className="signin f-dir-column a-items-center">
-        <p className="title p-40-400 c-black t-center">로그인</p>
+        <p className="title p-36-600 c-black t-center">KWS</p>
 
         <div className="input-wrap f-dir-column">
           <AuthTextFieldV2
