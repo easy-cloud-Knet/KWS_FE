@@ -1,0 +1,27 @@
+.vm-manage-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2px;
+
+  padding: 0;
+
+  width: 86px;
+  height: 48px;
+
+  border-radius: 12px;
+}
+
+.vm-manage-btn.delete {
+  background: var(--Grey2, #eceff3);
+}
+
+.vm-manage-btn.refresh {
+  background: var(--BG_Blue2, #f2f8ff);
+  color: var(--Main_Blue, #007bff);
+}
+
+.vm-manage-btn.add {
+  background: var(--Main_Blue, #007bff);
+  color: #fff;
+}

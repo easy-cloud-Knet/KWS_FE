@@ -1,0 +1,61 @@
+.vm-manage .title {
+  margin-top: 52px;
+  margin-bottom: 8px;
+}
+
+.vm-manage .vm-manage-btn-wrap {
+  gap: 20px;
+}
+
+.vm-manage .table-container {
+  border-radius: 10px;
+  box-shadow: 0px 0px 25px -8px rgba(0, 0, 0, 0.2);
+}
+
+.vm-manage .user-type {
+  height: 35px;
+
+  border-radius: 10px;
+}
+
+.vm-manage .user-type.admin {
+  width: 66px;
+
+  background: var(--Sub_Purple2, #e4dfff);
+  color: var(--Sub_Purple1, #6a5acd);
+}
+
+.vm-manage .user-type.user {
+  width: 52px;
+
+  background: var(--Sub_Green2, #dafdea);
+  color: var(--Sub_Green1, #28c76f);
+}
+
+.vm-manage .current-status-wrap {
+  gap: 6px;
+}
+
+.vm-manage .current-status {
+  gap: 8px;
+
+  width: 80px;
+  height: 35px;
+
+  border-radius: 10px;
+  color: var(--Main_Blue, #007bff);
+}
+
+.vm-manage .current-status.booting {
+  border: 1px solid var(--Main_Blue, #007bff);
+  background: var(--White, #fff);
+}
+
+.vm-manage .current-status.launching {
+  border: none;
+  background: var(--BG_Blue1, #cfe6ff);
+}
+
+.vm-manage .runtime {
+  gap: 2px;
+}
