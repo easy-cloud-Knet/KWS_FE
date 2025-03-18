@@ -1,6 +1,5 @@
 import {
   Alert,
-  Button,
   Checkbox,
   Dialog,
   DialogActions,
@@ -19,10 +18,24 @@ import {
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+import MuiBtn from "../components/button/MuiBtn";
+import VMManageBtn from "../components/vmManage/VMManageBtn";
+import VMDetailModal from "../components/vmManage/VMManageModal";
+
+import axiosClient from "../services/api";
+
 import { Status, VM } from "../types/vm";
 
-import VMDetailModal from "../components/vmManage/VMManageModal";
-import axiosClient from "../services/api";
+import { currentStatusMapping, userTypeMapping } from "../utils/MappingToKor";
+
+import booting from "../assets/image/vmManage/booting.svg";
+import launching from "../assets/image/vmManage/launching.svg";
+import time from "../assets/image/vmManage/time.svg";
+import addIcon from "../assets/image/vmManage/button/add.svg";
+import deleteIcon from "../assets/image/vmManage/button/delete.svg";
+import refreshIcon from "../assets/image/vmManage/button/refresh.svg";
+
+import "./VMManage.css";
 
 const VMManage: React.FC = () => {
   const [vmList, setVmList] = useState<VM[]>([]);
@@ -46,24 +59,28 @@ const VMManage: React.FC = () => {
       {
         id: "123e4567-e89b-12d3-a456-426614174000",
         vmName: "VM1",
+        currentStatus: "booting",
         status: "시작",
         instanceType: "t2.micro",
         publicIP: "192.168.1.1",
         key: "key example",
         os: "Ubuntu 24.04 LTS",
         startTime: "2025-01-18 10:00",
-        runTime: "5시간",
+        runTime: "5.5h",
+        userType: "admin",
       },
       {
         id: "123e4567-e89b-12d3-a456-426614174001",
         vmName: "VM2",
+        currentStatus: "launching",
         status: "시작",
         instanceType: "t2.medium",
         publicIP: "192.168.1.1",
         key: "key example",
         os: "Ubuntu 24.04 LTS",
         startTime: "2025-01-18 10:00",
-        runTime: "5시간 30분",
+        runTime: "5.5h",
+        userType: "user",
       },
     ];
 
@@ -103,20 +120,25 @@ const VMManage: React.FC = () => {
 
   return (
     <div className="vm-manage">
-      <div className="j-content-end">
-        <button className="default-button" onClick={() => window.location.reload()}>
+      <p className="title p-36-600">VM 리스트</p>
+
+      <div className="vm-manage-btn-wrap j-content-end">
+        {checkedVMs.length > 0 && (
+          <VMManageBtn
+            className="delete"
+            src={deleteIcon}
+            onClick={() => setShowDeleteDialog(true)}
+            disabled={!(checkedVMs.length > 0)}
+          >
+            삭제
+          </VMManageBtn>
+        )}
+        <VMManageBtn className="refresh" src={refreshIcon} onClick={() => window.location.reload()}>
           갱신
-        </button>
-        <button className="default-button" onClick={() => navigate("/create")}>
+        </VMManageBtn>
+        <VMManageBtn className="add" src={addIcon} onClick={() => navigate("/create")}>
           생성
-        </button>
-        <button
-          className="default-button"
-          onClick={() => setShowDeleteDialog(true)}
-          disabled={!(checkedVMs.length > 0)}
-        >
-          삭제
-        </button>
+        </VMManageBtn>
       </div>
 
       <Dialog
@@ -124,18 +146,33 @@ const VMManage: React.FC = () => {
         onClose={onCloseDeleteDialog}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
+        maxWidth="sm"
+        fullWidth={true}
       >
-        <DialogTitle id="alert-dialog-title">정말 삭제하시겠습니까?</DialogTitle>
+        <DialogTitle id="alert-dialog-title" sx={{ marginBottom: "calc(31px - 16px)" }}>
+          <p className="p-21-400">VM 삭제</p>
+        </DialogTitle>
         <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            삭제된 VM은 복구할 수 없습니다. 삭제하시겠습니까?
+          <DialogContentText className="f-dir-column" sx={{ gap: "32px" }}>
+            <p className="p-16-400 c-black">
+              {checkedVMs.length}개의 항목을 정말 삭제하시겠습니까?
+            </p>
+            <p className="p-16-400 c-black d-flex">
+              삭제 시&nbsp;<p className="c-red">되돌릴 수 없습니다.</p>
+            </p>
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={onCloseDeleteDialog} autoFocus>
-            취소
-          </Button>
-          <Button onClick={onClickDeleteBtn}>삭제</Button>
+          <MuiBtn
+            variant="contained"
+            onClick={onClickDeleteBtn}
+            sx={{ width: "96px", background: "var(--BlueBlack, #272B33)" }}
+          >
+            삭제하기
+          </MuiBtn>
+          <MuiBtn onClick={onCloseDeleteDialog} autoFocus sx={{ width: "96px" }}>
+            취소하기
+          </MuiBtn>
         </DialogActions>
       </Dialog>
 
@@ -162,10 +199,14 @@ const VMManage: React.FC = () => {
         />
       )}
 
-      <TableContainer component={Paper} style={{ marginTop: "20px" }}>
+      <TableContainer
+        className="table-container"
+        component={Paper}
+        style={{ marginTop: "20px", width: "86.667vw" }}
+      >
         <Table>
           <TableHead>
-            <TableRow>
+            <TableRow sx={{ height: "59px" }}>
               <TableCell padding="checkbox">
                 <Checkbox
                   indeterminate={checkedVMs.length > 0 && checkedVMs.length < vmList.length}
@@ -178,14 +219,14 @@ const VMManage: React.FC = () => {
                       setCheckedVMs([]);
                     }
                   }}
+                  sx={{ color: "var(--Grey1, #808B96)" }}
                 />
               </TableCell>
-              <TableCell>VM 이름</TableCell>
-              <TableCell>인스턴스 ID(UUID)</TableCell>
-              <TableCell>인스턴스 상태</TableCell>
-              <TableCell>인스턴스 유형</TableCell>
-              <TableCell>Public IP 주소</TableCell>
-              <TableCell>실행 시간</TableCell>
+              <TableCellAttribute>VM 이름</TableCellAttribute>
+              <TableCellAttribute>스냅샷</TableCellAttribute>
+              <TableCellAttribute>Public IP 주소</TableCellAttribute>
+              <TableCellAttribute>유저 역할</TableCellAttribute>
+              <TableCellAttribute>인스턴스 상태</TableCellAttribute>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -212,14 +253,31 @@ const VMManage: React.FC = () => {
                           : [...prevSelected, vm.id]
                       );
                     }}
+                    sx={{ color: "var(--Grey1, #808B96)" }}
                   />
                 </TableCell>
-                <TableCell>{vm.vmName}</TableCell>
-                <TableCell>{vm.id}</TableCell>
-                <TableCell>{vm.status}</TableCell>
+                <TableCell sx={{ width: "25%" }}>
+                  <p className="p-16-600">{vm.vmName}</p>
+                </TableCell>
                 <TableCell>{vm.instanceType}</TableCell>
                 <TableCell>{vm.publicIP || "-"}</TableCell>
-                <TableCell>{vm.runTime}</TableCell>
+                <TableCell>
+                  <div className={`user-type ${vm.userType} p-16-400 f-center`}>
+                    {userTypeMapping(vm.userType)}
+                  </div>
+                </TableCell>
+                <TableCell>
+                  <div className="current-status-wrap a-items-center">
+                    <div className={`current-status ${vm.currentStatus} p-16-400 f-center`}>
+                      <img src={vm.currentStatus === "booting" ? booting : launching} alt="" />
+                      {currentStatusMapping(vm.currentStatus)}
+                    </div>
+                    <div className="runtime a-items-center">
+                      <img src={time} alt="" />
+                      <p className="p-16-400 c-grey1">{vm.runTime}</p>
+                    </div>
+                  </div>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -229,3 +287,11 @@ const VMManage: React.FC = () => {
   );
 };
 export default VMManage;
+
+const TableCellAttribute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  return (
+    <TableCell>
+      <p className="p-14-400 c-grey1">{children}</p>
+    </TableCell>
+  );
+};
