@@ -30,10 +30,6 @@ const SignUp1: React.FC<SignUp1Props> = ({ onNext, userInfo, setUserInfo }) => {
   const [emailSended, setEmailSended] = useState(false);
 
   const [emailCode, setEmailCode] = useState(userInfo.emailCode);
-  const [emailCodeChecker, setEmailCodeChecker] = useState({
-    show: false,
-    match: false,
-  });
 
   useEffect(() => {
     setEmailChecker((prevIdChecker) => ({
@@ -42,8 +38,13 @@ const SignUp1: React.FC<SignUp1Props> = ({ onNext, userInfo, setUserInfo }) => {
     }));
   }, [email]);
 
-  const onClickEmailSend = async () => {
+  const onClickEmailSend = () => {
+    alert("입력하신 이메일로 인증번호를 발송하였습니다.");
     // 이메일 발송 API 호출
+    sendEmail();
+  };
+
+  const sendEmail = async () => {
     try {
       await axiosClient.post(
         "/users/send-email",
@@ -55,7 +56,6 @@ const SignUp1: React.FC<SignUp1Props> = ({ onNext, userInfo, setUserInfo }) => {
           },
         }
       );
-      alert("입력하신 이메일로 인증번호를 발송하였습니다.");
       setEmailSended(true);
     } catch (error) {
       const err = error as AxiosError<ServerError>;
@@ -76,46 +76,39 @@ const SignUp1: React.FC<SignUp1Props> = ({ onNext, userInfo, setUserInfo }) => {
     }
   };
 
-  useEffect(() => {
-    setEmailCodeChecker({ show: false, match: false });
-  }, [emailCode]);
-
-  const checkEmailCode = async () => {
+  const checkEmailCode = () => {
     if (!emailCode) {
-      setEmailCodeChecker({ show: false, match: false });
       return;
     }
 
-    try {
-      await axiosClient.post(
-        "/users/verify-code",
-        {},
-        {
-          params: {
-            email: email,
-            code: emailCode,
-          },
-        }
-      );
+    const verifyCode = async () => {
+      try {
+        await axiosClient.post(
+          "/users/verify-code",
+          {},
+          {
+            params: {
+              email: email,
+              code: emailCode,
+            },
+          }
+        );
 
-      alert("이메일이 인증되었습니다.");
-      setEmailCodeChecker({ show: true, match: true });
-      onClickNext();
-    } catch {
-      alert("인증번호가 일치하지 않습니다.");
-      setEmailCodeChecker({ show: true, match: false });
-    }
-  };
+        // alert("이메일이 인증되었습니다.");
+      } catch {
+        alert("인증번호가 일치하지 않습니다.");
+      }
+    };
 
-  const onClickNext = async () => {
-    if (emailChecker.format && emailCodeChecker.match) {
-      setUserInfo({ ...userInfo, email: email });
-      onNext();
-    }
+    verifyCode();
+
+    setUserInfo({ ...userInfo, email: email, emailCode: emailCode });
+    onNext();
   };
 
   return (
     <Form onSubmit={checkEmailCode} className="signup-1 f-dir-column f-center">
+      에이 설마 이게 안나오겠어?
       <div className="field">
         <>
           <AuthTextFieldV2
@@ -169,12 +162,10 @@ const SignUp1: React.FC<SignUp1Props> = ({ onNext, userInfo, setUserInfo }) => {
               </Button>
             </div>
             <div className="button-wrap j-content-end">
-              <BottomBtn variant="contained" onClick={checkEmailCode} disabled={!emailCode}>
+              <BottomBtn variant="contained" type="submit" disabled={!emailCode}>
                 인증
               </BottomBtn>
             </div>
-            {/* 엔터키 입력을 위한 보이지 않는 버튼 */}
-            <button type="submit" style={{ display: "none" }}></button>
           </>
         )}
       </div>

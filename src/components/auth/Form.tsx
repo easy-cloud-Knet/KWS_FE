@@ -1,6 +1,6 @@
 interface FormProps {
   children: React.ReactNode;
-  onSubmit?: () => Promise<void>;
+  onSubmit?: (event: React.FormEvent<HTMLFormElement>) => Promise<void> | void;
   className?: string;
   id?: string;
 }
@@ -10,7 +10,7 @@ const Form: React.FC<FormProps> = ({ children, onSubmit, className, id }) => {
     event.preventDefault();
 
     if (onSubmit) {
-      await onSubmit();
+      await onSubmit(event);
     }
   };
   return (
