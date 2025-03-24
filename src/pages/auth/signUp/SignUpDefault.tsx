@@ -47,10 +47,11 @@ const SignUpDefault = () => {
         password: userInfo.pw,
         username: userInfo.name,
       });
+      console.log(userInfo);
       navigate("/signup/success");
     } catch (error) {
       const err = error as { response?: { data: { detail?: Array<{ msg: string }> } } };
-      alert(err.response?.data.detail?.[0].msg || "회원가입 실패");
+      alert(err.response?.data.detail || "회원가입 실패");
     } finally {
       setIsLoading(false);
     }
