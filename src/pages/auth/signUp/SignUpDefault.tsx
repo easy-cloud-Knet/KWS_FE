@@ -42,17 +42,11 @@ const SignUpDefault = () => {
   const onClickRegisterAllowButton = async () => {
     setIsLoading(true);
     try {
-      await axiosClient.post(
-        "/users/register",
-        {},
-        {
-          params: {
-            email: userInfo.email,
-            password: userInfo.pw,
-            username: userInfo.name,
-          },
-        }
-      );
+      await axiosClient.post("/users/register", {
+        email: userInfo.email,
+        password: userInfo.pw,
+        username: userInfo.name,
+      });
       navigate("/signup/success");
     } catch (error) {
       const err = error as { response?: { data: { detail?: Array<{ msg: string }> } } };

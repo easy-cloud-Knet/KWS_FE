@@ -46,16 +46,7 @@ const SignUp1: React.FC<SignUp1Props> = ({ onNext, userInfo, setUserInfo }) => {
 
   const sendEmail = async () => {
     try {
-      await axiosClient.post(
-        "/users/send-email",
-        {},
-        {
-          params: {
-            email: email,
-            purpose: "register",
-          },
-        }
-      );
+      await axiosClient.post("/users/send-email", { email: email, purpose: "register" });
       setEmailSended(true);
     } catch (error) {
       const err = error as AxiosError<ServerError>;
@@ -83,16 +74,7 @@ const SignUp1: React.FC<SignUp1Props> = ({ onNext, userInfo, setUserInfo }) => {
 
     const verifyCode = async () => {
       try {
-        await axiosClient.post(
-          "/users/verify-code",
-          {},
-          {
-            params: {
-              email: email,
-              code: emailCode,
-            },
-          }
-        );
+        await axiosClient.post("/users/verify-code", { email: email, code: emailCode });
 
         // alert("이메일이 인증되었습니다.");
       } catch {
