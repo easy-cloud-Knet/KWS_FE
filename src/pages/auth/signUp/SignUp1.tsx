@@ -46,7 +46,11 @@ const SignUp1: React.FC<SignUp1Props> = ({ onNext, userInfo, setUserInfo }) => {
 
   const sendEmail = async () => {
     try {
-      await axiosClient.post("/users/send-email", { email: email, purpose: "register" });
+      await axiosClient.post(
+        "/users/send-email",
+        { email: email },
+        { params: { purpose: "register" } }
+      );
       setEmailSended(true);
     } catch (error) {
       const err = error as AxiosError<ServerError>;
