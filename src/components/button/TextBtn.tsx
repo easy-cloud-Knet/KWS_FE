@@ -1,8 +1,8 @@
 import "./TextBtn.css";
 
 interface TextBtnProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  className: string;
-  children: string;
+  className?: string;
+  children?: React.ReactNode;
 }
 
 const TextBtn = ({ children, className, ...props }: TextBtnProps) => {
