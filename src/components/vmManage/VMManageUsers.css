@@ -1,0 +1,66 @@
+.vm-manage-users .MuiPaper-root {
+  padding-top: 24px;
+  padding-left: 28px;
+  padding-right: 14px;
+
+  width: 520px;
+  height: 420px;
+
+  border-radius: 15px;
+}
+
+.vm-manage-users .vm-manage-users-header {
+  gap: 8px;
+}
+
+.vm-manage-users .vm-manage-users-header .input-wrap {
+  margin-right: 14px;
+}
+
+.vm-manage-users .vm-manage-users-header .input {
+  width: 364px;
+}
+
+.vm-manage-users .contents {
+  padding: 20px 0;
+}
+
+.vm-manage-users .contents .user-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.vm-manage-users .contents .user-list h4 {
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+
+.vm-manage-users .contents #scroll-dialog-description {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.vm-manage-users .contents #scroll-dialog-description .user {
+  height: 27px;
+}
+
+.vm-manage-users .contents #scroll-dialog-description .user:hover {
+  background: var(--Bar_Blue, #ecf2ff);
+}
+
+.vm-manage-users .contents #scroll-dialog-description .user-name {
+  margin-left: 8px;
+}
+
+.vm-manage-users .contents #scroll-dialog-description .user .user-btn-wrap {
+  gap: 34.5px;
+
+  padding-right: 24px;
+}
+.vm-manage-users .contents #scroll-dialog-description .user .user-btn-wrap .user-btn-inside-wrap {
+  gap: 4px;
+}

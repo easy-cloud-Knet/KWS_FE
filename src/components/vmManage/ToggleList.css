@@ -1,0 +1,10 @@
+.toggle-list .toggle-header {
+  gap: 4px;
+
+  margin-bottom: 4px;
+}
+
+.toggle-list .toggle-content {
+  gap: 8px;
+  margin-left: 16px;
+}

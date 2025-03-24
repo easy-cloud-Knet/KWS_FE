@@ -5,7 +5,7 @@ const MuiBtn: React.FC<ButtonProps> = ({ children, variant, sx, ...props }) => {
     <Button
       variant={variant}
       sx={{
-        height: "54px",
+        height: "48px",
         borderRadius: "12px",
         boxShadow: "none",
         ...(variant === "contained" && {
