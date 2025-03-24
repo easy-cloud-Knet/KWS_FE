@@ -78,7 +78,11 @@ const SignUp1: React.FC<SignUp1Props> = ({ onNext, userInfo, setUserInfo }) => {
 
     const verifyCode = async () => {
       try {
-        await axiosClient.post("/users/verify-code", { email: email, code: emailCode });
+        await axiosClient.post(
+          "/users/verify-code",
+          { email: email },
+          { params: { code: emailCode } }
+        );
 
         // alert("이메일이 인증되었습니다.");
       } catch {
