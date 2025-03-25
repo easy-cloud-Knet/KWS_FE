@@ -7,6 +7,8 @@ import AuthPwTextFieldV2 from "../../components/auth/textField/AuthPwTextFieldV2
 import BottomBtn from "../../components/button/BottomBtn";
 import TextBtn from "../../components/button/TextBtn";
 
+import axiosClient from "../../services/api";
+
 import "./SignIn.css";
 
 const SignIn: React.FC = () => {
@@ -27,6 +29,22 @@ const SignIn: React.FC = () => {
 
   const onClickCheckBox = () => {
     setChecked(!checked);
+  };
+
+  const onClickSignIn = async () => {
+    const response = await axiosClient.post("/users/login", {
+      email: email,
+      password: pw,
+    });
+
+    console.log(response);
+
+    // 성공할 경우
+    if (checked) {
+      localStorage.setItem("savedEmail", email);
+    } else {
+      localStorage.removeItem("savedEmail");
+    }
   };
 
   return (
@@ -60,16 +78,7 @@ const SignIn: React.FC = () => {
         <BottomBtn
           variant="contained"
           disabled={!(email.length > 0 && pw.length > 0)}
-          onClick={() => {
-            // TODO: 로그인 API 호출
-
-            // 성공할 경우
-            if (checked) {
-              localStorage.setItem("savedEmail", email);
-            } else {
-              localStorage.removeItem("savedEmail");
-            }
-          }}
+          onClick={onClickSignIn}
         >
           로그인
         </BottomBtn>
