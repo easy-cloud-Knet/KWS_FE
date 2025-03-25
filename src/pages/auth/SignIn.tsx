@@ -1,5 +1,5 @@
 import { Checkbox } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import AuthTextFieldV2 from "../../components/auth/textField/AuthTextFieldV2";
@@ -7,9 +7,12 @@ import AuthPwTextFieldV2 from "../../components/auth/textField/AuthPwTextFieldV2
 import BottomBtn from "../../components/button/BottomBtn";
 import TextBtn from "../../components/button/TextBtn";
 
+import AuthContext from "../../contexts/AuthContext";
+
 import axiosClient from "../../services/api";
 
 import "./SignIn.css";
+import { Error } from "../../types/axios";
 
 const SignIn: React.FC = () => {
   const [email, setEmail] = useState<string>("");
@@ -17,6 +20,9 @@ const SignIn: React.FC = () => {
 
   const [checked, setChecked] = useState(true);
 
+  // const [isIdPwMatch, setIsIdPwMatch] = useState(false);
+
+  const { login } = useContext(AuthContext);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -32,18 +38,30 @@ const SignIn: React.FC = () => {
   };
 
   const onClickSignIn = async () => {
-    const response = await axiosClient.post("/users/login", {
-      email: email,
-      password: pw,
-    });
+    try {
+      const response = await axiosClient.post("/users/login", {
+        email: email,
+        password: pw,
+      });
 
-    console.log(response);
+      if (response.data.access_token && response.data.refresh_token) {
+        login(response.data.accessToken, response.data.refreshToken, response.data.nickname);
+        // setIsIdPwMatch(true);
+      } else {
+        // setIsIdPwMatch(false);
+      }
 
-    // 성공할 경우
-    if (checked) {
-      localStorage.setItem("savedEmail", email);
-    } else {
-      localStorage.removeItem("savedEmail");
+      // 로그인 버튼 클릭 시
+      if (checked) {
+        localStorage.setItem("savedEmail", email);
+      } else {
+        localStorage.removeItem("savedEmail");
+      }
+
+      navigate("/");
+    } catch (err: unknown) {
+      const error = err as Error;
+      alert(error.response?.data?.detail || "로그인 실패");
     }
   };
 
