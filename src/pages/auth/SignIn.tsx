@@ -44,8 +44,6 @@ const SignIn: React.FC = () => {
         password: pw,
       });
 
-      console.log(response.data);
-
       if (response.data.access_token && response.data.refresh_token) {
         login(response.data.access_token, response.data.refresh_token, response.data.user.username);
         // setIsIdPwMatch(true);
