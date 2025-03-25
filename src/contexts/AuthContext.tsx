@@ -46,12 +46,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const login = (accessToken: string, refreshToken: string, userNickname: string) => {
     Cookies.set("accessToken", accessToken, {
       expires: ACCESS_TOKEN_EXP_TIME,
-      secure: true,
+      secure: false,
       sameSite: "Strict",
     });
     Cookies.set("refreshToken", refreshToken, {
       expires: REFRESH_TOKEN_EXP_TIME,
-      secure: true,
+      secure: false,
       sameSite: "Strict",
     });
 
