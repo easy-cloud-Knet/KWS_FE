@@ -55,6 +55,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       sameSite: "Strict",
     });
 
+    console.log(Cookies.get("accessToken"));
+    console.log(Cookies.get("refreshToken"));
+
     setUserNickname(userNickname);
     localStorage.setItem("userNickname", userNickname);
     setIsAuthenticated(true);

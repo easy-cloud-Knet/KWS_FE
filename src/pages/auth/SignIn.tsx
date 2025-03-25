@@ -45,7 +45,7 @@ const SignIn: React.FC = () => {
       });
 
       if (response.data.access_token && response.data.refresh_token) {
-        login(response.data.access_token, response.data.refresh_token, response.data.nickname);
+        login(response.data.access_token, response.data.refresh_token, response.data.user.username);
         // setIsIdPwMatch(true);
       } else {
         // setIsIdPwMatch(false);
