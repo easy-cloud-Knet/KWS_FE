@@ -55,36 +55,45 @@ const VMManage: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const vmList: VM[] = [
-      {
-        id: "123e4567-e89b-12d3-a456-426614174000",
-        vmName: "VM1",
-        currentStatus: "booting",
-        status: "시작",
-        instanceType: "t2.micro",
-        publicIP: "192.168.1.1",
-        key: "key example",
-        os: "Ubuntu 24.04 LTS",
-        startTime: "2025-01-18 10:00",
-        runTime: "5.5h",
-        userType: "admin",
-      },
-      {
-        id: "123e4567-e89b-12d3-a456-426614174001",
-        vmName: "VM2",
-        currentStatus: "launching",
-        status: "시작",
-        instanceType: "t2.medium",
-        publicIP: "192.168.1.1",
-        key: "key example",
-        os: "Ubuntu 24.04 LTS",
-        startTime: "2025-01-18 10:00",
-        runTime: "5.5h",
-        userType: "user",
-      },
-    ];
+    try {
+      const fetchData = async () => {
+        const response = await axiosClient.get("/vm/status");
+        console.log(response);
 
-    setVmList(vmList);
+        const vmList: VM[] = [
+          {
+            id: "123e4567-e89b-12d3-a456-426614174000",
+            vmName: "VM1",
+            currentStatus: "booting",
+            status: "시작",
+            instanceType: "t2.micro",
+            publicIP: "192.168.1.1",
+            key: "key example",
+            os: "Ubuntu 24.04 LTS",
+            startTime: "2025-01-18 10:00",
+            runTime: "5.5h",
+            userType: "admin",
+          },
+          {
+            id: "123e4567-e89b-12d3-a456-426614174001",
+            vmName: "VM2",
+            currentStatus: "launching",
+            status: "시작",
+            instanceType: "t2.medium",
+            publicIP: "192.168.1.1",
+            key: "key example",
+            os: "Ubuntu 24.04 LTS",
+            startTime: "2025-01-18 10:00",
+            runTime: "5.5h",
+            userType: "user",
+          },
+        ];
+        setVmList(vmList);
+      };
+      fetchData();
+    } catch (error) {
+      console.error(error);
+    }
   }, []);
 
   const onCloseDeleteDialog = () => {

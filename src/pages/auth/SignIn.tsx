@@ -1,5 +1,5 @@
 import { Checkbox } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import AuthTextFieldV2 from "../../components/auth/textField/AuthTextFieldV2";
@@ -7,7 +7,12 @@ import AuthPwTextFieldV2 from "../../components/auth/textField/AuthPwTextFieldV2
 import BottomBtn from "../../components/button/BottomBtn";
 import TextBtn from "../../components/button/TextBtn";
 
+import AuthContext from "../../contexts/AuthContext";
+
+import axiosClient from "../../services/api";
+
 import "./SignIn.css";
+import { Error } from "../../types/axios";
 
 const SignIn: React.FC = () => {
   const [email, setEmail] = useState<string>("");
@@ -15,6 +20,9 @@ const SignIn: React.FC = () => {
 
   const [checked, setChecked] = useState(true);
 
+  // const [isIdPwMatch, setIsIdPwMatch] = useState(false);
+
+  const { login } = useContext(AuthContext);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -27,6 +35,34 @@ const SignIn: React.FC = () => {
 
   const onClickCheckBox = () => {
     setChecked(!checked);
+  };
+
+  const onClickSignIn = async () => {
+    try {
+      const response = await axiosClient.post("/users/login", {
+        email: email,
+        password: pw,
+      });
+
+      if (response.data.access_token && response.data.refresh_token) {
+        login(response.data.access_token, response.data.refresh_token, response.data.user.username);
+        // setIsIdPwMatch(true);
+      } else {
+        // setIsIdPwMatch(false);
+      }
+
+      // 로그인 버튼 클릭 시
+      if (checked) {
+        localStorage.setItem("savedEmail", email);
+      } else {
+        localStorage.removeItem("savedEmail");
+      }
+
+      navigate("/");
+    } catch (err: unknown) {
+      const error = err as Error;
+      alert(error.response?.data?.detail || "로그인 실패");
+    }
   };
 
   return (
@@ -60,16 +96,7 @@ const SignIn: React.FC = () => {
         <BottomBtn
           variant="contained"
           disabled={!(email.length > 0 && pw.length > 0)}
-          onClick={() => {
-            // TODO: 로그인 API 호출
-
-            // 성공할 경우
-            if (checked) {
-              localStorage.setItem("savedEmail", email);
-            } else {
-              localStorage.removeItem("savedEmail");
-            }
-          }}
+          onClick={onClickSignIn}
         >
           로그인
         </BottomBtn>

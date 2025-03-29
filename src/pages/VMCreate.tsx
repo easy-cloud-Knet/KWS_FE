@@ -1,5 +1,4 @@
 import { InputLabel, MenuItem, Select, Stack, TextField } from "@mui/material";
-import Cookies from "js-cookie";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -27,7 +26,6 @@ const VMCreate: React.FC = () => {
         "/vm",
         {},
         {
-          headers: { Authorization: `Bearer ${Cookies.get("accessToken")}` },
           params: {
             name: vmName.value,
             os: os,
@@ -35,8 +33,10 @@ const VMCreate: React.FC = () => {
           },
         }
       );
-    } catch (error) {
-      console.error(error);
+
+      navigate("/");
+    } catch {
+      alert("VM 생성에 실패했습니다.");
     }
   };
 
@@ -80,9 +80,7 @@ const VMCreate: React.FC = () => {
               setVmName({ ...vmName, showError: true });
               return;
             }
-            // TODO: API 호출
             onCreateVM();
-            navigate("/");
           }}
         >
           생성

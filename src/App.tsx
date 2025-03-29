@@ -8,6 +8,8 @@ import SignUpDefault from "./pages/auth/signUp/SignUpDefault";
 import SignIn from "./pages/auth/SignIn";
 import SignUpSuccess from "./pages/auth/signUp/SignUpSuccess.tsx";
 
+import { AuthProvider } from "./contexts/AuthContext.tsx";
+
 import "@fontsource/pretendard/400.css"; // Regular (400)
 import "@fontsource/pretendard/600.css"; // Semi-bold (600)
 
@@ -20,16 +22,18 @@ function App() {
   return (
     <>
       <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<DefaultLayout />}>
-            <Route index element={<VMManage />} />
-            <Route path="create" element={<VMCreate />} />
+        <AuthProvider>
+          <Routes>
+            <Route path="/" element={<DefaultLayout />}>
+              <Route index element={<VMManage />} />
+              <Route path="create" element={<VMCreate />} />
 
-            <Route path="signin" element={<SignIn />} />
-            <Route path="signup" element={<SignUpDefault />} />
-            <Route path="signup/success" element={<SignUpSuccess />} />
-          </Route>
-        </Routes>
+              <Route path="signin" element={<SignIn />} />
+              <Route path="signup" element={<SignUpDefault />} />
+              <Route path="signup/success" element={<SignUpSuccess />} />
+            </Route>
+          </Routes>
+        </AuthProvider>
       </BrowserRouter>
     </>
   );
