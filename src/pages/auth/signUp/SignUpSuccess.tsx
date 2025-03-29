@@ -10,7 +10,7 @@ const SignUpSuccess = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="signup-success signup-default f-center">
+    <div className="signup-success signup-default">
       <div className="signup-container">
         <h2 className="p-48-400 t-align-center">회원가입 완료</h2>
 
