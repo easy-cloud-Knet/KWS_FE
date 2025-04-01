@@ -7,6 +7,7 @@ import VMManage from "./pages/VMManage";
 import SignUpDefault from "./pages/auth/signUp/SignUpDefault";
 import SignIn from "./pages/auth/SignIn";
 import SignUpSuccess from "./pages/auth/signUp/SignUpSuccess.tsx";
+import Invitation from "./pages/Invitation.tsx";
 
 import { AuthProvider } from "./contexts/AuthContext.tsx";
 
@@ -31,6 +32,8 @@ function App() {
               <Route path="signin" element={<SignIn />} />
               <Route path="signup" element={<SignUpDefault />} />
               <Route path="signup/success" element={<SignUpSuccess />} />
+
+              <Route path="/invitation" element={<Invitation />} />
             </Route>
           </Routes>
         </AuthProvider>

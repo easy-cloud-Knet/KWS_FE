@@ -332,6 +332,10 @@
   color: var(--Grey1, #808b96);
 }
 
+.c-text1 {
+  color: var(--Text1, #8695b6);
+}
+
 .c-red {
   color: #ff0000;
 }
