@@ -23,5 +23,5 @@ jobs:
         IMAGE=${{ secrets.DOCKER_HUB_USERNAME }}/kws_fe:latest
         docker stop KWS_FE || true
         docker rm KWS_FE || true
-        docker run -d --name KWS_FE -p 25120:8000 $IMAGE
+        docker run -d --name KWS_FE -p 25120:80 $IMAGE
         docker system prune -af
