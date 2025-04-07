@@ -259,6 +259,13 @@
   line-height: normal;
 }
 
+.p-21-600 {
+  font-size: 21px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+}
+
 .p-32-400 {
   font-size: 32px;
   font-style: normal;

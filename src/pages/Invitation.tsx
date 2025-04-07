@@ -9,6 +9,7 @@ const Invitation = () => {
   return (
     <section className="invitation f-center">
       <div className="invitation-card p-relative">
+        <p className="absolute top-[24px] left-[32px] p-21-600">사용자 초대</p>
         <div className="invitation-inside f-center t-center">
           <div className="f-dir-column j-content-between">
             <p className="p-21-400 d-flex">
