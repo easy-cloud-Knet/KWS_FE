@@ -54,8 +54,16 @@
 .navbar .navbar_login {
   display: flex;
   align-items: center;
+  gap: 16px;
 
   position: relative;
+
+  /* 줄바꿈 불허 */
+  white-space: nowrap;
+}
+
+.navbar .navbar_login .p-18-500 {
+  font-size: 1.6667vh; /* 18px */
 }
 
 .navbar .navbar_login img {
@@ -68,6 +76,7 @@
 
 .navbar .signin_btn {
   width: 10.3704vh; /* 112px */
+  min-width: fit-content;
   height: 5vh; /* 54px */
 
   font-size: 1.6667vh; /* 18px */

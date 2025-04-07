@@ -22,7 +22,7 @@ const SignIn: React.FC = () => {
 
   // const [isIdPwMatch, setIsIdPwMatch] = useState(false);
 
-  const { login } = useContext(AuthContext);
+  const { login } = useContext(AuthContext)!;
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -45,7 +45,12 @@ const SignIn: React.FC = () => {
       });
 
       if (response.data.access_token && response.data.refresh_token) {
-        login(response.data.access_token, response.data.refresh_token, response.data.user.username);
+        login(
+          response.data.access_token,
+          response.data.refresh_token,
+          response.data.user.username,
+          response.data.user.email
+        );
         // setIsIdPwMatch(true);
       } else {
         // setIsIdPwMatch(false);

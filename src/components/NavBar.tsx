@@ -9,7 +9,7 @@ import AuthContext from "../contexts/AuthContext";
 import "./NavBar.css";
 
 const NavBar = () => {
-  const { isAuthenticated, logout } = useContext(AuthContext);
+  const { isAuthenticated, logout, userNickname, userEmail } = useContext(AuthContext)!;
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -47,7 +47,11 @@ const NavBar = () => {
         </div>
       ) : (
         <div className="navbar_login">
-          <button
+          <p className="p-18-500 c-text1 flex">
+            환영합니다,&nbsp;<p className="c-black">{userNickname}</p>&nbsp;{userEmail}&nbsp;님!
+          </p>
+          <MuiBtn
+            variant="outlined"
             onClick={() => {
               // context 호출
               logout();
@@ -56,7 +60,7 @@ const NavBar = () => {
             className="signin_btn"
           >
             로그아웃
-          </button>
+          </MuiBtn>
         </div>
       )}
     </nav>
