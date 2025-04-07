@@ -1,24 +1,29 @@
 .vm-manage-users .MuiPaper-root {
   padding-top: 24px;
   padding-left: 28px;
-  padding-right: 14px;
+  padding-right: 32px;
+  padding-bottom: 20px;
 
-  width: 520px;
-  height: 420px;
+  width: 610px;
+  height: 510px;
 
   border-radius: 15px;
 }
 
 .vm-manage-users .vm-manage-users-header {
   gap: 8px;
+
+  margin-bottom: 33px;
 }
 
 .vm-manage-users .vm-manage-users-header .input-wrap {
   margin-right: 14px;
+
+  width: 100%;
 }
 
 .vm-manage-users .vm-manage-users-header .input {
-  width: 364px;
+  width: 442px;
 }
 
 .vm-manage-users .contents {
