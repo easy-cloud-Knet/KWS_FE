@@ -10,25 +10,28 @@ const Invitation = () => {
     <section className="invitation f-center">
       <div className="invitation-card p-relative">
         <div className="invitation-inside f-center t-center">
-          <div className="invitation-text f-dir-column j-content-between">
-            <p className="p-16-400 d-flex">
+          <div className="f-dir-column j-content-between">
+            <p className="p-21-400 d-flex">
               <p className="c-blue">닉네임&nbsp;</p>
               <p className="c-text1">(msgr@kw.ac.kr)&nbsp;</p>
               님으로부터&nbsp;<p className="c-blue">VM1</p>에 초대되었습니다.
             </p>
-            <p>수락하시겠습니까?</p>
+            <p className="p-21-400">&nbsp;</p>
+            <p className="p-21-400">수락하시겠습니까?</p>
           </div>
         </div>
         <div className="invitation-btn-wrap j-content-between">
           <MuiBtn
-            variant="outlined"
+            variant="text"
             onClick={() => {
               navigate("/");
             }}
           >
             아니오
           </MuiBtn>
-          <MuiBtn variant="contained">초대 수락</MuiBtn>
+          <MuiBtn variant="contained" sx={{ width: "119px" }}>
+            초대수락
+          </MuiBtn>
         </div>
       </div>
     </section>

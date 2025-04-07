@@ -3,8 +3,8 @@
 }
 
 .invitation .invitation-card {
-  width: 650px;
-  height: 420px;
+  width: 610px;
+  height: 329px;
 
   border-radius: 15px;
   background: var(--White, #fff);
@@ -16,14 +16,10 @@
   height: 100%;
 }
 
-.invitation .invitation-text {
-  height: 57px;
-}
-
 .invitation .invitation-card .invitation-btn-wrap {
   position: absolute;
   left: 36px;
   bottom: 28px;
 
-  width: calc(650px - 36px * 2);
+  width: calc(610px - 36px * 2);
 }
