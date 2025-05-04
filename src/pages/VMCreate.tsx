@@ -187,7 +187,14 @@ const VMCreate: React.FC = () => {
               />
 
               <div className="flex justify-between w-full">
-                <MuiBtn className="w-[88px]">취소</MuiBtn>
+                <MuiBtn
+                  className="w-[88px]"
+                  onClick={() => {
+                    navigate("/");
+                  }}
+                >
+                  취소
+                </MuiBtn>
                 <VMManageBtn className="add cursor-pointer" src={addIcon} onClick={onCreateVM}>
                   생성
                 </VMManageBtn>
