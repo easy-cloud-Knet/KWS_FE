@@ -46,43 +46,57 @@ const VMManageUsers: React.FC<VMManageUsersProps> = ({ open, setOpen }) => {
         <p className="p-16-400">사용자 초대</p>
         <div className="input-wrap j-content-between">
           <div className="input">
-            <AuthTextFieldV2 placeholder="이메일" />
+            <AuthTextFieldV2 placeholder="이메일 아이디" />
           </div>
           <MuiBtn variant="contained" sx={{ width: "88px" }}>
             전송
           </MuiBtn>
         </div>
       </section>
-      <DialogContent className="contents" dividers={false}>
-        <DialogContentText id="scroll-dialog-description" ref={descriptionElementRef} tabIndex={-1}>
-          <section className="admin-list user-list">
-            <h4 className="p-14-400 c-grey1">admin</h4>
-            <p className="user-name p-16-400 c-black">미숫가루</p>
-          </section>
 
-          <section className="shared-user-list user-list">
-            <h4 className="p-14-400 c-grey1">shared user</h4>
-            <User>미숫가루</User>
-          </section>
+      <section className="flex-col j-content-between h-full">
+        <DialogContent className="contents" dividers={false}>
+          <DialogContentText
+            id="scroll-dialog-description"
+            ref={descriptionElementRef}
+            tabIndex={-1}
+            sx={{ paddingBottom: "12px", maxHeight: "260px", overflowY: "scroll" }}
+          >
+            <section className="admin-list user-list">
+              <h4 className="p-14-400 c-grey1">admin</h4>
+              <p className="user-name p-16-400 c-black">미숫가루</p>
+            </section>
 
-          <ToggleList title="대기중">
-            <p className="p-16-400 c-black">pizza1</p>
-            <p className="p-16-400 c-black">pizza2</p>
-          </ToggleList>
-        </DialogContentText>
-      </DialogContent>
-      <DialogActions>
-        <MuiBtn variant="text" onClick={() => setOpen(false)}>
-          확인
-        </MuiBtn>
-      </DialogActions>
+            <section className="shared-user-list user-list">
+              <h4 className="p-14-400 c-grey1">shared user</h4>
+              <User email="msgr@kw.ac.kr">미숫가루</User>
+              <User email="msgr@kw.ac.kr">미숫가루</User>
+            </section>
+
+            <ToggleList title="대기중">
+              <p className="p-16-400 c-black">pizza1</p>
+              <p className="p-16-400 c-black">pizza2</p>
+            </ToggleList>
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <MuiBtn variant="text" onClick={() => setOpen(false)}>
+            확인
+          </MuiBtn>
+        </DialogActions>
+      </section>
     </Dialog>
   );
 };
 
 export default VMManageUsers;
 
-const User = ({ children }: { children?: React.ReactNode }) => {
+interface UserProps {
+  children?: React.ReactNode;
+  email?: string;
+}
+
+const User: React.FC<UserProps> = ({ children, email }) => {
   const [hover, setHover] = useState(false);
   const userRef = useRef<HTMLDivElement>(null);
 
@@ -104,7 +118,10 @@ const User = ({ children }: { children?: React.ReactNode }) => {
 
   return (
     <div className="user j-content-between a-items-center" ref={userRef}>
-      <p className="user-name p-16-400 c-black">{children}</p>
+      <div className="flex">
+        <p className="user-name p-16-400 c-black">{children}</p>
+        <p className="user-name p-16-400 c-grey1">{email}</p>
+      </div>
       {hover && (
         <div className="user-btn-wrap a-items-center">
           <TextBtn className="user-btn-inside-wrap a-items-center">

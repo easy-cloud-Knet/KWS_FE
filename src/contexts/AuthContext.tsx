@@ -12,18 +12,18 @@ import { ACCESS_TOKEN_EXP_TIME, REFRESH_TOKEN_EXP_TIME } from "../constants/toke
 export interface AuthContextType {
   isAuthenticated: boolean;
   userNickname: string;
-  login: (accessToken: string, refreshToken: string, userNickname: string) => void;
+  userEmail: string;
+  login: (
+    accessToken: string,
+    refreshToken: string,
+    userNickname: string,
+    userEmail: string
+  ) => void;
   logout: () => void;
   refreshAccessToken: () => Promise<string | null>;
 }
 
-const AuthContext = createContext<AuthContextType>({
-  isAuthenticated: false,
-  userNickname: "username",
-  login: () => {},
-  logout: () => {},
-  refreshAccessToken: async () => null,
-});
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 interface AuthProviderProps {
   children: ReactNode;
@@ -34,6 +34,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [userNickname, setUserNickname] = useState<string>(
     () => localStorage.getItem("userNickname") || "username"
   );
+  const [userEmail, setUserEmail] = useState<string>(() => localStorage.getItem("userEmail") || "");
 
   const location = useLocation();
 
@@ -43,7 +44,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     setIsAuthenticated(!!accessToken && !!refreshToken);
   }, [location]);
 
-  const login = (accessToken: string, refreshToken: string, userNickname: string) => {
+  const login = (
+    accessToken: string,
+    refreshToken: string,
+    userNickname: string,
+    userEmail: string
+  ) => {
     Cookies.set("accessToken", accessToken, {
       expires: ACCESS_TOKEN_EXP_TIME,
       secure: false,
@@ -56,7 +62,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     });
 
     setUserNickname(userNickname);
+    setUserEmail(userEmail);
     localStorage.setItem("userNickname", userNickname);
+    localStorage.setItem("userEmail", userEmail);
+
     setIsAuthenticated(true);
   };
 
@@ -65,6 +74,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     Cookies.remove("refreshToken");
     setUserNickname("username");
     localStorage.removeItem("userNickname");
+    localStorage.removeItem("userEmail");
     setIsAuthenticated(false);
   };
 
@@ -108,7 +118,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   return (
     <AuthContext.Provider
-      value={{ isAuthenticated, userNickname, login, logout, refreshAccessToken }}
+      value={{ isAuthenticated, userNickname, userEmail, login, logout, refreshAccessToken }}
     >
       {children}
     </AuthContext.Provider>

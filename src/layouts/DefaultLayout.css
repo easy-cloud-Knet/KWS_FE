@@ -3,6 +3,7 @@
   flex-direction: column;
   align-items: center;
 
+  width: 100vw;
   min-height: calc(100vh - 9.537vh);
 
   box-sizing: border-box;

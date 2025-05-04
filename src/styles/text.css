@@ -224,6 +224,13 @@
   line-height: normal;
 }
 
+.p-16-500 {
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+}
+
 .p-16-600 {
   font-size: 16px;
   font-style: normal;
@@ -238,6 +245,13 @@
   line-height: normal;
 }
 
+.p-18-500 {
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+}
+
 .p-20-400 {
   font-size: 20px;
   font-style: normal;
@@ -249,6 +263,13 @@
   font-size: 21px;
   font-style: normal;
   font-weight: 400;
+  line-height: normal;
+}
+
+.p-21-600 {
+  font-size: 21px;
+  font-style: normal;
+  font-weight: 600;
   line-height: normal;
 }
 
@@ -330,6 +351,10 @@
 
 .c-grey1 {
   color: var(--Grey1, #808b96);
+}
+
+.c-text1 {
+  color: var(--Text1, #8695b6);
 }
 
 .c-red {
