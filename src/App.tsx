@@ -14,7 +14,6 @@ import { AuthProvider } from "./contexts/AuthContext.tsx";
 import "@fontsource/pretendard/400.css"; // Regular (400)
 import "@fontsource/pretendard/600.css"; // Semi-bold (600)
 
-import "./App.css";
 import "./styles/colors.css";
 import "./styles/text.css";
 import "./styles/utilities.css";
