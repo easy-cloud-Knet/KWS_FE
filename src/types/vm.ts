@@ -20,6 +20,5 @@ export interface OsList {
   name: string;
   img?: string;
   version: string[];
+  hardware: string[];
 }
-
-export type HardWare = "Light (Server)" | "Heavy (Storage)";

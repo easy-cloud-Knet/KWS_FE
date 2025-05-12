@@ -1,53 +1,52 @@
 import { FormControlLabel, Radio, RadioGroup } from "@mui/material";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import AuthTextFieldV2 from "../components/auth/textField/AuthTextFieldV2";
 import VMCreateOsImage from "../components/vmCreate/VMCreateOsImage";
+import VMCreateHwDropdown from "../components/vmCreate/hw_dropdown/HwDropdown";
+import VMInfoToBeCreatedItem from "../components/vmCreate/VMInfoToBeCreatedItem";
+import VMManageBtn from "../components/vmManage/VMManageBtn";
+import MuiBtn from "../components/button/MuiBtn";
+
+import VMCreateContext, { VMCreateProvider } from "../contexts/VMCreateContext";
 
 import axiosClient from "../services/api";
 
-import { HardWare, OsList } from "../types/vm";
+import { OsList } from "../types/vm";
 
 import ubuntu from "../assets/image/vmCreate/ubuntu.svg";
 import addIcon from "../assets/image/vmManage/button/add.svg";
 
 import "./VMCreate.css";
-import VMCreateHwDropdown from "../components/vmCreate/hw_dropdown/HwDropdown";
-import VMInfoToBeCreatedItem from "../components/vmCreate/VMInfoToBeCreatedItem";
-import VMManageBtn from "../components/vmManage/VMManageBtn";
-import MuiBtn from "../components/button/MuiBtn";
 
 interface RequiredInput {
   value: string;
   showError: boolean;
 }
 
-const VMCreate: React.FC = () => {
+const VMCreateContent: React.FC = () => {
   const [vmName, setVmName] = useState<RequiredInput>({
     value: "",
     showError: false,
   });
-  // const [osList, setOsList] = useState<OsList[]>([
   const osList: OsList[] = [
     {
       name: "Ubuntu",
       img: ubuntu,
       version: ["24.04 LTS", "22.04 LTS", "20.04 LTS", "24.10", "23.10", "23.04"],
+      hardware: ["Light (Server)", "Heavy (Storage)", "GPU (AI/ML)"],
     },
     {
       name: "CentOS",
       img: ubuntu,
       version: ["8 Stream", "7 Stream"],
+      hardware: ["Light (Server)", "Heavy (Storage)"],
     },
   ];
-  // const [hardwareList, setHardwareList] = useState<HardWare[]>(["Light (Server)", "Heavy (Storage)"]);
-  const hardwareList: HardWare[] = ["Light (Server)", "Heavy (Storage)"];
-  const [os, setOs] = useState<string>("Ubuntu");
-  const [osVersion, setOsVersion] = useState<string>("");
-  const [hw, setHw] = useState<HardWare>("Light (Server)");
-  const [openSharedUser, setOpenSharedUser] = useState<string>("private");
 
+  const { os, osVersion, hw, setHw, openSharedUser, setOpenSharedUser } =
+    useContext(VMCreateContext)!;
   const navigate = useNavigate();
 
   const onCreateVM = async () => {
@@ -74,8 +73,8 @@ const VMCreate: React.FC = () => {
     <div className="vm-create flex justify-center size-full ">
       <section className="pt-[40px] w-[81.04166666666667%]">
         <h1 className="h1-bold">VM 생성</h1>
-        <section className="flex justify-between mb-[56px]">
-          <section className="create-section w-[55.7840616966581%]">
+        <section className="flex justify-between gap-[4.0625%] mt-[32px] mb-[56px]">
+          <section className="create-section flex-1 max-w-[868px]">
             <div className="mb-[24px]">
               <p className="pl-[32px] h-[75px] a-items-center p-16-500 c-text1">VM 정보 입력</p>
               <hr className="border-[#E6E7EB]" />
@@ -97,23 +96,22 @@ const VMCreate: React.FC = () => {
                   style={{ width: "100%" }}
                 />
               </div>
-              <div>
+              <div className="z-10">
                 <p className="p-16-400 mb-[20px]">OS 선택</p>
                 <div className="inline-grid grid-cols-4 gap-[20px]">
                   {osList.map((item) => (
-                    <VMCreateOsImage
-                      key={item.name}
-                      item={item}
-                      setOs={setOs}
-                      osVersion={osVersion}
-                      setOsVersion={setOsVersion}
-                    />
+                    <VMCreateOsImage key={item.name} item={item} />
                   ))}
                 </div>
-              </div>
-              <div>
-                <p className="p-16-400 mb-[20px]">하드웨어 선택</p>
-                <VMCreateHwDropdown hardwareList={hardwareList} hw={hw} setHw={setHw} />
+                <div className="mt-[20px]">
+                  <p className="p-16-400 mb-[20px]">하드웨어 선택</p>
+                  <VMCreateHwDropdown
+                    hardwareList={osList.find((item) => item.name === os)?.hardware || []}
+                    hw={hw}
+                    setHw={setHw}
+                    disabled={!osVersion}
+                  />
+                </div>
               </div>
 
               <div>
@@ -132,13 +130,17 @@ const VMCreate: React.FC = () => {
               </div>
             </section>
           </section>
-          <section className="create-section w-[39.20308483290488%]">
+          <section className="create-section w-[39%]">
             <div className="mb-[24px]">
               <p className="pl-[32px] h-[75px] a-items-center p-16-500 c-text1">생성될 VM 요약</p>
               <hr className="border-[#E6E7EB]" />
             </div>
             <section className="px-[32px] flex flex-col gap-[28px]">
-              <VMInfoToBeCreatedItem className="w-full" title="VM 이름" content="(비어 있음)" />
+              <VMInfoToBeCreatedItem
+                className="w-full"
+                title="VM 이름"
+                content={vmName.value || "(비어 있음)"}
+              />
               <div className="flex justify-between w-full">
                 <VMInfoToBeCreatedItem
                   className="w-[47.43589743589744%]"
@@ -204,6 +206,14 @@ const VMCreate: React.FC = () => {
         </section>
       </section>
     </div>
+  );
+};
+
+const VMCreate = () => {
+  return (
+    <VMCreateProvider>
+      <VMCreateContent />
+    </VMCreateProvider>
   );
 };
 

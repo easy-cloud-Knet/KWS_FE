@@ -6,7 +6,7 @@ interface HwDropdownItemProps extends React.ButtonHTMLAttributes<HTMLButtonEleme
 const HwDropdownItem: React.FC<HwDropdownItemProps> = ({ children, ...props }) => {
   return (
     <button
-      className="p-16-400 pl-[20px] w-full h-[48px] bg:transparent rounded-[10px] text-left hover:text-(--Main_Blue) hover:bg-[#ECF2FF] cursor-pointer z-10"
+      className="p-16-400 pl-[20px] w-full h-[48px] bg-white rounded-[10px] text-left hover:text-(--Main_Blue) hover:bg-[#ECF2FF] cursor-pointer z-20"
       {...props}
     >
       {children}
