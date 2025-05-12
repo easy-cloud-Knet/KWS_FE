@@ -1,27 +1,20 @@
 import clsx from "clsx";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 
 import VersionDropdown from "./version_dropdown/VersionDropdown";
+
+import VMCreateContext from "../../contexts/VMCreateContext";
 
 import { OsList } from "../../types/vm";
 
 interface VMCreateOsImageProps {
   item: OsList;
-  setOs: React.Dispatch<React.SetStateAction<string>>;
-  osVersion: string;
-  setOsVersion: React.Dispatch<React.SetStateAction<string>>;
-  selectedOs: string;
 }
 
-const VMCreateOsImage: React.FC<VMCreateOsImageProps> = ({
-  item,
-  setOs,
-  osVersion,
-  setOsVersion,
-  selectedOs,
-}) => {
+const VMCreateOsImage: React.FC<VMCreateOsImageProps> = ({ item }) => {
   const [toggle, setToggle] = useState<boolean>(false);
-  const isSelected = selectedOs === item.name;
+  const { os, setOs, osVersion, setOsVersion } = useContext(VMCreateContext)!;
+  const isSelected = os === item.name;
 
   return (
     <div
@@ -45,7 +38,6 @@ const VMCreateOsImage: React.FC<VMCreateOsImageProps> = ({
       <hr className="border-[#E6E7EB] w-full" />
 
       <VersionDropdown
-        setOs={setOs}
         version={item.version}
         osVersion={isSelected ? osVersion : ""}
         setOsVersion={setOsVersion}

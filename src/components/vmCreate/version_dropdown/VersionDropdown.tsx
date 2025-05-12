@@ -2,11 +2,11 @@ import React, { useEffect, useRef } from "react";
 
 import VersionDropdownItem from "./VersionDropdownItem";
 
-import ic_arrow_down from "../../../assets/image/vmCreate/ic_arrow_down.svg";
 import useOutsideClick from "../../../hooks/useOutsideClick";
 
+import ic_arrow_down from "../../../assets/image/vmCreate/ic_arrow_down.svg";
+
 interface VersionDropdownProps {
-  setOs: React.Dispatch<React.SetStateAction<string>>;
   version: string[];
   osVersion: string;
   setOsVersion: React.Dispatch<React.SetStateAction<string>>;

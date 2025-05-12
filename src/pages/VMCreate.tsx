@@ -1,9 +1,15 @@
 import { FormControlLabel, Radio, RadioGroup } from "@mui/material";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import AuthTextFieldV2 from "../components/auth/textField/AuthTextFieldV2";
 import VMCreateOsImage from "../components/vmCreate/VMCreateOsImage";
+import VMCreateHwDropdown from "../components/vmCreate/hw_dropdown/HwDropdown";
+import VMInfoToBeCreatedItem from "../components/vmCreate/VMInfoToBeCreatedItem";
+import VMManageBtn from "../components/vmManage/VMManageBtn";
+import MuiBtn from "../components/button/MuiBtn";
+
+import VMCreateContext, { VMCreateProvider } from "../contexts/VMCreateContext";
 
 import axiosClient from "../services/api";
 
@@ -13,17 +19,13 @@ import ubuntu from "../assets/image/vmCreate/ubuntu.svg";
 import addIcon from "../assets/image/vmManage/button/add.svg";
 
 import "./VMCreate.css";
-import VMCreateHwDropdown from "../components/vmCreate/hw_dropdown/HwDropdown";
-import VMInfoToBeCreatedItem from "../components/vmCreate/VMInfoToBeCreatedItem";
-import VMManageBtn from "../components/vmManage/VMManageBtn";
-import MuiBtn from "../components/button/MuiBtn";
 
 interface RequiredInput {
   value: string;
   showError: boolean;
 }
 
-const VMCreate: React.FC = () => {
+const VMCreateContent: React.FC = () => {
   const [vmName, setVmName] = useState<RequiredInput>({
     value: "",
     showError: false,
@@ -42,11 +44,9 @@ const VMCreate: React.FC = () => {
       hardware: ["Light (Server)", "Heavy (Storage)"],
     },
   ];
-  const [os, setOs] = useState<string>("");
-  const [osVersion, setOsVersion] = useState<string>("");
-  const [hw, setHw] = useState<string>("");
-  const [openSharedUser, setOpenSharedUser] = useState<string>("private");
 
+  const { os, osVersion, hw, setHw, openSharedUser, setOpenSharedUser } =
+    useContext(VMCreateContext)!;
   const navigate = useNavigate();
 
   const onCreateVM = async () => {
@@ -100,14 +100,7 @@ const VMCreate: React.FC = () => {
                 <p className="p-16-400 mb-[20px]">OS 선택</p>
                 <div className="inline-grid grid-cols-4 gap-[20px]">
                   {osList.map((item) => (
-                    <VMCreateOsImage
-                      key={item.name}
-                      item={item}
-                      setOs={setOs}
-                      osVersion={osVersion}
-                      setOsVersion={setOsVersion}
-                      selectedOs={os}
-                    />
+                    <VMCreateOsImage key={item.name} item={item} />
                   ))}
                 </div>
                 <div className="mt-[20px]">
@@ -143,7 +136,11 @@ const VMCreate: React.FC = () => {
               <hr className="border-[#E6E7EB]" />
             </div>
             <section className="px-[32px] flex flex-col gap-[28px]">
-              <VMInfoToBeCreatedItem className="w-full" title="VM 이름" content="(비어 있음)" />
+              <VMInfoToBeCreatedItem
+                className="w-full"
+                title="VM 이름"
+                content={vmName.value || "(비어 있음)"}
+              />
               <div className="flex justify-between w-full">
                 <VMInfoToBeCreatedItem
                   className="w-[47.43589743589744%]"
@@ -209,6 +206,14 @@ const VMCreate: React.FC = () => {
         </section>
       </section>
     </div>
+  );
+};
+
+const VMCreate = () => {
+  return (
+    <VMCreateProvider>
+      <VMCreateContent />
+    </VMCreateProvider>
   );
 };
 
