@@ -1,4 +1,4 @@
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 
 interface VMCreateContextType {
   os: string;
@@ -29,6 +29,10 @@ export const VMCreateProvider = ({ children }: { children: React.ReactNode }) =>
     openSharedUser,
     setOpenSharedUser,
   };
+
+  useEffect(() => {
+    setHw("");
+  }, [os]);
 
   return <VMCreateContext.Provider value={value}>{children}</VMCreateContext.Provider>;
 };
