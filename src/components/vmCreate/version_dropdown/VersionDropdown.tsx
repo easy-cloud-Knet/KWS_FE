@@ -4,20 +4,24 @@ import VersionDropdownItem from "./VersionDropdownItem";
 
 import useOutsideClick from "../../../hooks/useOutsideClick";
 
+import { OsList } from "../../../types/vm";
+
 import ic_arrow_down from "../../../assets/image/vmCreate/ic_arrow_down.svg";
 
 interface VersionDropdownProps {
-  version: string[];
+  item: OsList;
   osVersion: string;
   setOsVersion: React.Dispatch<React.SetStateAction<string>>;
+  setOs: React.Dispatch<React.SetStateAction<string>>;
   toggle: boolean;
   setToggle: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const VersionDropdown: React.FC<VersionDropdownProps> = ({
-  version,
+  item,
   osVersion,
   setOsVersion,
+  setOs,
   toggle,
   setToggle,
 }) => {
@@ -42,9 +46,15 @@ const VersionDropdown: React.FC<VersionDropdownProps> = ({
       <img className={`${toggle && "rotate-180"}`} src={ic_arrow_down} alt="" />
       {toggle && (
         <div className="absolute top-[40px] left-0 bg-white w-[252px] h-[240px] border-[1px] border-[#E6E7EB] rounded-[10px] overflow-y-scroll">
-          {version.map((item, index) => (
-            <VersionDropdownItem key={index} setOsVersion={setOsVersion} setToggle={setToggle}>
-              {item}
+          {item.version.map((version, index) => (
+            <VersionDropdownItem
+              key={index}
+              item={item}
+              setOsVersion={setOsVersion}
+              setOs={setOs}
+              setToggle={setToggle}
+            >
+              {version}
             </VersionDropdownItem>
           ))}
         </div>
