@@ -106,6 +106,7 @@ const VMCreate: React.FC = () => {
                       setOs={setOs}
                       osVersion={osVersion}
                       setOsVersion={setOsVersion}
+                      selectedOs={os}
                     />
                   ))}
                 </div>

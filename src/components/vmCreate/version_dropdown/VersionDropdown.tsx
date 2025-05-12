@@ -6,6 +6,7 @@ import ic_arrow_down from "../../../assets/image/vmCreate/ic_arrow_down.svg";
 import useOutsideClick from "../../../hooks/useOutsideClick";
 
 interface VersionDropdownProps {
+  setOs: React.Dispatch<React.SetStateAction<string>>;
   version: string[];
   osVersion: string;
   setOsVersion: React.Dispatch<React.SetStateAction<string>>;
@@ -15,6 +16,7 @@ interface VersionDropdownProps {
 
 const VersionDropdown: React.FC<VersionDropdownProps> = ({
   version,
+  osVersion,
   setOsVersion,
   toggle,
   setToggle,
@@ -36,7 +38,7 @@ const VersionDropdown: React.FC<VersionDropdownProps> = ({
           setToggle(!toggle);
         }}
       ></button>
-      <p className="p-14-400 c-text1">버전 선택</p>
+      <p className="p-14-400 c-text1">{osVersion || "버전 선택"}</p>
       <img className={`${toggle && "rotate-180"}`} src={ic_arrow_down} alt="" />
       {toggle && (
         <div className="absolute top-[40px] left-0 bg-white w-[252px] h-[240px] border-[1px] border-[#E6E7EB] rounded-[10px] overflow-y-scroll">
