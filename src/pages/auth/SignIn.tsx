@@ -71,7 +71,10 @@ const SignIn: React.FC = () => {
   };
 
   return (
-    <div className="signin-wrap f-dir-column f-center">
+    <form
+      onSubmit={onClickSignIn}
+      className="signin-wrap f-dir-column f-center"
+    >
       <div className="signin f-dir-column a-items-center">
         <p className="title p-36-600 c-black t-center">KWS</p>
 
@@ -91,8 +94,15 @@ const SignIn: React.FC = () => {
         </div>
 
         <div className="utils-wrap j-content-between a-items-center">
-          <div className="id-save a-items-center c-pointer" onClick={onClickCheckBox}>
-            <Checkbox checked={checked} onChange={onClickCheckBox} sx={{ padding: "0" }} />
+          <div
+            className="id-save a-items-center c-pointer"
+            onClick={onClickCheckBox}
+          >
+            <Checkbox
+              checked={checked}
+              onChange={onClickCheckBox}
+              sx={{ padding: "0" }}
+            />
             <p className="p-16-400">아이디 저장</p>
           </div>
           <TextBtn className="p-16-400 c-blue">비밀번호를 잊으셨나요?</TextBtn>
@@ -102,6 +112,7 @@ const SignIn: React.FC = () => {
           variant="contained"
           disabled={!(email.length > 0 && pw.length > 0)}
           onClick={onClickSignIn}
+          type="submit"
         >
           로그인
         </BottomBtn>
@@ -110,13 +121,16 @@ const SignIn: React.FC = () => {
           <hr></hr>
           <div className="register-btn-wrap j-content-center">
             <p className="p-16-400">계정이 없으신가요?</p>
-            <TextBtn className="p-16-400 c-blue" onClick={() => navigate("/signup")}>
+            <TextBtn
+              className="p-16-400 c-blue"
+              onClick={() => navigate("/signup")}
+            >
               회원가입하기
             </TextBtn>
           </div>
         </div>
       </div>
-    </div>
+    </form>
   );
 };
 

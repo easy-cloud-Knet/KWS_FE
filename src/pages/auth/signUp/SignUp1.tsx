@@ -56,7 +56,10 @@ const SignUp1: React.FC<SignUp1Props> = ({ onNext, userInfo, setUserInfo }) => {
       const err = error as AxiosError<ServerError>;
 
       // 에러 응답이 detail 배열 형태인 경우 처리
-      if (err.response?.data?.detail && Array.isArray(err.response.data.detail)) {
+      if (
+        err.response?.data?.detail &&
+        Array.isArray(err.response.data.detail)
+      ) {
         const duplicateError = err.response.data.detail.find(
           (detail: { msg: string }) => detail.msg === "이메일 중복"
         );
@@ -97,7 +100,10 @@ const SignUp1: React.FC<SignUp1Props> = ({ onNext, userInfo, setUserInfo }) => {
   };
 
   return (
-    <Form onSubmit={checkEmailCode} className="signup-1 f-dir-column f-center">
+    <Form
+      onSubmit={!emailSended ? onClickEmailSend : checkEmailCode}
+      className="signup-1 f-dir-column f-center"
+    >
       <div className="field">
         <>
           <AuthTextFieldV2
@@ -106,7 +112,10 @@ const SignUp1: React.FC<SignUp1Props> = ({ onNext, userInfo, setUserInfo }) => {
             placeholder="kws@kw.ac.kr"
             disabled={emailSended}
             onBlur={() =>
-              setEmailChecker((prevEmailChecker) => ({ ...prevEmailChecker, show: true }))
+              setEmailChecker((prevEmailChecker) => ({
+                ...prevEmailChecker,
+                show: true,
+              }))
             }
             onChange={(event) => setEmail(event.target.value)}
             checkMessageCondition={emailChecker.show && emailChecker.format}
@@ -120,6 +129,7 @@ const SignUp1: React.FC<SignUp1Props> = ({ onNext, userInfo, setUserInfo }) => {
               variant="contained"
               onClick={onClickEmailSend}
               disabled={!emailChecker.format}
+              type="submit"
             >
               인증코드 발송
             </BottomBtn>
@@ -151,7 +161,11 @@ const SignUp1: React.FC<SignUp1Props> = ({ onNext, userInfo, setUserInfo }) => {
               </Button>
             </div>
             <div className="button-wrap j-content-end">
-              <BottomBtn variant="contained" type="submit" disabled={!emailCode}>
+              <BottomBtn
+                variant="contained"
+                type="submit"
+                disabled={!emailCode}
+              >
                 인증
               </BottomBtn>
             </div>
