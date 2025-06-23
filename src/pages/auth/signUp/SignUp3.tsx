@@ -9,6 +9,7 @@ import axiosClient from "../../../services/api";
 import { UserInfo } from "../../../types/auth";
 
 import { NAME_REGEX } from "../../../constants/regex";
+import { AxiosError } from "axios";
 
 interface SignUp3Props {
   userInfo: UserInfo;
@@ -39,7 +40,7 @@ const SignUp3: React.FC<SignUp3Props> = ({ userInfo, setUserInfo }) => {
   const onClickRegisterAllowButton = async () => {
     setIsLoading(true);
     try {
-      await axiosClient.post("/users/register", {
+      await axiosClient.post("/users/register/", {
         email: userInfo.email,
         password: userInfo.pw,
         username: name || userInfo.name,
@@ -47,8 +48,11 @@ const SignUp3: React.FC<SignUp3Props> = ({ userInfo, setUserInfo }) => {
 
       navigate("/signup/success");
     } catch (error) {
-      const err = error as { response?: { data: { detail?: Array<{ msg: string }> } } };
-      alert(err.response?.data.detail || "회원가입 실패");
+      if (error instanceof AxiosError) {
+        alert(error.response?.data?.detail || "회원가입 실패");
+      } else {
+        alert("회원가입 실패");
+      }
     } finally {
       setIsLoading(false);
     }
