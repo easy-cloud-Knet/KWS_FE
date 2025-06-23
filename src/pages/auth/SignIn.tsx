@@ -12,7 +12,7 @@ import AuthContext from "../../contexts/AuthContext";
 import axiosClient from "../../services/api";
 
 import "./SignIn.css";
-import { Error } from "../../types/axios";
+import { AxiosError } from "axios";
 
 const SignIn: React.FC = () => {
   const [email, setEmail] = useState<string>("");
@@ -37,7 +37,8 @@ const SignIn: React.FC = () => {
     setChecked(!checked);
   };
 
-  const onClickSignIn = async () => {
+  const onClickSignIn = async (event: React.FormEvent) => {
+    event.preventDefault();
     try {
       const response = await axiosClient.post("/users/login", {
         email: email,
@@ -64,9 +65,12 @@ const SignIn: React.FC = () => {
       }
 
       navigate("/");
-    } catch (err: unknown) {
-      const error = err as Error;
-      alert(error.response?.data?.detail || "로그인 실패");
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        alert(error.response?.data?.detail || "로그인 실패");
+      } else {
+        alert("로그인 실패");
+      }
     }
   };
 
@@ -111,7 +115,6 @@ const SignIn: React.FC = () => {
         <BottomBtn
           variant="contained"
           disabled={!(email.length > 0 && pw.length > 0)}
-          onClick={onClickSignIn}
           type="submit"
         >
           로그인
