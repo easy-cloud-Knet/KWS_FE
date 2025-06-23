@@ -40,7 +40,7 @@ const SignUp3: React.FC<SignUp3Props> = ({ userInfo, setUserInfo }) => {
   const onClickRegisterAllowButton = async () => {
     setIsLoading(true);
     try {
-      await axiosClient.post("/users/register/", {
+      await axiosClient.post("/users/register", {
         email: userInfo.email,
         password: userInfo.pw,
         username: name || userInfo.name,
