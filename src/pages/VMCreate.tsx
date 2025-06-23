@@ -19,6 +19,7 @@ import ubuntu from "../assets/image/vmCreate/ubuntu.svg";
 import addIcon from "../assets/image/vmManage/button/add.svg";
 
 import "./VMCreate.css";
+import { AxiosError } from "axios";
 
 interface RequiredInput {
   value: string;
@@ -34,7 +35,14 @@ const VMCreateContent: React.FC = () => {
     {
       name: "Ubuntu",
       img: ubuntu,
-      version: ["24.04 LTS", "22.04 LTS", "20.04 LTS", "24.10", "23.10", "23.04"],
+      version: [
+        "24.04 LTS",
+        "22.04 LTS",
+        "20.04 LTS",
+        "24.10",
+        "23.10",
+        "23.04",
+      ],
       hardware: ["Light (Server)", "Heavy (Storage)", "GPU (AI/ML)"],
     },
     {
@@ -51,20 +59,17 @@ const VMCreateContent: React.FC = () => {
 
   const onCreateVM = async () => {
     try {
-      await axiosClient.post(
-        "/vm",
-        {},
-        {
-          params: {
-            name: vmName.value,
-            os: os,
-            ip: "",
-          },
-        }
-      );
+      await axiosClient.post("/vm/", {
+        name: vmName.value,
+        os: os,
+        ip: "sadffasd",
+      });
 
       navigate("/");
-    } catch {
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        console.log(error.response?.data);
+      }
       alert("VM 생성에 실패했습니다.");
     }
   };
@@ -76,7 +81,9 @@ const VMCreateContent: React.FC = () => {
         <section className="flex justify-between gap-[4.0625%] mt-[32px] mb-[56px]">
           <section className="create-section flex-1 max-w-[868px]">
             <div className="mb-[24px]">
-              <p className="pl-[32px] h-[75px] a-items-center p-16-500 c-text1">VM 정보 입력</p>
+              <p className="pl-[32px] h-[75px] a-items-center p-16-500 c-text1">
+                VM 정보 입력
+              </p>
               <hr className="border-[#E6E7EB]" />
             </div>
 
@@ -88,8 +95,12 @@ const VMCreateContent: React.FC = () => {
                 <AuthTextFieldV2
                   value={vmName.value}
                   placeholder="한글, 영문, 숫자 포함 가능, 2~12자"
-                  onBlur={() => setVmName({ ...vmName, showError: true as boolean })}
-                  onChange={(e) => setVmName({ ...vmName, value: e.target.value as string })}
+                  onBlur={() =>
+                    setVmName({ ...vmName, showError: true as boolean })
+                  }
+                  onChange={(e) =>
+                    setVmName({ ...vmName, value: e.target.value as string })
+                  }
                   error={vmName.showError && !vmName.value}
                   helperText={vmName.showError && "* 필수"}
                   required
@@ -106,7 +117,9 @@ const VMCreateContent: React.FC = () => {
                 <div className="mt-[20px]">
                   <p className="p-16-400 mb-[20px]">하드웨어 선택</p>
                   <VMCreateHwDropdown
-                    hardwareList={osList.find((item) => item.name === os)?.hardware || []}
+                    hardwareList={
+                      osList.find((item) => item.name === os)?.hardware || []
+                    }
                     hw={hw}
                     setHw={setHw}
                     disabled={!osVersion}
@@ -124,15 +137,25 @@ const VMCreateContent: React.FC = () => {
                     setOpenSharedUser(event.target.value as unknown as string);
                   }}
                 >
-                  <FormControlLabel value="private" control={<Radio />} label="private" />
-                  <FormControlLabel value="public" control={<Radio />} label="Public" />
+                  <FormControlLabel
+                    value="private"
+                    control={<Radio />}
+                    label="private"
+                  />
+                  <FormControlLabel
+                    value="public"
+                    control={<Radio />}
+                    label="Public"
+                  />
                 </RadioGroup>
               </div>
             </section>
           </section>
           <section className="create-section w-[39%]">
             <div className="mb-[24px]">
-              <p className="pl-[32px] h-[75px] a-items-center p-16-500 c-text1">생성될 VM 요약</p>
+              <p className="pl-[32px] h-[75px] a-items-center p-16-500 c-text1">
+                생성될 VM 요약
+              </p>
               <hr className="border-[#E6E7EB]" />
             </div>
             <section className="px-[32px] flex flex-col gap-[28px]">
@@ -197,7 +220,11 @@ const VMCreateContent: React.FC = () => {
                 >
                   취소
                 </MuiBtn>
-                <VMManageBtn className="add cursor-pointer" src={addIcon} onClick={onCreateVM}>
+                <VMManageBtn
+                  className="add cursor-pointer"
+                  src={addIcon}
+                  onClick={onCreateVM}
+                >
                   생성
                 </VMManageBtn>
               </div>
