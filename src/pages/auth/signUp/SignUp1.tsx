@@ -104,6 +104,9 @@ const SignUp1: React.FC<SignUp1Props> = ({ onNext, userInfo, setUserInfo }) => {
       onSubmit={!emailSended ? onClickEmailSend : checkEmailCode}
       className="signup-1 f-dir-column f-center"
     >
+      {/* 더미용 submit 버튼 */}
+      <button type="submit"></button>
+
       <div className="field">
         <>
           <AuthTextFieldV2
