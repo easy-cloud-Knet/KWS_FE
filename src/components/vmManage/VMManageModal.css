@@ -1,36 +1,14 @@
-.vm-manage-modal {
-  padding-top: 44px !important;
-  padding-left: 80px !important;
-  padding-right: 54px !important;
-}
-
-.vm-manage-modal .vm-manage-modal-title {
-  margin-bottom: 60px;
-}
-
 .vm-manage-modal .vm-manage-modal-title .title-btn-wrap {
   gap: 16px;
 }
 
-.vm-manage-modal .vm-modal-inside {
-  padding-right: 32px;
-}
-
 .vm-manage-modal .vm-modal-inside .vm-modal-column {
-  gap: 49px;
-}
-
-.vm-manage-modal .vm-modal-inside .vm-modal-column:nth-of-type(1) {
-  gap: 44px;
+  gap: 21.753607103218645948945615982242%;
 }
 
 .vm-manage-modal .bottom-btn-wrap {
   display: flex;
   gap: 24px;
-
-  position: absolute;
-  right: 54px;
-  bottom: 50px;
 }
 
 .vm-manage-modal .user-manage-btn {

@@ -1,11 +1,16 @@
 import "./ToggleSwitch.css";
 
-const ToggleSwitch = ({ ...props }) => {
+const ToggleSwitch: React.FC<React.InputHTMLAttributes<HTMLInputElement>> = ({
+  className,
+  ...props
+}) => {
   return (
-    <label className="toggle-switch">
-      <input type="checkbox" {...props} />
-      <span className="slider round"></span>
-    </label>
+    <div className={className}>
+      <label className="toggle-switch">
+        <input type="checkbox" {...props} />
+        <span className="slider round"></span>
+      </label>
+    </div>
   );
 };
 

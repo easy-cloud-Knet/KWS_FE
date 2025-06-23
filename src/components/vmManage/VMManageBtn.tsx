@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import React from "react";
 
 import "./VMManageBtn.css";
@@ -10,7 +11,7 @@ interface VMManageBtnProps extends React.ButtonHTMLAttributes<HTMLButtonElement>
 
 const VMManageBtn: React.FC<VMManageBtnProps> = ({ children, src, className, ...props }) => {
   return (
-    <button className={"vm-manage-btn default-button " + className} {...props}>
+    <button className={clsx("vm-manage-btn default-button cursor-pointer disabled:cursor-default", className)} {...props}>
       <img src={src} alt="" />
       {children}
     </button>
