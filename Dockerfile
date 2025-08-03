@@ -7,8 +7,14 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm install --legacy-peer-deps
 
-# 애플리케이션 코드 복사 및 빌드
+# 애플리케이션 코드 복사
 COPY . .
+
+# 빌드 시 환경 변수 설정
+ARG VITE_API_DOMAIN
+ENV VITE_API_DOMAIN=${VITE_API_DOMAIN}
+
+# 애플리케이션 빌드
 RUN npm run build
 
 # Step 2: Serve the built app with Nginx
