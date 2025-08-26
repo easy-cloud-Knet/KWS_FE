@@ -132,7 +132,6 @@ const SignUp1: React.FC<SignUp1Props> = ({ onNext, userInfo, setUserInfo }) => {
           {!emailSended && (
             <BottomBtn
               variant="contained"
-              onClick={onClickEmailSend}
               disabled={!emailChecker.format}
               type="submit"
             >
