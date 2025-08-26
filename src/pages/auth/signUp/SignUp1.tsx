@@ -14,6 +14,7 @@ import { ServerError } from "../../../types/axios";
 import { EMAIL_REGEX } from "../../../constants/regex";
 
 import "./SignUp1.css";
+import { toastAlert } from "../../../utils/ToastAlert";
 
 interface SignUp1Props {
   onNext: () => void;
@@ -48,13 +49,14 @@ const SignUp1: React.FC<SignUp1Props> = ({ onNext, userInfo, setUserInfo }) => {
       return;
     }
 
+    toastAlert("인증번호 발송 중...", "info");
     try {
       await axiosClient.post("/users/send-email", {
         email: email,
         purpose: "register",
       });
       setEmailSended(true);
-      alert("입력하신 이메일로 인증번호를 발송하였습니다.");
+      toastAlert("입력하신 이메일로 인증번호를 발송하였습니다.", "success");
     } catch (error) {
       const err = error as AxiosError<ServerError>;
 
@@ -89,7 +91,7 @@ const SignUp1: React.FC<SignUp1Props> = ({ onNext, userInfo, setUserInfo }) => {
           code: emailCode,
         });
 
-        alert("이메일이 인증되었습니다.");
+        toastAlert("이메일이 인증되었습니다.", "success");
       } catch {
         alert("인증번호가 일치하지 않습니다.");
       }
