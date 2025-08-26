@@ -45,6 +45,7 @@ const VMManage: React.FC = () => {
   const [deleteAlert, setDeleteAlert] = useState({
     show: false,
     success: false,
+    message: "",
   });
 
   const [showDetailModal, setShowDetailModal] = useState(false);
@@ -101,14 +102,57 @@ const VMManage: React.FC = () => {
   };
 
   const onClickDeleteBtn = async () => {
-    // TODO: API 연결
-    await axiosClient.delete(`/vm/$`);
+    try {
+      // 삭제 요청 병렬 수행
+      const results = await Promise.allSettled(
+        checkedVMs.map((vmId) => axiosClient.delete(`/vm/${vmId}`))
+      );
 
-    setVmList((prevList) => prevList.filter((vm) => !checkedVMs.includes(vm.id)));
-    setCheckedVMs([]);
+      const succeeded: string[] = [];
+      const failed: string[] = [];
+      results.forEach((res, idx) => {
+        if (res.status === "fulfilled") {
+          succeeded.push(checkedVMs[idx]);
+        } else {
+          failed.push(checkedVMs[idx]);
+        }
+      });
 
-    setDeleteAlert({ show: true, success: true });
-    onCloseDeleteDialog();
+      // 3) 성공한 VM만 리스트에서 제거 - 추후 fetch 로직 호출로 변경
+      if (succeeded.length > 0) {
+        setVmList((prev) => prev.filter((vm) => !succeeded.includes(vm.id)));
+      }
+      setCheckedVMs([]);
+      onCloseDeleteDialog();
+
+      if (failed.length === 0) {
+        setDeleteAlert({
+          show: true,
+          success: true,
+          message: "선택한 VM을 모두 성공적으로 삭제했습니다.",
+        });
+      } else if (succeeded.length > 0) {
+        setDeleteAlert({
+          show: true,
+          success: false,
+          message: `총 ${
+            failed.length
+          }개의 VM 삭제에 실패했습니다: ${failed.join(", ")}`,
+        });
+      } else {
+        setDeleteAlert({
+          show: true,
+          success: false,
+          message: "VM 삭제에 실패했습니다.",
+        });
+      }
+    } catch {
+      setDeleteAlert({
+        show: true,
+        success: false,
+        message: "삭제 요청 중 예기치 않은 오류가 발생했습니다.",
+      });
+    }
   };
 
   // modal 관련 함수들
@@ -118,7 +162,9 @@ const VMManage: React.FC = () => {
   };
 
   const onChangeName = (id: string, newName: string) => {
-    setVmList((prevList) => prevList.map((vm) => (vm.id === id ? { ...vm, vmName: newName } : vm)));
+    setVmList((prevList) =>
+      prevList.map((vm) => (vm.id === id ? { ...vm, vmName: newName } : vm))
+    );
   };
 
   const onChangeStatus = (id: string, newStatus: Status) => {
@@ -142,14 +188,23 @@ const VMManage: React.FC = () => {
             삭제
           </VMManageBtn>
         )}
-        <VMManageBtn className="refresh" src={refreshIcon} onClick={() => window.location.reload()}>
+        <VMManageBtn
+          className="refresh"
+          src={refreshIcon}
+          onClick={() => window.location.reload()}
+        >
           갱신
         </VMManageBtn>
-        <VMManageBtn className="add" src={addIcon} onClick={() => navigate("/create")}>
+        <VMManageBtn
+          className="add"
+          src={addIcon}
+          onClick={() => navigate("/create")}
+        >
           생성
         </VMManageBtn>
       </div>
 
+      {/* 삭제 Dialog */}
       <Dialog
         open={showDeleteDialog}
         onClose={onCloseDeleteDialog}
@@ -158,7 +213,10 @@ const VMManage: React.FC = () => {
         maxWidth="sm"
         fullWidth={true}
       >
-        <DialogTitle id="alert-dialog-title" sx={{ marginBottom: "calc(31px - 16px)" }}>
+        <DialogTitle
+          id="alert-dialog-title"
+          sx={{ marginBottom: "calc(31px - 16px)" }}
+        >
           <p className="p-21-400">VM 삭제</p>
         </DialogTitle>
         <DialogContent>
@@ -179,7 +237,11 @@ const VMManage: React.FC = () => {
           >
             삭제하기
           </MuiBtn>
-          <MuiBtn onClick={onCloseDeleteDialog} autoFocus sx={{ width: "96px" }}>
+          <MuiBtn
+            onClick={onCloseDeleteDialog}
+            autoFocus
+            sx={{ width: "96px" }}
+          >
             취소하기
           </MuiBtn>
         </DialogActions>
@@ -192,8 +254,11 @@ const VMManage: React.FC = () => {
         onClose={() => setDeleteAlert({ ...deleteAlert, show: false })}
         anchorOrigin={{ vertical: "top", horizontal: "right" }}
       >
-        <Alert severity={deleteAlert.success ? "success" : "error"} sx={{ width: "100%" }}>
-          {deleteAlert.success ? "성공적으로 삭제되었습니다." : "삭제 중 오류가 발생했습니다."}
+        <Alert
+          severity={deleteAlert.success ? "success" : "error"}
+          sx={{ width: "100%" }}
+        >
+          {deleteAlert.message}
         </Alert>
       </Snackbar>
 
@@ -218,8 +283,12 @@ const VMManage: React.FC = () => {
             <TableRow sx={{ height: "59px" }}>
               <TableCell padding="checkbox">
                 <Checkbox
-                  indeterminate={checkedVMs.length > 0 && checkedVMs.length < vmList.length}
-                  checked={vmList.length > 0 && checkedVMs.length === vmList.length}
+                  indeterminate={
+                    checkedVMs.length > 0 && checkedVMs.length < vmList.length
+                  }
+                  checked={
+                    vmList.length > 0 && checkedVMs.length === vmList.length
+                  }
                   onChange={(event) => {
                     if (event.target.checked) {
                       const allVMIds = vmList.map((vm) => vm.id);
@@ -250,7 +319,10 @@ const VMManage: React.FC = () => {
                 }}
                 sx={{ cursor: "pointer" }}
               >
-                <TableCell padding="checkbox" onClick={(event) => event.stopPropagation()}>
+                <TableCell
+                  padding="checkbox"
+                  onClick={(event) => event.stopPropagation()}
+                >
                   <Checkbox
                     checked={checkedVMs.includes(vm.id)}
                     onChange={() => {
@@ -277,8 +349,15 @@ const VMManage: React.FC = () => {
                 </TableCell>
                 <TableCell>
                   <div className="current-status-wrap a-items-center">
-                    <div className={`current-status ${vm.currentStatus} p-16-400 f-center`}>
-                      <img src={vm.currentStatus === "booting" ? booting : launching} alt="" />
+                    <div
+                      className={`current-status ${vm.currentStatus} p-16-400 f-center`}
+                    >
+                      <img
+                        src={
+                          vm.currentStatus === "booting" ? booting : launching
+                        }
+                        alt=""
+                      />
                       {currentStatusMapping(vm.currentStatus)}
                     </div>
                     <div className="runtime a-items-center">
@@ -297,7 +376,9 @@ const VMManage: React.FC = () => {
 };
 export default VMManage;
 
-const TableCellAttribute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+const TableCellAttribute: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   return (
     <TableCell>
       <p className="p-14-400 c-grey1">{children}</p>

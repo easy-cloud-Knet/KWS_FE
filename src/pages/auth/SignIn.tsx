@@ -127,6 +127,7 @@ const SignIn: React.FC = () => {
             <TextBtn
               className="p-16-400 c-blue"
               onClick={() => navigate("/signup")}
+              type="button"
             >
               회원가입하기
             </TextBtn>

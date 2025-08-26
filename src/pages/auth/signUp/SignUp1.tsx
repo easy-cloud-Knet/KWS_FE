@@ -38,20 +38,23 @@ const SignUp1: React.FC<SignUp1Props> = ({ onNext, userInfo, setUserInfo }) => {
     }));
   }, [email]);
 
-  const onClickEmailSend = () => {
-    alert("입력하신 이메일로 인증번호를 발송하였습니다.");
-    // 이메일 발송 API 호출
-    sendEmail();
-  };
+  const onClickEmailSend = async () => {
+    if (!email) {
+      return;
+    }
 
-  const sendEmail = async () => {
+    if (!emailChecker.format) {
+      alert("이메일 형식과 맞지 않습니다.");
+      return;
+    }
+
     try {
-      await axiosClient.post(
-        "/users/send-email",
-        { email: email },
-        { params: { purpose: "register" } }
-      );
+      await axiosClient.post("/users/send-email", {
+        email: email,
+        purpose: "register",
+      });
       setEmailSended(true);
+      alert("입력하신 이메일로 인증번호를 발송하였습니다.");
     } catch (error) {
       const err = error as AxiosError<ServerError>;
 
@@ -81,13 +84,12 @@ const SignUp1: React.FC<SignUp1Props> = ({ onNext, userInfo, setUserInfo }) => {
 
     const verifyCode = async () => {
       try {
-        await axiosClient.post(
-          "/users/verify-code",
-          { email: email },
-          { params: { code: emailCode } }
-        );
+        await axiosClient.post("/users/verify-code", {
+          email: email,
+          code: emailCode,
+        });
 
-        // alert("이메일이 인증되었습니다.");
+        alert("이메일이 인증되었습니다.");
       } catch {
         alert("인증번호가 일치하지 않습니다.");
       }
@@ -124,7 +126,7 @@ const SignUp1: React.FC<SignUp1Props> = ({ onNext, userInfo, setUserInfo }) => {
             checkMessageCondition={emailChecker.show && emailChecker.format}
             checkMessageContent="사용 가능한 이메일입니다."
             errorMessageCondition={emailChecker.show && !emailChecker.format}
-            errorMessageContent="이메일 형식과 맞지 않습니다."
+            errorMessageContent="@kw.ac.kr 이메일 형식과 맞지 않습니다."
           />
           <div style={{ height: "3.333vh" }}></div> {/* 36px */}
           {!emailSended && (
