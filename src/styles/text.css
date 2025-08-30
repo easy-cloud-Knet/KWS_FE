@@ -376,3 +376,10 @@
 .t-underline {
   text-decoration-line: underline;
 }
+
+.text-pr-r-16 {
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
