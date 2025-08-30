@@ -1,4 +1,5 @@
 import js from "@eslint/js";
+import prettier from "eslint-config-prettier";
 import pluginImport from "eslint-plugin-import";
 import reactHooks from "eslint-plugin-react-hooks";
 import reactRefresh from "eslint-plugin-react-refresh";
@@ -11,7 +12,7 @@ export default tseslint.config(
     extends: [
       js.configs.recommended,
       ...tseslint.configs.recommended,
-      "eslint-config-prettier",
+      prettier,
     ],
     files: ["**/*.{ts,tsx}"],
     languageOptions: {
@@ -27,6 +28,7 @@ export default tseslint.config(
       "import/resolver": {
         typescript: { project: ["./tsconfig.app.json"] },
       },
+      "import/internal-regex": "^@/",
     },
     rules: {
       ...reactHooks.configs.recommended.rules,
