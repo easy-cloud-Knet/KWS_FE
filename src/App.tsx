@@ -1,22 +1,21 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
-import DefaultLayout from "./layouts/DefaultLayout";
+import { AuthProvider } from "@/contexts/AuthContext.tsx";
+import DefaultLayout from "@/layouts/DefaultLayout";
+import DefaultLayoutV2 from "@/layouts/DefaultLayoutV2.tsx";
+import SignIn from "@/pages/auth/SignIn";
+import SignUpDefault from "@/pages/auth/signUp/SignUpDefault";
+import SignUpSuccess from "@/pages/auth/signUp/SignUpSuccess.tsx";
+import Invitation from "@/pages/Invitation.tsx";
+import Landing from "@/pages/Landing";
+import VMCreate from "@/pages/VMCreate";
+import VMManage from "@/pages/VMManage";
 
-import VMCreate from "./pages/VMCreate";
-import VMManage from "./pages/VMManage";
-import SignUpDefault from "./pages/auth/signUp/SignUpDefault";
-import SignIn from "./pages/auth/SignIn";
-import SignUpSuccess from "./pages/auth/signUp/SignUpSuccess.tsx";
-import Invitation from "./pages/Invitation.tsx";
-
-import { AuthProvider } from "./contexts/AuthContext.tsx";
-
+import "@/styles/colors.css";
+import "@/styles/text.css";
+import "@/styles/utilities.css";
 import "@fontsource/pretendard/400.css"; // Regular (400)
 import "@fontsource/pretendard/600.css"; // Semi-bold (600)
-
-import "./styles/colors.css";
-import "./styles/text.css";
-import "./styles/utilities.css";
 
 function App() {
   return (
@@ -33,6 +32,9 @@ function App() {
               <Route path="signup/success" element={<SignUpSuccess />} />
 
               <Route path="/invitation" element={<Invitation />} />
+            </Route>
+            <Route path="/landing" element={<DefaultLayoutV2 />}>
+              <Route index element={<Landing />} />
             </Route>
           </Routes>
         </AuthProvider>
