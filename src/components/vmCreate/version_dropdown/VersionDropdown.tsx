@@ -1,12 +1,12 @@
 import React, { useEffect, useRef } from "react";
 
-import VersionDropdownItem from "./VersionDropdownItem";
-
+import ic_arrow_down from "../../../assets/image/vmCreate/ic_arrow_down.svg";
 import useOutsideClick from "../../../hooks/useOutsideClick";
-
 import { OsList } from "../../../types/vm";
 
-import ic_arrow_down from "../../../assets/image/vmCreate/ic_arrow_down.svg";
+import VersionDropdownItem from "./VersionDropdownItem";
+
+
 
 interface VersionDropdownProps {
   item: OsList;

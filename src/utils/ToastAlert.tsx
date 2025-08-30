@@ -7,6 +7,7 @@ interface ToastAlertProps {
   type: AlertColor;
 }
 
+// eslint-disable-next-line 
 const Toast: React.FC<ToastAlertProps> = ({ message, type }) => {
   const [open, setOpen] = useState(true);
 

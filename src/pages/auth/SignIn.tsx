@@ -1,18 +1,16 @@
 import { Checkbox } from "@mui/material";
+import { AxiosError } from "axios";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import AuthTextFieldV2 from "../../components/auth/textField/AuthTextFieldV2";
 import AuthPwTextFieldV2 from "../../components/auth/textField/AuthPwTextFieldV2";
+import AuthTextFieldV2 from "../../components/auth/textField/AuthTextFieldV2";
 import BottomBtn from "../../components/button/BottomBtn";
 import TextBtn from "../../components/button/TextBtn";
-
 import AuthContext from "../../contexts/AuthContext";
-
 import axiosClient from "../../services/api";
 
 import "./SignIn.css";
-import { AxiosError } from "axios";
 
 const SignIn: React.FC = () => {
   const [email, setEmail] = useState<string>("");

@@ -1,11 +1,11 @@
 import clsx from "clsx";
 import React, { useContext, useState } from "react";
 
-import VersionDropdown from "./version_dropdown/VersionDropdown";
 
 import VMCreateContext from "../../contexts/VMCreateContext";
-
 import { OsList } from "../../types/vm";
+
+import VersionDropdown from "./version_dropdown/VersionDropdown";
 
 interface VMCreateOsImageProps {
   item: OsList;

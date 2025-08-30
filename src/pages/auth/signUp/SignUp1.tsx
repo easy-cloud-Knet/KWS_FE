@@ -5,16 +5,12 @@ import { useEffect, useState } from "react";
 import Form from "../../../components/auth/Form";
 import AuthTextFieldV2 from "../../../components/auth/textField/AuthTextFieldV2";
 import BottomBtn from "../../../components/button/BottomBtn";
-
+import { EMAIL_REGEX } from "../../../constants/regex";
 import axiosClient from "../../../services/api";
-
 import { UserInfo } from "../../../types/auth";
 import { ServerError } from "../../../types/axios";
-
-import { EMAIL_REGEX } from "../../../constants/regex";
-
-import "./SignUp1.css";
 import { toastAlert } from "../../../utils/ToastAlert";
+import "./SignUp1.css";
 
 interface SignUp1Props {
   onNext: () => void;

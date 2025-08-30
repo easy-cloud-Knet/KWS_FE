@@ -1,20 +1,19 @@
-import { Box, Typography, Slide, TextField, IconButton } from "@mui/material";
 import ModeEditOutlineOutlinedIcon from "@mui/icons-material/ModeEditOutlineOutlined";
+import { Box, Typography, Slide, TextField, IconButton } from "@mui/material";
+import clsx from "clsx";
 import React, { useEffect, useRef, useState } from "react";
-
-import VMManageBtn from "./VMManageBtn";
-import VMManageUsers from "./VMManageUsers";
-import ImageBtn from "../button/ImageBtn";
-import ToggleSwitch from "../button/ToggleSwitch";
-
-import { Status, VM } from "../../types/vm";
 
 import closeBtn from "../../assets/image/button/closeBtn.svg";
 import link from "../../assets/image/vmManage/vmManageModal/link.svg";
 import user from "../../assets/image/vmManage/vmManageModal/user.svg";
+import { Status, VM } from "../../types/vm";
+import ImageBtn from "../button/ImageBtn";
+import ToggleSwitch from "../button/ToggleSwitch";
+
+import VMManageBtn from "./VMManageBtn";
+import VMManageUsers from "./VMManageUsers";
 
 import "./VMManageModal.css";
-import clsx from "clsx";
 
 interface VMDetailModalProps {
   open: boolean;

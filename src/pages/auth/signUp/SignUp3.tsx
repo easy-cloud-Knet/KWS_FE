@@ -1,15 +1,12 @@
+import { AxiosError } from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import AuthTextFieldV2 from "../../../components/auth/textField/AuthTextFieldV2";
 import BottomBtn from "../../../components/button/BottomBtn";
-
-import axiosClient from "../../../services/api";
-
-import { UserInfo } from "../../../types/auth";
-
 import { NAME_REGEX } from "../../../constants/regex";
-import { AxiosError } from "axios";
+import axiosClient from "../../../services/api";
+import { UserInfo } from "../../../types/auth";
 
 interface SignUp3Props {
   userInfo: UserInfo;

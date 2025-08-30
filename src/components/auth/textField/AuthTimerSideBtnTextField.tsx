@@ -2,7 +2,6 @@ import { Button, InputAdornment } from "@mui/material";
 import { useEffect, useState } from "react";
 
 import AuthTextField from "./AuthTextField";
-
 import { AuthSideBtnTextFieldProps } from "./types/textField";
 
 import "./AuthTimerSideBtnTextField.css";

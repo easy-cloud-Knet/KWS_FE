@@ -2,9 +2,10 @@ import { useContext } from "react";
 import { Link } from "react-router-dom";
 import { useLocation, useNavigate } from "react-router-dom";
 
+import AuthContext from "../contexts/AuthContext";
+
 import MuiBtn from "./button/MuiBtn";
 
-import AuthContext from "../contexts/AuthContext";
 
 import "./NavBar.css";
 
