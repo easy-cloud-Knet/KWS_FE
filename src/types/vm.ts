@@ -19,6 +19,6 @@ export interface VM {
 export interface OsList {
   name: string;
   img?: string;
-  version: string[];
+  version: { [key: string]: string }[];
   hardware: string[];
 }

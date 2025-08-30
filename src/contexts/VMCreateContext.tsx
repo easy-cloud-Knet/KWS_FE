@@ -5,17 +5,26 @@ interface VMCreateContextType {
   setOs: React.Dispatch<React.SetStateAction<string>>;
   osVersion: string;
   setOsVersion: React.Dispatch<React.SetStateAction<string>>;
+  osVersionImgName: string;
+  setOsVersionImgName: React.Dispatch<React.SetStateAction<string>>;
   hw: string;
   setHw: React.Dispatch<React.SetStateAction<string>>;
   openSharedUser: string;
   setOpenSharedUser: React.Dispatch<React.SetStateAction<string>>;
 }
 
-const VMCreateContext = createContext<VMCreateContextType | undefined>(undefined);
+const VMCreateContext = createContext<VMCreateContextType | undefined>(
+  undefined
+);
 
-export const VMCreateProvider = ({ children }: { children: React.ReactNode }) => {
+export const VMCreateProvider = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
   const [os, setOs] = useState<string>("");
   const [osVersion, setOsVersion] = useState<string>("");
+  const [osVersionImgName, setOsVersionImgName] = useState<string>("");
   const [hw, setHw] = useState<string>("");
   const [openSharedUser, setOpenSharedUser] = useState<string>("private");
 
@@ -24,6 +33,8 @@ export const VMCreateProvider = ({ children }: { children: React.ReactNode }) =>
     setOs,
     osVersion,
     setOsVersion,
+    osVersionImgName,
+    setOsVersionImgName,
     hw,
     setHw,
     openSharedUser,
@@ -34,7 +45,11 @@ export const VMCreateProvider = ({ children }: { children: React.ReactNode }) =>
     setHw("");
   }, [os]);
 
-  return <VMCreateContext.Provider value={value}>{children}</VMCreateContext.Provider>;
+  return (
+    <VMCreateContext.Provider value={value}>
+      {children}
+    </VMCreateContext.Provider>
+  );
 };
 
 export default VMCreateContext;
