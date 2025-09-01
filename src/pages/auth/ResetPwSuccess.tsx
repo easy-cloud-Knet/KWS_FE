@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import ic_check_auth from "@/assets/image/auth/ic_check_auth.svg";
 import BottomBtn from "@/components/button/BottomBtn";
 
-const SignUpSuccess = () => {
+const ResetPwSuccess = () => {
   const navigate = useNavigate();
 
   return (
@@ -11,11 +11,11 @@ const SignUpSuccess = () => {
       <div className="flex flex-col items-center gap-[32px]">
         <img src={ic_check_auth} alt="" />
 
-        <h2 className="text-pr-sb-36 text-center">회원가입 완료</h2>
+        <h2 className="text-pr-sb-36 text-center">비밀번호 변경 완료</h2>
 
         <p className="text-pr-r-21 text-center c-grey">
-          도들에 오신 것을 환영합니다. <br />
-          이제부터 클라우드 환경을 자유롭게 탐험해 보세요!
+          안전하게 비밀번호를 변경하였습니다. <br />
+          변경된 비밀번호로 로그인해 주세요.
         </p>
       </div>
 
@@ -34,4 +34,4 @@ const SignUpSuccess = () => {
   );
 };
 
-export default SignUpSuccess;
+export default ResetPwSuccess;

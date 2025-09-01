@@ -1,7 +1,6 @@
 import { Button, InputAdornment } from "@mui/material";
 
 import AuthTextField from "./AuthTextField";
-
 import { AuthSideBtnTextFieldProps } from "./types/textField";
 
 /**

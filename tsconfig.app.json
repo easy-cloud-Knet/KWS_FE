@@ -9,6 +9,11 @@
     "skipLibCheck": true,
     "typeRoots": ["./src/types", "./node_modules/@types"],
 
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    },
+
     /* Bundler mode */
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,

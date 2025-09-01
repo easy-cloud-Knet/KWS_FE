@@ -1,25 +1,21 @@
 import { FormControlLabel, Radio, RadioGroup } from "@mui/material";
+import { AxiosError } from "axios";
 import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import AuthTextFieldV2 from "../components/auth/textField/AuthTextFieldV2";
-import VMCreateOsImage from "../components/vmCreate/VMCreateOsImage";
-import VMCreateHwDropdown from "../components/vmCreate/hw_dropdown/HwDropdown";
-import VMInfoToBeCreatedItem from "../components/vmCreate/VMInfoToBeCreatedItem";
-import VMManageBtn from "../components/vmManage/VMManageBtn";
-import MuiBtn from "../components/button/MuiBtn";
-
-import VMCreateContext, { VMCreateProvider } from "../contexts/VMCreateContext";
-
-import axiosClient from "../services/api";
-
-import { OsList } from "../types/vm";
-
-import ubuntu from "../assets/image/vmCreate/ubuntu.svg";
-import addIcon from "../assets/image/vmManage/button/add.svg";
+import ubuntu from "@/assets/image/vmCreate/ubuntu.svg";
+import addIcon from "@/assets/image/vmManage/button/add.svg";
+import AuthTextFieldV2 from "@/components/auth/textField/AuthTextFieldV2";
+import MuiBtn from "@/components/button/MuiBtn";
+import VMCreateHwDropdown from "@/components/vmCreate/hw_dropdown/HwDropdown";
+import VMCreateOsImage from "@/components/vmCreate/VMCreateOsImage";
+import VMInfoToBeCreatedItem from "@/components/vmCreate/VMInfoToBeCreatedItem";
+import VMManageBtn from "@/components/vmManage/VMManageBtn";
+import VMCreateContext, { VMCreateProvider } from "@/contexts/VMCreateContext";
+import axiosClient from "@/services/api";
+import { OsList } from "@/types/vm";
 
 import "./VMCreate.css";
-import { AxiosError } from "axios";
 
 interface RequiredInput {
   value: string;
@@ -36,32 +32,39 @@ const VMCreateContent: React.FC = () => {
       name: "Ubuntu",
       img: ubuntu,
       version: [
-        "24.04 LTS",
-        "22.04 LTS",
-        "20.04 LTS",
-        "24.10",
-        "23.10",
-        "23.04",
+        { "24.04 LTS": "ubuntu-cloud-24.04.img" },
+        { "22.04 LTS": "ubuntu-cloud-22.04.img" },
+        // "20.04 LTS",
+        // "24.10",
+        // "23.10",
+        // "23.04",
       ],
-      hardware: ["Light (Server)", "Heavy (Storage)", "GPU (AI/ML)"],
+      hardware: ["Light (Server)" /*, "Heavy (Storage)", "GPU (AI/ML)"*/],
     },
-    {
-      name: "CentOS",
-      img: ubuntu,
-      version: ["8 Stream", "7 Stream"],
-      hardware: ["Light (Server)", "Heavy (Storage)"],
-    },
+    // {
+    //   name: "CentOS",
+    //   img: ubuntu,
+    //   version: ["8 Stream", "7 Stream"],
+    //   hardware: ["Light (Server)", "Heavy (Storage)"],
+    // },
   ];
 
-  const { os, osVersion, hw, setHw, openSharedUser, setOpenSharedUser } =
-    useContext(VMCreateContext)!;
+  const {
+    os,
+    osVersion,
+    osVersionImgName,
+    hw,
+    setHw,
+    openSharedUser,
+    setOpenSharedUser,
+  } = useContext(VMCreateContext)!;
   const navigate = useNavigate();
 
   const onCreateVM = async () => {
     try {
       await axiosClient.post("/vm/", {
         name: vmName.value,
-        os: os,
+        os: osVersionImgName,
         ip: "sadffasd",
       });
 

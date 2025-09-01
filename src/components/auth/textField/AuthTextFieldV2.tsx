@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 
-import CheckMessage from "./bottomMessages/CheckMessage";
-import ErrorMessage from "./bottomMessages/ErrorMessage";
+import remove from "../../../assets/image/input/remove.svg";
 import ImageBtn from "../../button/ImageBtn";
 
+import CheckMessage from "./bottomMessages/CheckMessage";
+import ErrorMessage from "./bottomMessages/ErrorMessage";
 import { AuthTextFieldV2Props } from "./types/textField";
 
-import remove from "../../../assets/image/input/remove.svg";
 
 import "./AuthTextFieldV2.css";
 /**

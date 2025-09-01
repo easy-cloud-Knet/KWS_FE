@@ -1,11 +1,10 @@
 import clsx from "clsx";
 import React, { useContext, useState } from "react";
 
+import VMCreateContext from "@/contexts/VMCreateContext";
+import { OsList } from "@/types/vm";
+
 import VersionDropdown from "./version_dropdown/VersionDropdown";
-
-import VMCreateContext from "../../contexts/VMCreateContext";
-
-import { OsList } from "../../types/vm";
 
 interface VMCreateOsImageProps {
   item: OsList;
@@ -14,7 +13,7 @@ interface VMCreateOsImageProps {
 const VMCreateOsImage: React.FC<VMCreateOsImageProps> = ({ item }) => {
   const [toggle, setToggle] = useState<boolean>(false);
 
-  const { os, setOs, osVersion, setOsVersion } = useContext(VMCreateContext)!;
+  const { os, osVersion } = useContext(VMCreateContext)!;
   const isSelected = os === item.name;
 
   return (
@@ -25,8 +24,15 @@ const VMCreateOsImage: React.FC<VMCreateOsImageProps> = ({ item }) => {
         isSelected ? "border-(--Main_Blue)" : "border-[#E6E7EB]"
       )}
     >
-      <img src={item.img} alt={item.name} className="w-[48px] h-[48px] mt-[20px]" />
-      <p className="p-16-500" style={{ marginTop: "8px", marginBottom: "16px" }}>
+      <img
+        src={item.img}
+        alt={item.name}
+        className="w-[48px] h-[48px] mt-[20px]"
+      />
+      <p
+        className="p-16-500"
+        style={{ marginTop: "8px", marginBottom: "16px" }}
+      >
         {item.name}
       </p>
       <hr className="border-[#E6E7EB] w-full" />
@@ -34,8 +40,6 @@ const VMCreateOsImage: React.FC<VMCreateOsImageProps> = ({ item }) => {
       <VersionDropdown
         item={item}
         osVersion={isSelected ? osVersion : ""}
-        setOsVersion={setOsVersion}
-        setOs={setOs}
         toggle={toggle}
         setToggle={setToggle}
       />

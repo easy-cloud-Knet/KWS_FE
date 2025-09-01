@@ -3,7 +3,6 @@ import { IconButton } from "@mui/material";
 import { useState } from "react";
 
 import AuthTextFieldV2 from "./AuthTextFieldV2.tsx";
-
 import { AuthTextFieldV2Props } from "./types/textField";
 
 const AuthPwTextFieldV2: React.FC<AuthTextFieldV2Props> = ({ ...props }) => {

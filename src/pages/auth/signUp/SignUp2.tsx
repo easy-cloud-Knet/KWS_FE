@@ -3,10 +3,8 @@ import { useEffect, useState } from "react";
 import Form from "../../../components/auth/Form";
 import AuthPwTextFieldV2 from "../../../components/auth/textField/AuthPwTextFieldV2";
 import BottomBtn from "../../../components/button/BottomBtn";
-
-import { UserInfo } from "../../../types/auth";
-
 import { PW_REGEX } from "../../../constants/regex";
+import { UserInfo } from "../../../types/auth";
 
 import "./SignUp2.css";
 

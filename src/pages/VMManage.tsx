@@ -18,22 +18,18 @@ import {
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import MuiBtn from "../components/button/MuiBtn";
-import VMManageBtn from "../components/vmManage/VMManageBtn";
-import VMDetailModal from "../components/vmManage/VMManageModal";
-
-import axiosClient from "../services/api";
-
-import { Status, VM } from "../types/vm";
-
-import { currentStatusMapping, userTypeMapping } from "../utils/MappingToKor";
-
 import booting from "../assets/image/vmManage/booting.svg";
-import launching from "../assets/image/vmManage/launching.svg";
-import time from "../assets/image/vmManage/time.svg";
 import addIcon from "../assets/image/vmManage/button/add.svg";
 import deleteIcon from "../assets/image/vmManage/button/delete.svg";
 import refreshIcon from "../assets/image/vmManage/button/refresh.svg";
+import launching from "../assets/image/vmManage/launching.svg";
+import time from "../assets/image/vmManage/time.svg";
+import MuiBtn from "../components/button/MuiBtn";
+import VMManageBtn from "../components/vmManage/VMManageBtn";
+import VMDetailModal from "../components/vmManage/VMManageModal";
+import axiosClient from "../services/api";
+import { Status, VM } from "../types/vm";
+import { currentStatusMapping, userTypeMapping } from "../utils/MappingToKor";
 
 import "./VMManage.css";
 

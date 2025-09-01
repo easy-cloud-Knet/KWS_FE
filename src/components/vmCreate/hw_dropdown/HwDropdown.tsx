@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 
-import HwDropdownItem from "./HwDropdownItem";
-
+import ic_arrow_down from "../../../assets/image/vmCreate/ic_arrow_down.svg";
 import useOutsideClick from "../../../hooks/useOutsideClick";
 
-import ic_arrow_down from "../../../assets/image/vmCreate/ic_arrow_down.svg";
+import HwDropdownItem from "./HwDropdownItem";
+
+
 
 interface HwDropdownProps {
   hardwareList: string[];

@@ -1,13 +1,14 @@
 import { Dialog, DialogActions, DialogContent, DialogContentText } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
 
-import ToggleList from "./ToggleList";
+import deletion from "../../assets/image/vmManage/vmManageUsers/delete.svg";
+import succession from "../../assets/image/vmManage/vmManageUsers/succession.svg";
 import AuthTextFieldV2 from "../auth/textField/AuthTextFieldV2";
 import MuiBtn from "../button/MuiBtn";
 import TextBtn from "../button/TextBtn";
 
-import deletion from "../../assets/image/vmManage/vmManageUsers/delete.svg";
-import succession from "../../assets/image/vmManage/vmManageUsers/succession.svg";
+
+import ToggleList from "./ToggleList";
 
 import "./VMManageUsers.css";
 

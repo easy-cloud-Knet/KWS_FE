@@ -1,18 +1,16 @@
 import { Checkbox } from "@mui/material";
+import { AxiosError } from "axios";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import AuthTextFieldV2 from "../../components/auth/textField/AuthTextFieldV2";
 import AuthPwTextFieldV2 from "../../components/auth/textField/AuthPwTextFieldV2";
+import AuthTextFieldV2 from "../../components/auth/textField/AuthTextFieldV2";
 import BottomBtn from "../../components/button/BottomBtn";
 import TextBtn from "../../components/button/TextBtn";
-
 import AuthContext from "../../contexts/AuthContext";
-
 import axiosClient from "../../services/api";
 
 import "./SignIn.css";
-import { AxiosError } from "axios";
 
 const SignIn: React.FC = () => {
   const [email, setEmail] = useState<string>("");
@@ -109,7 +107,13 @@ const SignIn: React.FC = () => {
             />
             <p className="p-16-400">아이디 저장</p>
           </div>
-          <TextBtn className="p-16-400 c-blue">비밀번호를 잊으셨나요?</TextBtn>
+          <button
+            className="p-16-400 c-blue cursor-pointer"
+            type="button"
+            onClick={() => navigate("/findpw")}
+          >
+            비밀번호를 잊으셨나요?
+          </button>
         </div>
 
         <BottomBtn
