@@ -3,6 +3,9 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext.tsx";
 import DefaultLayout from "@/layouts/DefaultLayout";
 import DefaultLayoutV2 from "@/layouts/DefaultLayoutV2.tsx";
+import FindPw from "@/pages/auth/FindPw";
+import ResetPw from "@/pages/auth/ResetPw";
+import ResetPwSuccess from "@/pages/auth/ResetPwSuccess";
 import SignIn from "@/pages/auth/SignIn";
 import SignUpDefault from "@/pages/auth/signUp/SignUpDefault";
 import SignUpSuccess from "@/pages/auth/signUp/SignUpSuccess.tsx";
@@ -30,6 +33,9 @@ function App() {
               <Route path="signin" element={<SignIn />} />
               <Route path="signup" element={<SignUpDefault />} />
               <Route path="signup/success" element={<SignUpSuccess />} />
+              <Route path="findpw" element={<FindPw />} />
+              <Route path="resetpw" element={<ResetPw />} />
+              <Route path="resetpw/success" element={<ResetPwSuccess />} />
 
               <Route path="/invitation" element={<Invitation />} />
             </Route>

@@ -9,8 +9,8 @@ const BottomBtn: React.FC<ButtonProps> = ({ children, variant, ...props }) => {
       variant={variant}
       sx={
         variant === "contained"
-          ? { background: "#007bff", borderRadius: "17px" }
-          : { borderRadius: "17px" }
+          ? { background: "#007bff", borderRadius: "10px" }
+          : { borderRadius: "10px" }
       }
       {...props}
     >
