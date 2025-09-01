@@ -44,7 +44,7 @@ const FindPw = () => {
   return (
     <main className="flex flex-col items-center size-full pt-[169px]">
       <h1 className="text-pr-sb-36 text-center text-(--BlueBlack)">
-        비밀번호 찾기
+        비밀번호 재설정
       </h1>
 
       <form
