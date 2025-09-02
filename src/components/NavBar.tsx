@@ -34,7 +34,7 @@ const NavBar = () => {
           onClickLink(event, "/");
         }}
       >
-        <img src={ic_logo} alt="" />
+        <img src={ic_logo} alt="" className="size-[64px]" />
       </Link>
       {!isAuthenticated ? (
         <div className="navbar_login">
