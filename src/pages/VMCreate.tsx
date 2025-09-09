@@ -80,12 +80,12 @@ const VMCreateContent: React.FC = () => {
   return (
     <div className="vm-create flex justify-center size-full ">
       <section className="pt-[40px] w-[81.04166666666667%]">
-        <h1 className="h1-bold">VM 생성</h1>
+        <h1 className="h1-bold">인스턴스 생성</h1>
         <section className="flex justify-between gap-[4.0625%] mt-[32px] mb-[56px]">
           <section className="create-section flex-1 max-w-[868px]">
             <div className="mb-[24px]">
               <p className="pl-[32px] h-[75px] a-items-center p-16-500 c-text1">
-                VM 정보 입력
+                인스턴스 정보 입력
               </p>
               <hr className="border-[#E6E7EB]" />
             </div>
@@ -93,7 +93,7 @@ const VMCreateContent: React.FC = () => {
             <section className="px-[32px] flex flex-col gap-[56px]">
               <div>
                 <p className="p-16-400" style={{ marginBottom: "20px" }}>
-                  VM 이름
+                  인스턴스 이름
                 </p>
                 <AuthTextFieldV2
                   value={vmName.value}
@@ -157,14 +157,14 @@ const VMCreateContent: React.FC = () => {
           <section className="create-section w-[39%]">
             <div className="mb-[24px]">
               <p className="pl-[32px] h-[75px] a-items-center p-16-500 c-text1">
-                생성될 VM 요약
+                생성될 인스턴스 요약
               </p>
               <hr className="border-[#E6E7EB]" />
             </div>
             <section className="px-[32px] flex flex-col gap-[28px]">
               <VMInfoToBeCreatedItem
                 className="w-full"
-                title="VM 이름"
+                title="인스턴스 이름"
                 content={vmName.value || "(비어 있음)"}
               />
               <div className="flex justify-between w-full">

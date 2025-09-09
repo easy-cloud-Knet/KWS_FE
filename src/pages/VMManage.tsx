@@ -296,8 +296,8 @@ const VMManage: React.FC = () => {
                   sx={{ color: "var(--Grey1, #808B96)" }}
                 />
               </TableCell>
-              <TableCellAttribute>VM 이름</TableCellAttribute>
-              <TableCellAttribute>스냅샷</TableCellAttribute>
+              <TableCellAttribute>인스턴스 이름</TableCellAttribute>
+              <TableCellAttribute>인스턴스 유형</TableCellAttribute>
               <TableCellAttribute>Public IP 주소</TableCellAttribute>
               <TableCellAttribute>유저 역할</TableCellAttribute>
               <TableCellAttribute>인스턴스 상태</TableCellAttribute>
