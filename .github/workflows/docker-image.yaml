@@ -16,7 +16,9 @@ jobs:
 
     - name: Build and tag Docker image
       run: |
-        docker build --no-cache -t ${{ secrets.DOCKER_HUB_USERNAME }}/kws_fe:latest .
+        docker build --no-cache \
+          --build-arg VITE_API_DOMAIN=${{ secrets.VITE_API_DOMAIN }} \
+          -t ${{ secrets.DOCKER_HUB_USERNAME }}/kws_fe:latest .
         docker tag ${{ secrets.DOCKER_HUB_USERNAME }}/kws_fe:latest ${{ secrets.DOCKER_HUB_USERNAME }}/kws_fe:latest
 
     - name: Deploy container locally
