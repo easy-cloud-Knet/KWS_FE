@@ -1,5 +1,5 @@
 import ModeEditOutlineOutlinedIcon from "@mui/icons-material/ModeEditOutlineOutlined";
-import { Box, Typography, Slide, TextField, IconButton } from "@mui/material";
+import { Box, IconButton, Slide, TextField, Typography } from "@mui/material";
 import clsx from "clsx";
 import React, { useEffect, useRef, useState } from "react";
 
@@ -108,116 +108,117 @@ const VMDetailModal: React.FC<VMDetailModalProps> = ({
                 </div>
               </div>
               {vm ? (
-                <div className="vm-modal-inside j-content-between h-full">
-                  <ModalColumn>
-                    <Typography>
-                      <p className="p-18-400 flex items-center relative">
-                        VM 이름:
-                        {!isUnderEditingName ? (
-                          <div className="flex items-center absolute left-[40%]">
-                            <span
-                              className="c-pointer"
-                              onClick={() => setIsUnderEditingName(true)}
-                              style={{ marginLeft: "8px" }}
-                            >
-                              <p className="p-18-400">{vm.vmName}</p>
-                            </span>
-                            <IconButton
+                <div className="vm-modal-inside flex justify-between h-full">
+                  <section className="flex justify-between w-[75.26041666666666666666666666666667%]">
+                    <ModalColumn>
+                      <Typography>
+                        <p className="p-18-400 flex items-center w-full whitespace-nowrap">
+                          인스턴스 이름:
+                          {!isUnderEditingName ? (
+                            <div className="flex items-center ml-[8px] w-full">
+                              <span
+                                className="w-full c-pointer"
+                                onClick={() => setIsUnderEditingName(true)}
+                              >
+                                <p className="w-full p-18-400 line-clamp-1 overflow-ellipsis">
+                                  {vm.vmName}
+                                </p>
+                              </span>
+                              <IconButton
+                                size="small"
+                                onClick={() => setIsUnderEditingName(true)}
+                              >
+                                <ModeEditOutlineOutlinedIcon />
+                              </IconButton>
+                            </div>
+                          ) : (
+                            <TextField
+                              value={editedName}
+                              onChange={(event) => {
+                                setEditedName(event.target.value);
+                              }}
+                              onBlur={onSaveName}
+                              onKeyDown={(event) => {
+                                if (event.key === "Enter") {
+                                  onSaveName();
+                                }
+                              }}
                               size="small"
-                              onClick={() => setIsUnderEditingName(true)}
-                            >
-                              <ModeEditOutlineOutlinedIcon />
-                            </IconButton>
-                          </div>
-                        ) : (
-                          <TextField
-                            value={editedName}
-                            onChange={(event) => {
-                              setEditedName(event.target.value);
-                            }}
-                            onBlur={onSaveName}
-                            onKeyDown={(event) => {
-                              if (event.key === "Enter") {
-                                onSaveName();
-                              }
-                            }}
-                            size="small"
-                            variant="standard"
-                            autoFocus
-                            sx={{
-                              position: "absolute",
-                              left: "40%",
-                              ml: 1,
-                              fontSize: "18px",
-                            }}
+                              variant="standard"
+                              autoFocus
+                              sx={{
+                                ml: 1,
+                                width: "fit-content",
+                                fontSize: "18px",
+                              }}
+                            />
+                          )}
+                        </p>
+                      </Typography>
+                      <Typography
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "8px",
+                          position: "relative",
+                        }}
+                      >
+                        <p className="p-18-400">인스턴스 상태: </p>
+                        <div className="relative size-1">
+                          <ToggleSwitch
+                            className="absolute top-[50%] left-0 -translate-y-1/2"
+                            checked={toggleSwitch}
+                            onChange={() => setToggleSwitch(!toggleSwitch)}
                           />
-                        )}
-                      </p>
-                    </Typography>
-                    <Typography
-                      sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "8px",
-                        position: "relative",
+                        </div>
+                      </Typography>
+                      <Typography>
+                        <p className="p-18-400">
+                          인스턴스 유형: {vm.instanceType}
+                        </p>
+                      </Typography>
+                    </ModalColumn>
+                    <ModalColumn>
+                      <Typography>
+                        <p className="p-18-400">
+                          Public IP 주소: {vm.publicIP || "-"}
+                        </p>
+                      </Typography>
+                      <Typography>
+                        <p className="p-18-400">키 이름: {vm.key}</p>
+                      </Typography>
+                      <Typography>
+                        <p className="p-18-400">OS: {vm.os}</p>
+                      </Typography>
+                    </ModalColumn>
+                    <ModalColumn>
+                      <Typography>
+                        <p className="p-18-400">시작 시간: {vm.startTime}</p>
+                      </Typography>
+                      <Typography>
+                        <p className="p-18-400">실행 시간: {vm.runTime}</p>
+                      </Typography>
+                      <Typography></Typography>
+                    </ModalColumn>
+                  </section>
+                  <section className="bottom-btn-wrap flex justify-end items-end">
+                    <VMManageBtn
+                      className="user-manage-btn"
+                      src={user}
+                      onClick={() => {
+                        setOpenUserManage(!openUserManage);
                       }}
                     >
-                      <p className="p-18-400">인스턴스 상태: </p>
-                      <div className="relative size-1">
-                        <ToggleSwitch
-                          className="absolute top-[50%] left-0 -translate-y-1/2"
-                          checked={toggleSwitch}
-                          onChange={() => setToggleSwitch(!toggleSwitch)}
-                        />
-                      </div>
-                    </Typography>
-                    <Typography>
-                      <p className="p-18-400">
-                        인스턴스 유형: {vm.instanceType}
-                      </p>
-                    </Typography>
-                  </ModalColumn>
-                  <ModalColumn>
-                    <Typography>
-                      <p className="p-18-400">
-                        Public IP 주소: {vm.publicIP || "-"}
-                      </p>
-                    </Typography>
-                    <Typography>
-                      <p className="p-18-400">키 이름: {vm.key}</p>
-                    </Typography>
-                    <Typography>
-                      <p className="p-18-400">OS: {vm.os}</p>
-                    </Typography>
-                  </ModalColumn>
-                  <ModalColumn className="w-[40.452111838191552647233789411065%]">
-                    <Typography>
-                      <p className="p-18-400">시작 시간: {vm.startTime}</p>
-                    </Typography>
-                    <Typography>
-                      <p className="p-18-400">실행 시간: {vm.runTime}</p>
-                    </Typography>
-                    <Typography>
-                      <section className="bottom-btn-wrap j-content-end">
-                        <VMManageBtn
-                          className="user-manage-btn"
-                          src={user}
-                          onClick={() => {
-                            setOpenUserManage(!openUserManage);
-                          }}
-                        >
-                          유저 관리
-                        </VMManageBtn>
-                        <VMManageBtn
-                          className="link-btn"
-                          src={link}
-                          onClick={() => {}}
-                        >
-                          연결
-                        </VMManageBtn>
-                      </section>
-                    </Typography>
-                  </ModalColumn>
+                      유저 관리
+                    </VMManageBtn>
+                    <VMManageBtn
+                      className="link-btn"
+                      src={link}
+                      onClick={() => {}}
+                    >
+                      연결
+                    </VMManageBtn>
+                  </section>
                 </div>
               ) : (
                 <Typography>선택된 VM이 없습니다.</Typography>
@@ -238,7 +239,7 @@ const ModalColumn: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
 }) => {
   return (
     <div
-      className={clsx("vm-modal-column flex flex-col", className)}
+      className={clsx("vm-modal-column flex flex-col w-[310px]", className)}
       {...props}
     ></div>
   );

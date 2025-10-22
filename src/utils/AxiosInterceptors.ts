@@ -3,8 +3,11 @@ import axios, {
   AxiosResponse,
   AxiosError,
   InternalAxiosRequestConfig,
+  AxiosInstance,
 } from "axios";
 import Cookies from "js-cookie";
+
+import axiosClient from "@/services/api";
 
 interface FailedRequest {
   resolve: (token: string) => void;
@@ -20,7 +23,10 @@ let isInterceptorSetup = false;
 let isRefreshing = false;
 let failedQueue: FailedRequest[] = [];
 
-const processQueue = (error: AxiosError | null, token: string | null = null) => {
+const processQueue = (
+  error: AxiosError | null,
+  token: string | null = null
+) => {
   failedQueue.forEach((prom) => {
     if (error) {
       prom.reject(error);
@@ -40,11 +46,14 @@ const createAxiosResponseInterceptor = (authActions: AuthActions) => {
         return Promise.reject(error);
       }
 
-      if ((originalRequest as AxiosRequestConfig & { _retry?: boolean })._retry) {
+      if (
+        (originalRequest as AxiosRequestConfig & { _retry?: boolean })._retry
+      ) {
         return Promise.reject(error);
       }
 
-      (originalRequest as AxiosRequestConfig & { _retry?: boolean })._retry = true;
+      (originalRequest as AxiosRequestConfig & { _retry?: boolean })._retry =
+        true;
 
       if (isRefreshing) {
         return new Promise<string>((resolve, reject) => {
@@ -69,13 +78,104 @@ const createAxiosResponseInterceptor = (authActions: AuthActions) => {
           try {
             const newAccessToken = await authActions.refreshAccessToken();
             if (newAccessToken) {
-              axios.defaults.headers.common["Authorization"] = `Bearer ${newAccessToken}`;
+              axios.defaults.headers.common[
+                "Authorization"
+              ] = `Bearer ${newAccessToken}`;
               if (originalRequest && originalRequest.headers) {
-                originalRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
+                originalRequest.headers[
+                  "Authorization"
+                ] = `Bearer ${newAccessToken}`;
               }
               processQueue(null, newAccessToken);
               if (originalRequest) {
                 resolve(axios(originalRequest));
+              } else {
+                reject(new Error("Original request is undefined"));
+              }
+            } else {
+              processQueue(
+                {
+                  ...error,
+                  message: "Failed to refresh token",
+                  isAxiosError: true,
+                  toJSON: () => ({}),
+                } as AxiosError,
+                null
+              );
+              authActions.logout();
+              window.location.href = "/signin";
+              reject(error);
+            }
+          } catch (err) {
+            processQueue(err as AxiosError, null);
+            authActions.logout();
+            window.location.href = "/signin";
+            reject(err);
+          } finally {
+            isRefreshing = false;
+          }
+        };
+        refreshAccessToken();
+      });
+    }
+  );
+};
+
+const createResponseInterceptorForClient = (
+  client: AxiosInstance,
+  authActions: AuthActions
+) => {
+  client.interceptors.response.use(
+    (response: AxiosResponse) => response,
+    async (error: AxiosError) => {
+      const originalRequest = error.config;
+      if (!error.response || error.response.status !== 401) {
+        return Promise.reject(error);
+      }
+
+      if (
+        (originalRequest as AxiosRequestConfig & { _retry?: boolean })._retry
+      ) {
+        return Promise.reject(error);
+      }
+
+      (originalRequest as AxiosRequestConfig & { _retry?: boolean })._retry =
+        true;
+
+      if (isRefreshing) {
+        return new Promise<string>((resolve, reject) => {
+          failedQueue.push({ resolve, reject });
+        })
+          .then((token) => {
+            if (originalRequest && originalRequest.headers) {
+              originalRequest.headers["Authorization"] = `Bearer ${token}`;
+            }
+            if (originalRequest) {
+              return client(originalRequest);
+            }
+            return Promise.reject(new Error("Original request is undefined"));
+          })
+          .catch((err) => Promise.reject(err));
+      }
+
+      isRefreshing = true;
+
+      return new Promise((resolve, reject) => {
+        const refreshAccessToken = async () => {
+          try {
+            const newAccessToken = await authActions.refreshAccessToken();
+            if (newAccessToken) {
+              client.defaults.headers.common[
+                "Authorization"
+              ] = `Bearer ${newAccessToken}`;
+              if (originalRequest && originalRequest.headers) {
+                originalRequest.headers[
+                  "Authorization"
+                ] = `Bearer ${newAccessToken}`;
+              }
+              processQueue(null, newAccessToken);
+              if (originalRequest) {
+                resolve(client(originalRequest));
               } else {
                 reject(new Error("Original request is undefined"));
               }
@@ -123,6 +223,19 @@ export const setupAxiosInterceptors = (authActions: AuthActions): void => {
     (error) => Promise.reject(error)
   );
 
-  createAxiosResponseInterceptor(authActions);
+  axiosClient.interceptors.request.use(
+    (config: InternalAxiosRequestConfig) => {
+      const token = Cookies.get("accessToken");
+      if (token) {
+        config.headers = config.headers || {};
+        config.headers["Authorization"] = `Bearer ${token}`;
+      }
+      return config;
+    },
+    (error) => Promise.reject(error)
+  );
+
+  createAxiosResponseInterceptor(authActions); // global axios
+  createResponseInterceptorForClient(axiosClient, authActions);
   isInterceptorSetup = true;
 };

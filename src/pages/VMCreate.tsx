@@ -1,6 +1,6 @@
 import { FormControlLabel, Radio, RadioGroup } from "@mui/material";
 import { AxiosError } from "axios";
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 import ubuntu from "@/assets/image/vmCreate/ubuntu.svg";
@@ -49,23 +49,54 @@ const VMCreateContent: React.FC = () => {
     // },
   ];
 
-  const {
-    os,
-    osVersion,
-    osVersionImgName,
-    hw,
-    setHw,
-    openSharedUser,
-    setOpenSharedUser,
-  } = useContext(VMCreateContext)!;
+  const { os, osVersion, hw, setHw, openSharedUser, setOpenSharedUser } =
+    useContext(VMCreateContext)!;
   const navigate = useNavigate();
+
+  // Backend에서 제공하는 인스턴스 타입/OS 목록 (id 매핑용)
+  const [instanceTypes, setInstanceTypes] = useState<
+    { id: number; typename: string; vcpu: number; ram: number; dsk: number }[]
+  >([]);
+  const [osOptions, setOsOptions] = useState<{ id: number; name: string }[]>(
+    []
+  );
+
+  useEffect(() => {
+    const fetchVmRequirements = async () => {
+      try {
+        const { data } = await axiosClient.get("/vm/");
+        setInstanceTypes(data.instance_types || []);
+        setOsOptions(data.os || []);
+      } catch (error) {
+        console.error("Failed to fetch VM requirements", error);
+      }
+    };
+    fetchVmRequirements();
+  }, []);
 
   const onCreateVM = async () => {
     try {
+      // 선택된 OS 이름(`os`)과 매칭되는 id를 찾고, 없으면 첫 번째 항목 사용
+      const selectedOsId =
+        osOptions.find((o) => o.name === os)?.id ?? osOptions[0]?.id;
+
+      // 인스턴스 타입 id: 현재 UI와 타입 매핑이 없으므로 일단 첫 번째 항목 사용
+      // 추후 UI에서 실제 타입 선택과 매핑 필요
+      const selectedTypeId = instanceTypes[0]?.id;
+
+      if (!selectedOsId || !selectedTypeId) {
+        alert(
+          "VM 생성에 필요한 정보(OS/Instance Type)가 준비되지 않았습니다. 잠시 후 다시 시도해주세요."
+        );
+        return;
+      }
+
       await axiosClient.post("/vm/", {
         name: vmName.value,
-        os: osVersionImgName,
-        ip: "sadffasd",
+        os_id: selectedOsId,
+        ip: "0.0.0.0",
+        type_id: selectedTypeId,
+        is_public: openSharedUser === "public",
       });
 
       navigate("/");
@@ -80,12 +111,12 @@ const VMCreateContent: React.FC = () => {
   return (
     <div className="vm-create flex justify-center size-full ">
       <section className="pt-[40px] w-[81.04166666666667%]">
-        <h1 className="h1-bold">VM 생성</h1>
+        <h1 className="h1-bold">인스턴스 생성</h1>
         <section className="flex justify-between gap-[4.0625%] mt-[32px] mb-[56px]">
           <section className="create-section flex-1 max-w-[868px]">
             <div className="mb-[24px]">
               <p className="pl-[32px] h-[75px] a-items-center p-16-500 c-text1">
-                VM 정보 입력
+                인스턴스 정보 입력
               </p>
               <hr className="border-[#E6E7EB]" />
             </div>
@@ -93,7 +124,7 @@ const VMCreateContent: React.FC = () => {
             <section className="px-[32px] flex flex-col gap-[56px]">
               <div>
                 <p className="p-16-400" style={{ marginBottom: "20px" }}>
-                  VM 이름
+                  인스턴스 이름
                 </p>
                 <AuthTextFieldV2
                   value={vmName.value}
@@ -157,14 +188,14 @@ const VMCreateContent: React.FC = () => {
           <section className="create-section w-[39%]">
             <div className="mb-[24px]">
               <p className="pl-[32px] h-[75px] a-items-center p-16-500 c-text1">
-                생성될 VM 요약
+                생성될 인스턴스 요약
               </p>
               <hr className="border-[#E6E7EB]" />
             </div>
             <section className="px-[32px] flex flex-col gap-[28px]">
               <VMInfoToBeCreatedItem
                 className="w-full"
-                title="VM 이름"
+                title="인스턴스 이름"
                 content={vmName.value || "(비어 있음)"}
               />
               <div className="flex justify-between w-full">

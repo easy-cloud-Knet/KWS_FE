@@ -4,6 +4,8 @@ import { FormEvent, MouseEvent, useEffect, useState } from "react";
 import AuthTextFieldV2 from "@/components/auth/textField/AuthTextFieldV2";
 import BottomBtn from "@/components/button/BottomBtn";
 import { EMAIL_REGEX } from "@/constants/regex";
+import axiosClient from "@/services/api";
+import { toastAlert } from "@/utils/ToastAlert";
 
 const FindPw = () => {
   const [email, setEmail] = useState("");
@@ -29,8 +31,17 @@ const FindPw = () => {
     if (!email || !emailChecker.format) {
       return;
     }
-    // TODO: api 연결
-    setEmailSended(true);
+
+    try {
+      await axiosClient.post("/users/send-email", {
+        email: email,
+        purpose: "change_password",
+      });
+      setEmailSended(true);
+      toastAlert("입력하신 이메일로 인증번호를 발송하였습니다.", "success");
+    } catch {
+      alert("이메일 전송에 실패했습니다.");
+    }
   };
 
   const onClickCheckEmailCode = async (
@@ -38,7 +49,15 @@ const FindPw = () => {
   ) => {
     event.preventDefault();
 
-    // TODO: api 연결
+    try {
+      await axiosClient.post("/users/verify-code", {
+        email: email,
+        code: emailCode,
+      });
+      toastAlert("이메일이 인증되었습니다.", "success");
+    } catch {
+      alert("인증번호가 일치하지 않습니다.");
+    }
   };
 
   return (

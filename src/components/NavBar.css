@@ -3,8 +3,9 @@
   justify-content: space-between;
   align-items: center;
 
-  height: 9.537vh; /* 103px */
-  padding: 0 3.125vw; /* 60px */
+  height: 60px;
+  padding-left: 8px;
+  padding-right: 60px;
 
   background-color: #ffffff;
 
@@ -75,11 +76,10 @@
 }
 
 .navbar .signin_btn {
-  width: 10.3704vh; /* 112px */
-  min-width: fit-content;
-  height: 5vh; /* 54px */
+  width: 112px;
+  height: 54px;
 
-  font-size: 1.6667vh; /* 18px */
+  font-size: 18px;
   font-style: normal;
   font-weight: 400;
   line-height: normal;

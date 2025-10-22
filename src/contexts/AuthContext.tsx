@@ -2,10 +2,12 @@ import Cookies from "js-cookie";
 import React, { createContext, useState, useEffect, ReactNode } from "react";
 import { useLocation } from "react-router-dom";
 
-import { ACCESS_TOKEN_EXP_TIME, REFRESH_TOKEN_EXP_TIME } from "../constants/tokenExpireTime";
-import axiosClient from "../services/api";
-import { setupAxiosInterceptors } from "../utils/AxiosInterceptors";
-
+import {
+  ACCESS_TOKEN_EXP_TIME,
+  REFRESH_TOKEN_EXP_TIME,
+} from "@/constants/tokenExpireTime";
+import axiosClient from "@/services/api";
+import { setupAxiosInterceptors } from "@/utils/AxiosInterceptors";
 
 // AuthContext에서 사용할 인터페이스 정의
 export interface AuthContextType {
@@ -33,7 +35,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [userNickname, setUserNickname] = useState<string>(
     () => localStorage.getItem("userNickname") || "username"
   );
-  const [userEmail, setUserEmail] = useState<string>(() => localStorage.getItem("userEmail") || "");
+  const [userEmail, setUserEmail] = useState<string>(
+    () => localStorage.getItem("userEmail") || ""
+  );
 
   const location = useLocation();
 
@@ -86,7 +90,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
     try {
       const response = await axiosClient.post(
-        "users/refresh-access-token",
+        "/users/refresh-access-token",
         {},
         {
           params: {
@@ -94,7 +98,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           },
         }
       );
-      const { accessToken } = response.data;
+      const { access_token: accessToken } = response.data;
       Cookies.set("accessToken", accessToken, {
         expires: ACCESS_TOKEN_EXP_TIME,
         secure: true,
@@ -117,7 +121,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   return (
     <AuthContext.Provider
-      value={{ isAuthenticated, userNickname, userEmail, login, logout, refreshAccessToken }}
+      value={{
+        isAuthenticated,
+        userNickname,
+        userEmail,
+        login,
+        logout,
+        refreshAccessToken,
+      }}
     >
       {children}
     </AuthContext.Provider>
