@@ -1,6 +1,6 @@
 interface VMInfoToBeCreatedItemProps {
   title: string;
-  content: string;
+  content: number | string;
   className?: string;
 }
 

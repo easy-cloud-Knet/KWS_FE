@@ -223,18 +223,18 @@ const VMCreateContent: React.FC = () => {
               <div className="flex justify-between w-full">
                 <VMInfoToBeCreatedItem
                   className="w-[26.72131147540984%] bg-(--Grey2)"
-                  title="vGPU"
-                  content="1"
+                  title="vCPU"
+                  content={instanceTypes.find((t) => t.typename === hw)?.vcpu || "(비어 있음)"}
                 />
                 <VMInfoToBeCreatedItem
                   className="w-[26.72131147540984%] bg-(--Grey2)"
                   title="Ram"
-                  content="2GB"
+                  content={instanceTypes.find((t) => t.typename === hw)?.ram || "(비어 있음)"}
                 />
                 <VMInfoToBeCreatedItem
                   className="w-[26.72131147540984%] bg-(--Grey2)"
                   title="Disk"
-                  content="20GB"
+                  content={instanceTypes.find((t) => t.typename === hw)?.dsk || "(비어 있음)"}
                 />
               </div>
               <div className="flex justify-between w-full">
