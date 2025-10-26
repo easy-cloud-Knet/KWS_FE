@@ -35,30 +35,15 @@ const VMCreateContent: React.FC = () => {
     value: "",
     showError: false,
   });
-  const osList: OsList[] = [
-    {
-      name: "Ubuntu",
-      img: ubuntu,
-      version: [
-        { "24.04 LTS": "ubuntu-cloud-24.04.img" },
-        { "22.04 LTS": "ubuntu-cloud-22.04.img" },
-        // "20.04 LTS",
-        // "24.10",
-        // "23.10",
-        // "23.04",
-      ],
-      hardware: ["Light (Server)" /*, "Heavy (Storage)", "GPU (AI/ML)"*/],
-    },
-    // {
-    //   name: "CentOS",
-    //   img: ubuntu,
-    //   version: ["8 Stream", "7 Stream"],
-    //   hardware: ["Light (Server)", "Heavy (Storage)"],
-    // },
-  ];
-
-  const { os, osVersion, hw, setHw, openSharedUser, setOpenSharedUser } =
-    useContext(VMCreateContext)!;
+  const {
+    os,
+    osVersion,
+    osVersionImgName,
+    hw,
+    setHw,
+    openSharedUser,
+    setOpenSharedUser,
+  } = useContext(VMCreateContext)!;
   const navigate = useNavigate();
 
   // Backend에서 제공하는 인스턴스 타입/OS 목록 (id 매핑용)
@@ -67,14 +52,20 @@ const VMCreateContent: React.FC = () => {
     []
   );
 
+  const computedOsList: OsList[] = osOptions.map((o) => ({
+    id: o.id,
+    name: o.name,
+    img: ubuntu,
+    version: [{ [o.name]: o.name }],
+    hardware: instanceTypes.map((t) => t.typename),
+  }));
+
   useEffect(() => {
     const fetchVmRequirements = async () => {
       try {
         const { data } = await axiosClient.get("/vm/");
         setInstanceTypes(data.instance_types || []);
-        console.log(data.instance_types);
         setOsOptions(data.os || []);
-        console.log(data.os);
       } catch (error) {
         console.error("Failed to fetch VM requirements", error);
       }
@@ -84,13 +75,14 @@ const VMCreateContent: React.FC = () => {
 
   const onCreateVM = async () => {
     try {
-      // 선택된 OS 이름(`os`)과 매칭되는 id를 찾고, 없으면 첫 번째 항목 사용
+      // 선택된 OS 이미지 파일명(`osVersionImgName`)과 매칭되는 id를 찾고, 없으면 첫 번째 항목 사용
       const selectedOsId =
-        osOptions.find((o) => o.name === os)?.id ?? osOptions[0]?.id;
+        osOptions.find((o) => o.name === osVersionImgName)?.id ??
+        osOptions[0]?.id;
 
-      // 인스턴스 타입 id: 현재 UI와 타입 매핑이 없으므로 일단 첫 번째 항목 사용
-      // 추후 UI에서 실제 타입 선택과 매핑 필요
-      const selectedTypeId = instanceTypes[0]?.id;
+      const selectedTypeId =
+        instanceTypes.find((t) => t.typename === hw)?.id ??
+        instanceTypes[0]?.id;
 
       if (!selectedOsId || !selectedTypeId) {
         alert(
@@ -152,16 +144,14 @@ const VMCreateContent: React.FC = () => {
               <div className="z-10">
                 <p className="p-16-400 mb-[20px]">OS 선택</p>
                 <div className="inline-grid grid-cols-4 gap-[20px]">
-                  {osList.map((item) => (
+                  {computedOsList.map((item) => (
                     <VMCreateOsImage key={item.name} item={item} />
                   ))}
                 </div>
                 <div className="mt-[20px]">
                   <p className="p-16-400 mb-[20px]">하드웨어 선택</p>
                   <VMCreateHwDropdown
-                    hardwareList={
-                      osList.find((item) => item.name === os)?.hardware || []
-                    }
+                    hardwareList={instanceTypes.map((t) => t.typename)}
                     hw={hw}
                     setHw={setHw}
                     disabled={!osVersion}
