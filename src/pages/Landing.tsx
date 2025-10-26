@@ -1,3 +1,5 @@
+import { useNavigate } from "react-router-dom";
+
 import connectorLine from "@/assets/image/landing/connector_line.svg";
 import horizontalArrow from "@/assets/image/landing/horizontal_arrow.svg";
 import ic_baseline_copyright from "@/assets/image/landing/ic_baseline_copyright.svg";
@@ -5,6 +7,7 @@ import rectangle from "@/assets/image/landing/rectangle.svg";
 import LandingInputField from "@/components/LandingInputField";
 
 const Landing = () => {
+  const navigate = useNavigate();
   return (
     <main className="w-full max-w-[1200px] mx-auto">
       <section className="flex justify-between pt-[169px] w-full h-[calc(100vh-103px)]">
@@ -21,7 +24,12 @@ const Landing = () => {
               <br />
               도들에서 당신의 가상 머신을 만들어 보세요.
             </p>
-            <button className="w-full h-[48px] bg-[var(--Main_Blue)] rounded-[10px] text-white font-semibold cursor-pointer">
+            <button
+              className="w-full h-[48px] bg-[var(--Main_Blue)] rounded-[10px] text-white font-semibold cursor-pointer"
+              onClick={() => {
+                navigate("/manage");
+              }}
+            >
               시작하기
             </button>
           </div>

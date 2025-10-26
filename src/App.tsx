@@ -26,21 +26,23 @@ function App() {
       <BrowserRouter>
         <AuthProvider>
           <Routes>
-            <Route path="/" element={<DefaultLayout />}>
-              <Route index element={<VMManage />} />
-              <Route path="create" element={<VMCreate />} />
+            <Route path="/">
+              <Route element={<DefaultLayoutV2 />}>
+                <Route index element={<Landing />} />
+                <Route path="signin" element={<SignIn />} />
+              </Route>
+              <Route element={<DefaultLayout />}>
+                <Route path="manage" element={<VMManage />} />
+                <Route path="create" element={<VMCreate />} />
+                
+                <Route path="signup" element={<SignUpDefault />} />
+                <Route path="signup/success" element={<SignUpSuccess />} />
+                <Route path="findpw" element={<FindPw />} />
+                <Route path="resetpw" element={<ResetPw />} />
+                <Route path="resetpw/success" element={<ResetPwSuccess />} />
 
-              <Route path="signin" element={<SignIn />} />
-              <Route path="signup" element={<SignUpDefault />} />
-              <Route path="signup/success" element={<SignUpSuccess />} />
-              <Route path="findpw" element={<FindPw />} />
-              <Route path="resetpw" element={<ResetPw />} />
-              <Route path="resetpw/success" element={<ResetPwSuccess />} />
-
-              <Route path="/invitation" element={<Invitation />} />
-            </Route>
-            <Route path="/landing" element={<DefaultLayoutV2 />}>
-              <Route index element={<Landing />} />
+                <Route path="/invitation" element={<Invitation />} />
+              </Route>
             </Route>
           </Routes>
         </AuthProvider>
