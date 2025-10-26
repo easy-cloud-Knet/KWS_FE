@@ -52,20 +52,19 @@ const VMCreateContent: React.FC = () => {
     []
   );
 
+  // ubuntu-cloud-24.04.img -> nameLabel: ubuntu, versionLabel: 24.04
   const computedOsList: OsList[] = osOptions.map((o) => {
-    const [base, rest] = o.name.split("-", 2);
-    const nameLabel = base || o.name;
-    let versionLabel = "";
-    if (rest) {
-      const lastDot = rest.lastIndexOf(".");
-      versionLabel = lastDot > -1 ? rest.slice(0, lastDot) : rest;
-    }
+    const dotIdx = o.name.lastIndexOf(".");
+    const noExt = dotIdx > -1 ? o.name.slice(0, dotIdx) : o.name;
+    const parts = noExt.split("-");
+    const nameLabel = parts[0] || noExt;
+    const versionLabel = parts.length > 1 ? parts[parts.length - 1] : "";
     return {
       id: o.id,
       name: nameLabel,
       img: ubuntu,
-      // label: parsed version text (e.g., 12.7.0), value: original filename (e.g., debian-12.7.0.qcow2)
-      version: [{ [versionLabel || o.name]: o.name }],
+      // label: last segment (version), value: original filename
+      version: [{ [versionLabel || noExt]: o.name }],
       hardware: instanceTypes.map((t) => t.typename),
     };
   });
@@ -155,7 +154,10 @@ const VMCreateContent: React.FC = () => {
                 <p className="p-16-400 mb-[20px]">OS 선택</p>
                 <div className="inline-grid grid-cols-4 gap-[20px]">
                   {computedOsList.map((item) => (
-                    <VMCreateOsImage key={String(item.id ?? item.name)} item={item} />
+                    <VMCreateOsImage
+                      key={String(item.id ?? item.name)}
+                      item={item}
+                    />
                   ))}
                 </div>
                 <div className="mt-[20px]">
