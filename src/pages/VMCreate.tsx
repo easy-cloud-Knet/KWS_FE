@@ -52,13 +52,23 @@ const VMCreateContent: React.FC = () => {
     []
   );
 
-  const computedOsList: OsList[] = osOptions.map((o) => ({
-    id: o.id,
-    name: o.name,
-    img: ubuntu,
-    version: [{ [o.name]: o.name }],
-    hardware: instanceTypes.map((t) => t.typename),
-  }));
+  const computedOsList: OsList[] = osOptions.map((o) => {
+    const [base, rest] = o.name.split("-", 2);
+    const nameLabel = base || o.name;
+    let versionLabel = "";
+    if (rest) {
+      const lastDot = rest.lastIndexOf(".");
+      versionLabel = lastDot > -1 ? rest.slice(0, lastDot) : rest;
+    }
+    return {
+      id: o.id,
+      name: nameLabel,
+      img: ubuntu,
+      // label: parsed version text (e.g., 12.7.0), value: original filename (e.g., debian-12.7.0.qcow2)
+      version: [{ [versionLabel || o.name]: o.name }],
+      hardware: instanceTypes.map((t) => t.typename),
+    };
+  });
 
   useEffect(() => {
     const fetchVmRequirements = async () => {
@@ -145,7 +155,7 @@ const VMCreateContent: React.FC = () => {
                 <p className="p-16-400 mb-[20px]">OS 선택</p>
                 <div className="inline-grid grid-cols-4 gap-[20px]">
                   {computedOsList.map((item) => (
-                    <VMCreateOsImage key={item.name} item={item} />
+                    <VMCreateOsImage key={String(item.id ?? item.name)} item={item} />
                   ))}
                 </div>
                 <div className="mt-[20px]">
