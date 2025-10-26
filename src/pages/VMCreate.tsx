@@ -22,6 +22,14 @@ interface RequiredInput {
   showError: boolean;
 }
 
+interface InstanceTypes {
+  id: number;
+  typename: string;
+  vcpu: number;
+  ram: number;
+  dsk: number;
+}
+
 const VMCreateContent: React.FC = () => {
   const [vmName, setVmName] = useState<RequiredInput>({
     value: "",
@@ -54,9 +62,7 @@ const VMCreateContent: React.FC = () => {
   const navigate = useNavigate();
 
   // Backend에서 제공하는 인스턴스 타입/OS 목록 (id 매핑용)
-  const [instanceTypes, setInstanceTypes] = useState<
-    { id: number; typename: string; vcpu: number; ram: number; dsk: number }[]
-  >([]);
+  const [instanceTypes, setInstanceTypes] = useState<InstanceTypes[]>([]);
   const [osOptions, setOsOptions] = useState<{ id: number; name: string }[]>(
     []
   );
@@ -66,7 +72,9 @@ const VMCreateContent: React.FC = () => {
       try {
         const { data } = await axiosClient.get("/vm/");
         setInstanceTypes(data.instance_types || []);
+        console.log(data.instance_types);
         setOsOptions(data.os || []);
+        console.log(data.os);
       } catch (error) {
         console.error("Failed to fetch VM requirements", error);
       }
