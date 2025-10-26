@@ -54,8 +54,8 @@ const VMManage: React.FC = () => {
   useEffect(() => {
     try {
       const fetchData = async () => {
-        // const response = await axiosClient.get("/vm/status");
-        // console.log(response);
+        const { data } = await axiosClient.get("/vm/status");
+        console.log(data);
 
         const vmList: VM[] = [
           {
