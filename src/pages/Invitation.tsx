@@ -25,7 +25,7 @@ const Invitation = () => {
           <MuiBtn
             variant="text"
             onClick={() => {
-              navigate("/");
+              navigate("/manage");
             }}
           >
             아니오

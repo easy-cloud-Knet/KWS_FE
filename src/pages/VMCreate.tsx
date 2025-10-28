@@ -108,7 +108,7 @@ const VMCreateContent: React.FC = () => {
         is_public: openSharedUser === "public",
       });
 
-      navigate("/");
+      navigate("/manage");
     } catch (error) {
       if (error instanceof AxiosError) {
         console.log(error.response?.data);
@@ -259,7 +259,7 @@ const VMCreateContent: React.FC = () => {
                 <MuiBtn
                   className="w-[88px]"
                   onClick={() => {
-                    navigate("/");
+                    navigate("/manage");
                   }}
                 >
                   취소

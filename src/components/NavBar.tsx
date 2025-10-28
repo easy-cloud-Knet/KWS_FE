@@ -28,7 +28,7 @@ const NavBar = () => {
   return (
     <nav className="navbar">
       <Link
-        to="/"
+        to={isAuthenticated ? "/manage" : "/"}
         className="navbar_logo"
         onClick={(event) => {
           onClickLink(event, "/");
