@@ -171,7 +171,7 @@ const VMManage: React.FC = () => {
 
   return (
     <div className="vm-manage">
-      <p className="title p-36-600">VM 리스트</p>
+      <p className="title p-36-600">인스턴스 리스트</p>
 
       <div className="vm-manage-btn-wrap j-content-end">
         {checkedVMs.length > 0 && (
