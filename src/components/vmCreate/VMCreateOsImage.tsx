@@ -27,7 +27,7 @@ const VMCreateOsImage: React.FC<VMCreateOsImageProps> = ({ item }) => {
       <img
         src={item.img}
         alt={item.name}
-        className="w-[48px] h-[48px] mt-[20px]"
+        className="h-[48px] mt-[20px]"
       />
       <p
         className="p-16-500"
