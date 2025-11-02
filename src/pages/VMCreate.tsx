@@ -3,6 +3,7 @@ import { AxiosError } from "axios";
 import { useContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
+import debian from "@/assets/image/vmCreate/debian.png";
 import ubuntu from "@/assets/image/vmCreate/ubuntu.svg";
 import addIcon from "@/assets/image/vmManage/button/add.svg";
 import AuthTextFieldV2 from "@/components/auth/textField/AuthTextFieldV2";
@@ -62,7 +63,7 @@ const VMCreateContent: React.FC = () => {
     return {
       id: o.id,
       name: nameLabel,
-      img: ubuntu,
+      img: nameLabel === "ubuntu" ? ubuntu : debian,
       // label: last segment (version), value: original filename
       version: [{ [versionLabel || noExt]: o.name }],
       hardware: instanceTypes.map((t) => t.typename),
