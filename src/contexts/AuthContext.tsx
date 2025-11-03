@@ -1,6 +1,5 @@
 import Cookies from "js-cookie";
 import React, { createContext, useState, useEffect, ReactNode } from "react";
-import { useLocation } from "react-router-dom";
 
 import {
   ACCESS_TOKEN_EXP_TIME,
@@ -42,8 +41,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [userEmail, setUserEmail] = useState<string>(
     () => localStorage.getItem("userEmail") || ""
   );
-
-  const location = useLocation();
 
   useEffect(() => {
     const accessToken = Cookies.get("accessToken");
