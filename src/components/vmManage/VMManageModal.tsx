@@ -14,6 +14,7 @@ import VMManageBtn from "./VMManageBtn";
 import VMManageUsers from "./VMManageUsers";
 
 import "./VMManageModal.css";
+import axiosClient from "@/services/api";
 
 interface VMDetailModalProps {
   open: boolean;
@@ -38,6 +39,14 @@ const VMDetailModal: React.FC<VMDetailModalProps> = ({
   const [openUserManage, setOpenUserManage] = useState(false);
 
   const modalRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const { data } = await axiosClient.get(`/vm/${vm?.id}/status`);
+      console.log(data);
+    };
+    fetchData();
+  }, [vm]);
 
   // 바깥 영역 클릭 처리
   useEffect(() => {

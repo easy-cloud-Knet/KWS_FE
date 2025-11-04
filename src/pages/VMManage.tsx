@@ -33,6 +33,17 @@ import { currentStatusMapping, userTypeMapping } from "../utils/MappingToKor";
 
 import "./VMManage.css";
 
+interface VMInitStatus {
+  vm_id: string;
+  vm_name: string;
+  is_owner: string;
+  instance_type: string;
+  os: string;
+  ip: string;
+  status: string;
+  uptime: string;
+}
+
 const VMManage: React.FC = () => {
   const [vmList, setVmList] = useState<VM[]>([]);
   const [checkedVMs, setCheckedVMs] = useState<string[]>([]);
@@ -55,38 +66,22 @@ const VMManage: React.FC = () => {
     try {
       const fetchData = async () => {
         const { data } = await axiosClient.get("/vm/status");
-        console.log(data);
 
-        const vmList: VM[] = [
-          {
-            id: "123e4567-e89b-12d3-a456-426614174000",
-            vmName: "VM1",
-            currentStatus: "booting",
-            status: "시작",
-            instanceType: "t2.micro",
-            publicIP: "192.168.1.1",
-            key: "key example",
-            os: "Ubuntu 24.04 LTS",
-            startTime: "2025-01-18 10:00",
-            runTime: "5.5h",
-            userType: "admin",
-          },
-          {
-            id: "123e4567-e89b-12d3-a456-426614174001",
-            vmName: "VM2",
-            currentStatus: "launching",
-            status: "시작",
-            instanceType: "t2.medium",
-            publicIP: "192.168.1.1",
-            key: "key example",
-            os: "Ubuntu 24.04 LTS",
-            startTime: "2025-01-18 10:00",
-            runTime: "5.5h",
-            userType: "user",
-          },
-        ];
-        setVmList(vmList);
+        setVmList(data.map((vm: VMInitStatus) => ({
+          id: vm.vm_id,
+          vmName: vm.vm_name,
+          currentStatus: vm.status,
+          status: vm.status,
+          instanceType: vm.instance_type,
+          publicIP: vm.ip,
+          key: vm.is_owner,
+          os: vm.os,
+          startTime: vm.uptime,
+          runTime: vm.uptime,
+          userType: vm.is_owner,
+        })));
       };
+      
       fetchData();
     } catch (error) {
       console.error(error);
