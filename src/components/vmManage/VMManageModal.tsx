@@ -7,7 +7,7 @@ import React, { useEffect, useRef, useState } from "react";
 import link from "@/assets/image/vmManage/vmManageModal/link.svg";
 import user from "@/assets/image/vmManage/vmManageModal/user.svg";
 import axiosClient from "@/services/api";
-import { Status, VM } from "@/types/vm";
+import { Status } from "@/types/vm";
 
 // import ImageBtn from "../button/ImageBtn";
 import ToggleSwitch from "../button/ToggleSwitch";
@@ -19,7 +19,7 @@ import "./VMManageModal.css";
 
 interface VMDetailModalProps {
   open: boolean;
-  vm: VM | null;
+  vmId: string | null;
   onClose: () => void;
   onChangeStatus: (id: string, newStatus: Status) => void;
   onChangeName: (id: string, newName: string) => void;
@@ -45,18 +45,17 @@ interface VMStatus {
   };
 }
 
-const VMDetailModal: React.FC<VMDetailModalProps> = ({
+const VMDetailModal = ({
   open,
-  vm,
+  vmId,
   onClose,
   // onChangeStatus,
   onChangeName,
-}) => {
+}: VMDetailModalProps) => {
   const [isUnderEditingName, setIsUnderEditingName] = useState(false);
-  const [editedName, setEditedName] = useState<string>(vm?.vmName || "");
-  const [toggleSwitch, setToggleSwitch] = useState(false);
-
   const [vmStatus, setVmStatus] = useState<VMStatus | null>(null);
+  const [editedName, setEditedName] = useState<string>(vmStatus?.vm_name || "");
+  const [toggleSwitch, setToggleSwitch] = useState(false);
 
   // 유저 관리 클릭
   const [openUserManage, setOpenUserManage] = useState(false);
@@ -65,12 +64,12 @@ const VMDetailModal: React.FC<VMDetailModalProps> = ({
 
   useEffect(() => {
     const fetchData = async () => {
-      const { data } = await axiosClient.get(`/vm/${vm?.id}/status`);
+      const { data } = await axiosClient.get(`/vm/${vmId}/status`);
       console.log(data);
       setVmStatus(data);
     };
     fetchData();
-  }, [vm]);
+  }, [vmId]);
 
   // 바깥 영역 클릭 처리
   useEffect(() => {
@@ -96,8 +95,12 @@ const VMDetailModal: React.FC<VMDetailModalProps> = ({
   }, [open, onClose]);
 
   const onSaveName = () => {
-    if (vm && editedName.trim() !== "" && editedName !== vm.vmName) {
-      onChangeName(vm.id, editedName.trim());
+    if (
+      vmStatus &&
+      editedName.trim() !== "" &&
+      editedName !== vmStatus.vm_name
+    ) {
+      onChangeName(vmStatus.vm_id, editedName.trim());
     }
     setIsUnderEditingName(false);
   };

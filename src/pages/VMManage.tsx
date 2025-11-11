@@ -58,7 +58,7 @@ const VMManage: React.FC = () => {
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [selectedVMId, setSelectedVMId] = useState<string | null>(null);
 
-  const selectedVM = vmList.find((vm) => vm.id === selectedVMId) || null;
+  // const selectedVM = vmList.find((vm) => vm.id === selectedVMId) || null;
 
   const navigate = useNavigate();
 
@@ -67,21 +67,23 @@ const VMManage: React.FC = () => {
       const fetchData = async () => {
         const { data } = await axiosClient.get("/vm/status");
 
-        setVmList(data.map((vm: VMInitStatus) => ({
-          id: vm.vm_id,
-          vmName: vm.vm_name,
-          currentStatus: vm.status,
-          status: vm.status,
-          instanceType: vm.instance_type,
-          publicIP: vm.ip,
-          key: vm.is_owner,
-          os: vm.os,
-          startTime: vm.uptime,
-          runTime: vm.uptime,
-          userType: vm.is_owner,
-        })));
+        setVmList(
+          data.map((vm: VMInitStatus) => ({
+            id: vm.vm_id,
+            vmName: vm.vm_name,
+            currentStatus: vm.status,
+            status: vm.status,
+            instanceType: vm.instance_type,
+            publicIP: vm.ip,
+            key: vm.is_owner,
+            os: vm.os,
+            startTime: vm.uptime,
+            runTime: vm.uptime,
+            userType: vm.is_owner,
+          }))
+        );
       };
-      
+
       fetchData();
     } catch (error) {
       console.error(error);
@@ -257,7 +259,7 @@ const VMManage: React.FC = () => {
       {showDetailModal && (
         <VMDetailModal
           open={showDetailModal}
-          vm={selectedVM}
+          vmId={selectedVMId}
           onClose={onCloseDetailModal}
           onChangeStatus={onChangeStatus}
           onChangeName={onChangeName}
