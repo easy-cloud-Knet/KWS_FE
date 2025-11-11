@@ -241,7 +241,9 @@ const VMDetailModal = ({
                       </Typography>
                     </ModalColumn>
                     <ModalColumn>
-                      <Typography></Typography>
+                      <Typography>
+                        <p className="p-18-400">&nbsp;</p>
+                      </Typography>
                       <Typography>
                         <p className="p-18-400">
                           시작 시간: {vmStatus.time_info.start_time}
