@@ -3,18 +3,19 @@ import { Box, IconButton, Slide, TextField, Typography } from "@mui/material";
 import clsx from "clsx";
 import React, { useEffect, useRef, useState } from "react";
 
-import closeBtn from "../../assets/image/button/closeBtn.svg";
-import link from "../../assets/image/vmManage/vmManageModal/link.svg";
-import user from "../../assets/image/vmManage/vmManageModal/user.svg";
-import { Status, VM } from "../../types/vm";
-import ImageBtn from "../button/ImageBtn";
+// import closeBtn from "@/assets/image/button/closeBtn.svg";
+import link from "@/assets/image/vmManage/vmManageModal/link.svg";
+import user from "@/assets/image/vmManage/vmManageModal/user.svg";
+import axiosClient from "@/services/api";
+import { Status, VM } from "@/types/vm";
+
+// import ImageBtn from "../button/ImageBtn";
 import ToggleSwitch from "../button/ToggleSwitch";
 
 import VMManageBtn from "./VMManageBtn";
 import VMManageUsers from "./VMManageUsers";
 
 import "./VMManageModal.css";
-import axiosClient from "@/services/api";
 
 interface VMDetailModalProps {
   open: boolean;
@@ -22,6 +23,26 @@ interface VMDetailModalProps {
   onClose: () => void;
   onChangeStatus: (id: string, newStatus: Status) => void;
   onChangeName: (id: string, newName: string) => void;
+}
+
+interface VMStatus {
+  vm_id: string;
+  vm_name: string;
+  status: string;
+  os: string;
+  instance_type: string;
+  resources: {
+    vcpu: number;
+    ram: number;
+    disk: number;
+  };
+  network: {
+    ip: string;
+  };
+  time_info: {
+    start_time: string;
+    uptime: string;
+  };
 }
 
 const VMDetailModal: React.FC<VMDetailModalProps> = ({
@@ -35,6 +56,8 @@ const VMDetailModal: React.FC<VMDetailModalProps> = ({
   const [editedName, setEditedName] = useState<string>(vm?.vmName || "");
   const [toggleSwitch, setToggleSwitch] = useState(false);
 
+  const [vmStatus, setVmStatus] = useState<VMStatus | null>(null);
+
   // 유저 관리 클릭
   const [openUserManage, setOpenUserManage] = useState(false);
 
@@ -44,6 +67,7 @@ const VMDetailModal: React.FC<VMDetailModalProps> = ({
     const fetchData = async () => {
       const { data } = await axiosClient.get(`/vm/${vm?.id}/status`);
       console.log(data);
+      setVmStatus(data);
     };
     fetchData();
   }, [vm]);
@@ -107,16 +131,17 @@ const VMDetailModal: React.FC<VMDetailModalProps> = ({
             className="flex flex-col justify-between pt-[44px] pl-[4.167%] pr-[2.8125%] pb-[1.4583%]"
             style={{ height: "100%" }}
           >
-            <div className="flex flex-col h-full gap-[19.166267369429803545759463344514%]">
-              <div className="flex justify-between items-start">
-                <Typography variant="h6" gutterBottom>
-                  <p className="p-18-400">인스턴스 ID: {vm?.id}</p>
-                </Typography>
-                <div className="title-btn-wrap a-items-center">
-                  <ImageBtn src={closeBtn} alt="X" onClick={onClose} />
-                </div>
-              </div>
-              {vm ? (
+            {vmStatus ? (
+              <div className="flex flex-col h-full gap-[19.166267369429803545759463344514%]">
+                {/* <div className="flex justify-between items-start">
+                  <Typography variant="h6" gutterBottom>
+                    <p className="p-18-400">인스턴스 ID: {vmStatus?.vm_id}</p>
+                  </Typography>
+                  <div className="title-btn-wrap a-items-center">
+                    <ImageBtn src={closeBtn} alt="X" onClick={onClose} />
+                  </div>
+                </div> */}
+
                 <div className="vm-modal-inside flex justify-between h-full">
                   <section className="flex justify-between w-[75.26041666666666666666666666666667%]">
                     <ModalColumn>
@@ -130,7 +155,7 @@ const VMDetailModal: React.FC<VMDetailModalProps> = ({
                                 onClick={() => setIsUnderEditingName(true)}
                               >
                                 <p className="w-full p-18-400 line-clamp-1 overflow-ellipsis">
-                                  {vm.vmName}
+                                  {vmStatus.vm_name}
                                 </p>
                               </span>
                               <IconButton
@@ -164,6 +189,21 @@ const VMDetailModal: React.FC<VMDetailModalProps> = ({
                           )}
                         </p>
                       </Typography>
+                      <Typography>
+                        <p className="p-18-400">OS: {vmStatus.os}</p>
+                      </Typography>
+                      <Typography>
+                        <p className="p-18-400">
+                          인스턴스 유형: {vmStatus.instance_type}
+                        </p>
+                      </Typography>
+                      <Typography>
+                        <p className="p-18-400">
+                          RAM: {vmStatus.resources.ram}GB
+                        </p>
+                      </Typography>
+                    </ModalColumn>
+                    <ModalColumn>
                       <Typography
                         sx={{
                           display: "flex",
@@ -183,31 +223,32 @@ const VMDetailModal: React.FC<VMDetailModalProps> = ({
                       </Typography>
                       <Typography>
                         <p className="p-18-400">
-                          인스턴스 유형: {vm.instanceType}
+                          Public IP 주소: {vmStatus.network.ip || "-"}
                         </p>
                       </Typography>
-                    </ModalColumn>
-                    <ModalColumn>
                       <Typography>
                         <p className="p-18-400">
-                          Public IP 주소: {vm.publicIP || "-"}
+                          vCPU: {vmStatus.resources.vcpu}
                         </p>
                       </Typography>
                       <Typography>
-                        <p className="p-18-400">키 이름: {vm.key}</p>
-                      </Typography>
-                      <Typography>
-                        <p className="p-18-400">OS: {vm.os}</p>
+                        <p className="p-18-400">
+                          DISK: {vmStatus.resources.disk}GB
+                        </p>
                       </Typography>
                     </ModalColumn>
                     <ModalColumn>
-                      <Typography>
-                        <p className="p-18-400">시작 시간: {vm.startTime}</p>
-                      </Typography>
-                      <Typography>
-                        <p className="p-18-400">실행 시간: {vm.runTime}</p>
-                      </Typography>
                       <Typography></Typography>
+                      <Typography>
+                        <p className="p-18-400">
+                          시작 시간: {vmStatus.time_info.start_time}
+                        </p>
+                      </Typography>
+                      <Typography>
+                        <p className="p-18-400">
+                          실행 시간: {vmStatus.time_info.uptime}
+                        </p>
+                      </Typography>
                     </ModalColumn>
                   </section>
                   <section className="bottom-btn-wrap flex justify-end items-end">
@@ -229,10 +270,10 @@ const VMDetailModal: React.FC<VMDetailModalProps> = ({
                     </VMManageBtn>
                   </section>
                 </div>
-              ) : (
-                <Typography>선택된 VM이 없습니다.</Typography>
-              )}
-            </div>
+              </div>
+            ) : (
+              <Typography>선택된 VM이 없습니다.</Typography>
+            )}
           </section>
         </Box>
       </Slide>
