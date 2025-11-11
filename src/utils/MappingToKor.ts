@@ -15,6 +15,8 @@ export const currentStatusMapping = (currentStatus: CurrentStatus) => {
     return "부팅중";
   } else if (currentStatus === "launching") {
     return "실행중";
+  } else if (currentStatus === "started begin") {
+    return "실행중";
   } else {
     return "";
   }
