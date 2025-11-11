@@ -73,7 +73,10 @@ const VMManage: React.FC = () => {
             vmName: vm.vm_name,
             currentStatus: vm.status,
             status: vm.status,
-            instanceType: vm.instance_type,
+            instanceType:
+              vm.instance_type === "started begin"
+                ? "booting"
+                : vm.instance_type,
             publicIP: vm.ip,
             key: vm.is_owner,
             os: vm.os,
