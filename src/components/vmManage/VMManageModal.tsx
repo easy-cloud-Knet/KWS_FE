@@ -87,8 +87,8 @@ const VMDetailModal = ({
     const changeStatus = async () => {
       setIsChangingStatus(true);
       try {
-        await axiosClient.patch(`/vm/${vmId}/status`, {
-          status: toggleSwitch ? "run" : "stop",
+        await axiosClient.patch(`/vm/${vmId}/state`, {
+          state: toggleSwitch ? "run" : "stop",
         });
       } catch {
         suppressPatchRef.current = true;
