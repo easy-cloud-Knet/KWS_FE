@@ -69,6 +69,11 @@ const VMDetailModal = ({
     const fetchData = async () => {
       const { data } = await axiosClient.get(`/vm/${vmId}/status`);
       setVmStatus(data);
+      if (data.status === "start begin" || data.status === "started begin") {
+        setToggleSwitch(true);
+      } else {
+        setToggleSwitch(false);
+      }
     };
     fetchData();
   }, [vmId]);
