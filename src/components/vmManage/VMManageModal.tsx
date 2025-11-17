@@ -57,7 +57,7 @@ const VMDetailModal = ({
   const [editedName, setEditedName] = useState<string>(vmStatus?.vm_name || "");
   const [toggleSwitch, setToggleSwitch] = useState(false);
   const [isChangingStatus, setIsChangingStatus] = useState(false);
-  const skipNextPatchRef = useRef(true);
+  const skipNextPatchRef = useRef(false);
   const suppressPatchRef = useRef(false);
 
   // 유저 관리 클릭
@@ -107,12 +107,15 @@ const VMDetailModal = ({
   }, [toggleSwitch, vmId]);
 
   useEffect(() => {
-    if (!vmStatus) {
+    if (!vmStatus || isChangingStatus) {
       return;
     }
-    skipNextPatchRef.current = true;
-    setToggleSwitch(vmStatus.status === "run");
-  }, [vmStatus]);
+    const shouldBeOn = vmStatus.status === "run";
+    if (toggleSwitch !== shouldBeOn) {
+      skipNextPatchRef.current = true;
+      setToggleSwitch(shouldBeOn);
+    }
+  }, [vmStatus, toggleSwitch, isChangingStatus]);
 
   // 바깥 영역 클릭 처리
   useEffect(() => {
