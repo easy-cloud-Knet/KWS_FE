@@ -57,8 +57,7 @@ const VMDetailModal = ({
   const [editedName, setEditedName] = useState<string>(vmStatus?.vm_name || "");
   const [toggleSwitch, setToggleSwitch] = useState(false);
   const [isChangingStatus, setIsChangingStatus] = useState(false);
-  const skipNextPatchRef = useRef(false);
-  const suppressPatchRef = useRef(false);
+  
 
   // 유저 관리 클릭
   const [openUserManage, setOpenUserManage] = useState(false);
@@ -78,46 +77,17 @@ const VMDetailModal = ({
     fetchData();
   }, [vmId]);
 
-  useEffect(() => {
-    if (skipNextPatchRef.current) {
-      skipNextPatchRef.current = false;
-      return;
-    }
-    if (suppressPatchRef.current) {
-      suppressPatchRef.current = false;
-      return;
-    }
-
-    let cancelled = false;
-    const changeStatus = async () => {
-      setIsChangingStatus(true);
-      try {
-        await axiosClient.patch(`/vm/${vmId}/state`, {
-          state: toggleSwitch ? "run" : "stop",
-        });
-      } catch {
-        suppressPatchRef.current = true;
-        setToggleSwitch((prev) => !prev);
-      } finally {
-        if (!cancelled) {
-          setIsChangingStatus(false);
-        }
-      }
-    };
-    changeStatus();
-
-    return () => {
-      cancelled = true;
-    };
-  }, [toggleSwitch, vmId]);
+  useEffect(() => {}, [toggleSwitch, vmId]);
 
   useEffect(() => {
     if (!vmStatus || isChangingStatus) {
       return;
     }
-    const shouldBeOn = vmStatus.status === "run";
+    const shouldBeOn =
+      vmStatus.status === "run" ||
+      vmStatus.status === "start begin" ||
+      vmStatus.status === "started begin";
     if (toggleSwitch !== shouldBeOn) {
-      skipNextPatchRef.current = true;
       setToggleSwitch(shouldBeOn);
     }
   }, [vmStatus, toggleSwitch, isChangingStatus]);
@@ -272,12 +242,22 @@ const VMDetailModal = ({
                             className="absolute top-[50%] left-0 -translate-y-1/2"
                             checked={toggleSwitch}
                             disabled={isChangingStatus}
-                            onChange={() => {
-                              if (isChangingStatus) {
+                            onChange={async () => {
+                              if (isChangingStatus || !vmId) {
                                 return;
                               }
+                              const next = !toggleSwitch;
                               setIsChangingStatus(true);
-                              setToggleSwitch((prev) => !prev);
+                              setToggleSwitch(next);
+                              try {
+                                await axiosClient.patch(`/vm/${vmId}/state`, {
+                                  state: next ? "run" : "stop",
+                                });
+                              } catch {
+                                setToggleSwitch(!next);
+                              } finally {
+                                setIsChangingStatus(false);
+                              }
                             }}
                           />
                         </div>
