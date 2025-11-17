@@ -192,7 +192,7 @@ const VMDetailModal = ({
                                 onClick={() => setIsUnderEditingName(true)}
                               >
                                 <p className="w-full p-18-400 line-clamp-1 overflow-ellipsis">
-                                  {vmStatus.vm_name}
+                                  {editedName}
                                 </p>
                               </span>
                               <IconButton
