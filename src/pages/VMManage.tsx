@@ -343,11 +343,13 @@ const VMManage: React.FC = () => {
                 <TableCell>
                   <div className="current-status-wrap a-items-center">
                     <div
-                      className={`current-status ${vm.currentStatus} p-16-400 f-center`}
+                      className={`current-status ${vm.currentStatus === "started begin" ? "launching" : "booting"} p-16-400 f-center`}
                     >
                       <img
                         src={
-                          vm.currentStatus === "booting" ? booting : launching
+                          vm.currentStatus === "started begin"
+                            ? launching
+                            : booting
                         }
                         alt=""
                       />
