@@ -112,13 +112,20 @@ const VMDetailModal = ({
     };
   }, [open, onClose]);
 
-  const onSaveName = () => {
+  const onSaveName = async () => {
     if (
       vmStatus &&
       editedName.trim() !== "" &&
       editedName !== vmStatus.vm_name
     ) {
       onChangeName(vmStatus.vm_id, editedName.trim());
+      try {
+        await axiosClient.patch(`/vm/${vmId}/name`, {
+          new_name: editedName.trim(),
+        });
+      } catch (error) {
+        console.error(error);
+      }
     }
     setIsUnderEditingName(false);
   };
