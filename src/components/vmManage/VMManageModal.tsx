@@ -56,6 +56,9 @@ const VMDetailModal = ({
   const [vmStatus, setVmStatus] = useState<VMStatus | null>(null);
   const [editedName, setEditedName] = useState<string>(vmStatus?.vm_name || "");
   const [toggleSwitch, setToggleSwitch] = useState(false);
+  const [isChangingStatus, setIsChangingStatus] = useState(false);
+  const skipNextPatchRef = useRef(true);
+  const suppressPatchRef = useRef(false);
 
   // 유저 관리 클릭
   const [openUserManage, setOpenUserManage] = useState(false);
@@ -65,11 +68,51 @@ const VMDetailModal = ({
   useEffect(() => {
     const fetchData = async () => {
       const { data } = await axiosClient.get(`/vm/${vmId}/status`);
-      console.log(data);
       setVmStatus(data);
     };
     fetchData();
   }, [vmId]);
+
+  useEffect(() => {
+    if (skipNextPatchRef.current) {
+      skipNextPatchRef.current = false;
+      return;
+    }
+    if (suppressPatchRef.current) {
+      suppressPatchRef.current = false;
+      return;
+    }
+
+    let cancelled = false;
+    const changeStatus = async () => {
+      setIsChangingStatus(true);
+      try {
+        await axiosClient.patch(`/vm/${vmId}/status`, {
+          status: toggleSwitch ? "run" : "stop",
+        });
+      } catch {
+        suppressPatchRef.current = true;
+        setToggleSwitch((prev) => !prev);
+      } finally {
+        if (!cancelled) {
+          setIsChangingStatus(false);
+        }
+      }
+    };
+    changeStatus();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [toggleSwitch, vmId]);
+
+  useEffect(() => {
+    if (!vmStatus) {
+      return;
+    }
+    skipNextPatchRef.current = true;
+    setToggleSwitch(vmStatus.status === "run");
+  }, [vmStatus]);
 
   // 바깥 영역 클릭 처리
   useEffect(() => {
@@ -220,7 +263,14 @@ const VMDetailModal = ({
                           <ToggleSwitch
                             className="absolute top-[50%] left-0 -translate-y-1/2"
                             checked={toggleSwitch}
-                            onChange={() => setToggleSwitch(!toggleSwitch)}
+                            disabled={isChangingStatus}
+                            onChange={() => {
+                              if (isChangingStatus) {
+                                return;
+                              }
+                              setIsChangingStatus(true);
+                              setToggleSwitch((prev) => !prev);
+                            }}
                           />
                         </div>
                       </Typography>
