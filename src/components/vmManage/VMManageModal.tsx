@@ -54,7 +54,7 @@ const VMDetailModal = ({
 }: VMDetailModalProps) => {
   const [isUnderEditingName, setIsUnderEditingName] = useState(false);
   const [vmStatus, setVmStatus] = useState<VMStatus | null>(null);
-  const [editedName, setEditedName] = useState<string>(vmStatus?.vm_name || "");
+  const [editedName, setEditedName] = useState<string>("");
   const [toggleSwitch, setToggleSwitch] = useState(false);
   const [isChangingStatus, setIsChangingStatus] = useState(false);
 
@@ -67,6 +67,7 @@ const VMDetailModal = ({
     const fetchData = async () => {
       const { data } = await axiosClient.get(`/vm/${vmId}/status`);
       setVmStatus(data);
+      setEditedName(data.vm_name);
       if (data.status === "start begin" || data.status === "started begin") {
         setToggleSwitch(true);
       } else {
