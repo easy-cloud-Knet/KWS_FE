@@ -28,7 +28,7 @@ import MuiBtn from "../components/button/MuiBtn";
 import VMManageBtn from "../components/vmManage/VMManageBtn";
 import VMDetailModal from "../components/vmManage/VMManageModal";
 import axiosClient from "../services/api";
-import { Status, VM } from "../types/vm";
+import { CurrentStatus, VM } from "../types/vm";
 import { currentStatusMapping, userTypeMapping } from "../utils/MappingToKor";
 
 import "./VMManage.css";
@@ -40,7 +40,7 @@ interface VMInitStatus {
   instance_type: string;
   os: string;
   ip: string;
-  status: string;
+  status: CurrentStatus;
   uptime: string;
 }
 
@@ -71,7 +71,6 @@ const VMManage: React.FC = () => {
           data.map((vm: VMInitStatus) => ({
             id: vm.vm_id,
             vmName: vm.vm_name,
-            currentStatus: vm.status == "started begin" ? "booting" : vm.status,
             status: vm.status,
             instanceType: vm.instance_type,
             publicIP: vm.ip,
@@ -160,7 +159,7 @@ const VMManage: React.FC = () => {
     );
   };
 
-  const onChangeStatus = (id: string, newStatus: Status) => {
+  const onChangeStatus = (id: string, newStatus: CurrentStatus) => {
     setVmList((prevList) =>
       prevList.map((vm) => (vm.id === id ? { ...vm, status: newStatus } : vm))
     );
@@ -343,17 +342,17 @@ const VMManage: React.FC = () => {
                 <TableCell>
                   <div className="current-status-wrap a-items-center">
                     <div
-                      className={`current-status ${vm.currentStatus === "started begin" ? "launching" : "booting"} p-16-400 f-center`}
+                      className={`current-status ${
+                        vm.status === "started begin" ? "launching" : "booting"
+                      } p-16-400 f-center`}
                     >
                       <img
                         src={
-                          vm.currentStatus === "started begin"
-                            ? launching
-                            : booting
+                          vm.status === "started begin" ? launching : booting
                         }
                         alt=""
                       />
-                      {currentStatusMapping(vm.currentStatus)}
+                      {currentStatusMapping(vm.status)}
                     </div>
                     <div className="runtime a-items-center">
                       <img src={time} alt="" />

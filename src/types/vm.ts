@@ -11,8 +11,7 @@ export interface VM {
   id: string;
   vmName: string;
   instanceType: string;
-  currentStatus: CurrentStatus;
-  status: Status;
+  status: CurrentStatus;
   publicIP?: string;
   key: string;
   os: string;

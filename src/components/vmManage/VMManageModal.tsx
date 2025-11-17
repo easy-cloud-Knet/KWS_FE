@@ -7,7 +7,7 @@ import React, { useEffect, useRef, useState } from "react";
 import link from "@/assets/image/vmManage/vmManageModal/link.svg";
 import user from "@/assets/image/vmManage/vmManageModal/user.svg";
 import axiosClient from "@/services/api";
-import { Status } from "@/types/vm";
+import { CurrentStatus } from "@/types/vm";
 
 // import ImageBtn from "../button/ImageBtn";
 import ToggleSwitch from "../button/ToggleSwitch";
@@ -21,7 +21,7 @@ interface VMDetailModalProps {
   open: boolean;
   vmId: string | null;
   onClose: () => void;
-  onChangeStatus: (id: string, newStatus: Status) => void;
+  onChangeStatus: (id: string, newStatus: CurrentStatus) => void;
   onChangeName: (id: string, newName: string) => void;
 }
 
@@ -57,7 +57,6 @@ const VMDetailModal = ({
   const [editedName, setEditedName] = useState<string>(vmStatus?.vm_name || "");
   const [toggleSwitch, setToggleSwitch] = useState(false);
   const [isChangingStatus, setIsChangingStatus] = useState(false);
-  
 
   // 유저 관리 클릭
   const [openUserManage, setOpenUserManage] = useState(false);
@@ -76,8 +75,6 @@ const VMDetailModal = ({
     };
     fetchData();
   }, [vmId]);
-
-  useEffect(() => {}, [toggleSwitch, vmId]);
 
   useEffect(() => {
     if (!vmStatus || isChangingStatus) {
