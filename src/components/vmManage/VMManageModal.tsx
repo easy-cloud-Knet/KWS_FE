@@ -126,7 +126,7 @@ const VMDetailModal = ({
   const onClickConnectBtn = async () => {
     try {
       const { data } = await axiosClient.get(`/vm/${vmId}/connect`);
-      console.log(data);
+      window.location.href = data.url;
     } catch (error) {
       console.error(error);
     }
