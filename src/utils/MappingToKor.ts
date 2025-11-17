@@ -11,13 +11,17 @@ export const userTypeMapping = (userType: UserType) => {
 };
 
 export const currentStatusMapping = (currentStatus: CurrentStatus) => {
-  if (currentStatus === "booting") {
-    return "부팅중";
-  } else if (currentStatus === "launching") {
-    return "실행중";
+  if (currentStatus === "prepare begin") {
+    return "진행중";
+  } else if (currentStatus === "start begin") {
+    return "시작중";
   } else if (currentStatus === "started begin") {
     return "실행중";
+  } else if (currentStatus === "stopped end") {
+    return "중지됨";
+  } else if (currentStatus === "release end") {
+    return "종료됨";
   } else {
-    return "";
+    return "진행중";
   }
 };

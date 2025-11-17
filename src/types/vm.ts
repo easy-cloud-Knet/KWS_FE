@@ -1,5 +1,10 @@
 export type Status = "시작" | "중지" | "재부팅" | "삭제";
-export type CurrentStatus = "booting" | "launching";
+export type CurrentStatus =
+  | "prepare begin"
+  | "start begin"
+  | "started begin"
+  | "stopped end"
+  | "release end";
 export type UserType = "admin" | "user";
 
 export interface VM {
