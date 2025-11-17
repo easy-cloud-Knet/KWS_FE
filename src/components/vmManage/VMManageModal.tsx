@@ -123,6 +123,15 @@ const VMDetailModal = ({
     setIsUnderEditingName(false);
   };
 
+  const onClickConnectBtn = async () => {
+    try {
+      const { data } = await axiosClient.get(`/vm/${vmId}/connect`);
+      console.log(data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <div>
       <Slide
@@ -304,7 +313,7 @@ const VMDetailModal = ({
                     <VMManageBtn
                       className="link-btn"
                       src={link}
-                      onClick={() => {}}
+                      onClick={onClickConnectBtn}
                     >
                       연결
                     </VMManageBtn>
