@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { Outlet, Navigate, useLocation } from "react-router-dom";
 
-import NavBar from "@/components/NavBar";
+import NavBar from "@/components/navbar/NavBar";
 import AuthContext from "@/contexts/AuthContext.tsx";
 
 import "./DefaultLayout.css";

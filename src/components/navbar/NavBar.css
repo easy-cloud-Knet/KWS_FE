@@ -63,18 +63,6 @@
   white-space: nowrap;
 }
 
-.navbar .navbar_login .p-18-500 {
-  font-size: 1.6667vh; /* 18px */
-}
-
-.navbar .navbar_login img {
-  height: 2.593vh;
-
-  position: absolute;
-  left: -4vw;
-  cursor: pointer;
-}
-
 .navbar .signin_btn {
   width: 112px;
   height: 54px;
