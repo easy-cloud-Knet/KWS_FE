@@ -15,8 +15,9 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-import { useEffect, useState } from "react";
+import { PropsWithChildren, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { twJoin, twMerge } from "tailwind-merge";
 
 import booting from "../assets/image/vmManage/booting.svg";
 import addIcon from "../assets/image/vmManage/button/add.svg";
@@ -44,7 +45,7 @@ interface VMInitStatus {
   uptime: string;
 }
 
-const VMManage: React.FC = () => {
+const VMManage = () => {
   const [vmList, setVmList] = useState<VM[]>([]);
   const [checkedVMs, setCheckedVMs] = useState<string[]>([]);
 
@@ -127,9 +128,7 @@ const VMManage: React.FC = () => {
         setDeleteAlert({
           show: true,
           success: false,
-          message: `총 ${
-            failed.length
-          }개의 VM 삭제에 실패했습니다: ${failed.join(", ")}`,
+          message: `총 ${failed.length}개의 VM 삭제에 실패했습니다: ${failed.join(", ")}`,
         });
       } else {
         setDeleteAlert({
@@ -154,9 +153,7 @@ const VMManage: React.FC = () => {
   };
 
   const onChangeName = (id: string, newName: string) => {
-    setVmList((prevList) =>
-      prevList.map((vm) => (vm.id === id ? { ...vm, vmName: newName } : vm))
-    );
+    setVmList((prevList) => prevList.map((vm) => (vm.id === id ? { ...vm, vmName: newName } : vm)));
   };
 
   const onChangeStatus = (id: string, newStatus: CurrentStatus) => {
@@ -167,9 +164,9 @@ const VMManage: React.FC = () => {
 
   return (
     <div className="vm-manage">
-      <p className="title p-36-600">인스턴스 리스트</p>
+      <p className="title typo-pr-sb-36">인스턴스 리스트</p>
 
-      <div className="vm-manage-btn-wrap j-content-end">
+      <div className="vm-manage-btn-wrap flex justify-end">
         {checkedVMs.length > 0 && (
           <VMManageBtn
             className="delete"
@@ -180,18 +177,10 @@ const VMManage: React.FC = () => {
             삭제
           </VMManageBtn>
         )}
-        <VMManageBtn
-          className="refresh"
-          src={refreshIcon}
-          onClick={() => window.location.reload()}
-        >
+        <VMManageBtn className="refresh" src={refreshIcon} onClick={() => window.location.reload()}>
           갱신
         </VMManageBtn>
-        <VMManageBtn
-          className="add"
-          src={addIcon}
-          onClick={() => navigate("/create")}
-        >
+        <VMManageBtn className="add" src={addIcon} onClick={() => navigate("/create")}>
           생성
         </VMManageBtn>
       </div>
@@ -205,19 +194,14 @@ const VMManage: React.FC = () => {
         maxWidth="sm"
         fullWidth={true}
       >
-        <DialogTitle
-          id="alert-dialog-title"
-          sx={{ marginBottom: "calc(31px - 16px)" }}
-        >
-          <p className="p-21-400">VM 삭제</p>
+        <DialogTitle id="alert-dialog-title" sx={{ marginBottom: "calc(31px - 16px)" }}>
+          <p className="typo-pr-r-21">VM 삭제</p>
         </DialogTitle>
         <DialogContent>
-          <DialogContentText className="f-dir-column" sx={{ gap: "32px" }}>
-            <p className="p-16-400 c-black">
-              {checkedVMs.length}개의 항목을 정말 삭제하시겠습니까?
-            </p>
-            <p className="p-16-400 c-black d-flex">
-              삭제 시&nbsp;<p className="c-red">되돌릴 수 없습니다.</p>
+          <DialogContentText className="flex flex-col" sx={{ gap: "32px" }}>
+            <p className="typo-pr-r-16">{checkedVMs.length}개의 항목을 정말 삭제하시겠습니까?</p>
+            <p className="typo-pr-r-16 flex">
+              삭제 시&nbsp;<p className="text-red">되돌릴 수 없습니다.</p>
             </p>
           </DialogContentText>
         </DialogContent>
@@ -229,11 +213,7 @@ const VMManage: React.FC = () => {
           >
             삭제하기
           </MuiBtn>
-          <MuiBtn
-            onClick={onCloseDeleteDialog}
-            autoFocus
-            sx={{ width: "96px" }}
-          >
+          <MuiBtn onClick={onCloseDeleteDialog} autoFocus sx={{ width: "96px" }}>
             취소하기
           </MuiBtn>
         </DialogActions>
@@ -246,10 +226,7 @@ const VMManage: React.FC = () => {
         onClose={() => setDeleteAlert({ ...deleteAlert, show: false })}
         anchorOrigin={{ vertical: "top", horizontal: "right" }}
       >
-        <Alert
-          severity={deleteAlert.success ? "success" : "error"}
-          sx={{ width: "100%" }}
-        >
+        <Alert severity={deleteAlert.success ? "success" : "error"} sx={{ width: "100%" }}>
           {deleteAlert.message}
         </Alert>
       </Snackbar>
@@ -275,12 +252,8 @@ const VMManage: React.FC = () => {
             <TableRow sx={{ height: "59px" }}>
               <TableCell padding="checkbox">
                 <Checkbox
-                  indeterminate={
-                    checkedVMs.length > 0 && checkedVMs.length < vmList.length
-                  }
-                  checked={
-                    vmList.length > 0 && checkedVMs.length === vmList.length
-                  }
+                  indeterminate={checkedVMs.length > 0 && checkedVMs.length < vmList.length}
+                  checked={vmList.length > 0 && checkedVMs.length === vmList.length}
                   onChange={(event) => {
                     if (event.target.checked) {
                       const allVMIds = vmList.map((vm) => vm.id);
@@ -311,10 +284,7 @@ const VMManage: React.FC = () => {
                 }}
                 sx={{ cursor: "pointer" }}
               >
-                <TableCell
-                  padding="checkbox"
-                  onClick={(event) => event.stopPropagation()}
-                >
+                <TableCell padding="checkbox" onClick={(event) => event.stopPropagation()}>
                   <Checkbox
                     checked={checkedVMs.includes(vm.id)}
                     onChange={() => {
@@ -330,33 +300,31 @@ const VMManage: React.FC = () => {
                   />
                 </TableCell>
                 <TableCell sx={{ width: "25%" }}>
-                  <p className="p-16-600">{vm.vmName}</p>
+                  <p className="text-[16px] font-semibold">{vm.vmName}</p>
                 </TableCell>
                 <TableCell>{vm.instanceType}</TableCell>
                 <TableCell>{vm.publicIP || "-"}</TableCell>
                 <TableCell>
-                  <div className={`user-type ${vm.userType} p-16-400 f-center`}>
+                  <div
+                    className={twMerge("user-type typo-pr-r-16 flex justify-center", vm.userType)}
+                  >
                     {userTypeMapping(vm.userType)}
                   </div>
                 </TableCell>
                 <TableCell>
-                  <div className="current-status-wrap a-items-center">
+                  <div className="current-status-wrap flex items-center">
                     <div
-                      className={`current-status ${
+                      className={twJoin(
+                        "current-status typo-pr-r-16 flex justify-center items-center",
                         vm.status === "started begin" ? "launching" : "booting"
-                      } p-16-400 f-center`}
+                      )}
                     >
-                      <img
-                        src={
-                          vm.status === "started begin" ? launching : booting
-                        }
-                        alt=""
-                      />
+                      <img src={vm.status === "started begin" ? launching : booting} alt="" />
                       {currentStatusMapping(vm.status)}
                     </div>
-                    <div className="runtime a-items-center">
+                    <div className="runtime flex items-center">
                       <img src={time} alt="" />
-                      <p className="p-16-400 c-grey1">{vm.runTime}</p>
+                      <p className="typo-pr-r-16 text-grey1">{vm.runTime}</p>
                     </div>
                   </div>
                 </TableCell>
@@ -370,12 +338,10 @@ const VMManage: React.FC = () => {
 };
 export default VMManage;
 
-const TableCellAttribute: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
+const TableCellAttribute = ({ children }: PropsWithChildren) => {
   return (
     <TableCell>
-      <p className="p-14-400 c-grey1">{children}</p>
+      <p className="typo-pr-r-14 text-grey1">{children}</p>
     </TableCell>
   );
 };

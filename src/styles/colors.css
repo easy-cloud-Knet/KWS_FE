@@ -21,3 +21,21 @@
 
   --Text1: #8695b6;
 }
+
+@theme {
+  --color-sub-purple1: #6a5acd;
+  --color-sub-purple2: #e4dfff;
+  --color-sub-green1: #28c76f;
+  --color-sub-green2: #dafdea;
+  --color-red: #ff0000;
+  --color-main-blue: #007bff;
+  --color-bg-blue1: #cfe6ff;
+  --color-bg-blue2: #f2f8ff;
+  --color-bar-blue: #ecf2ff;
+  --color-line: #e6e7eb;
+  --color-blue-black: #272b33;
+  --color-grey1: #808b96;
+  --color-grey2: #eceff3;
+  --color-white: #ffffff;
+  --color-text1: #8695b6;
+}

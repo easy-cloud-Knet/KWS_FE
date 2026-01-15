@@ -14,7 +14,7 @@ interface SignUp2Props {
   setUserInfo: React.Dispatch<React.SetStateAction<UserInfo>>;
 }
 
-const SignUp2: React.FC<SignUp2Props> = ({ onNext, userInfo, setUserInfo }) => {
+const SignUp2 = ({ onNext, userInfo, setUserInfo }: SignUp2Props) => {
   const [pw, setPw] = useState(userInfo.pw);
   const [pwChecker, setPwChecker] = useState({
     show: false,
@@ -50,7 +50,7 @@ const SignUp2: React.FC<SignUp2Props> = ({ onNext, userInfo, setUserInfo }) => {
 
   return (
     <Form className="signup2" onSubmit={onClickNext}>
-      <div className="input-wrap f-dir-column">
+      <div className="input-wrap flex flex-col">
         <AuthPwTextFieldV2
           label="비밀번호"
           value={pw}
@@ -83,7 +83,7 @@ const SignUp2: React.FC<SignUp2Props> = ({ onNext, userInfo, setUserInfo }) => {
         />
       </div>
 
-      <div className="button-wrap j-content-between">
+      <div className="button-wrap flex justify-between">
         <BottomBtn
           variant="contained"
           onClick={onClickNext}
@@ -93,7 +93,7 @@ const SignUp2: React.FC<SignUp2Props> = ({ onNext, userInfo, setUserInfo }) => {
         </BottomBtn>
 
         {/* 엔터키 입력을 위한 보이지 않는 버튼 */}
-        <button type="submit" style={{ display: "none" }}></button>
+        <button type="submit" className="hidden"></button>
       </div>
     </Form>
   );

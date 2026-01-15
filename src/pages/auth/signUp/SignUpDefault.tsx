@@ -8,7 +8,6 @@ import SignUp2 from "./SignUp2";
 import SignUp3 from "./SignUp3";
 import SignUp4 from "./SignUpSuccess";
 
-
 import "../AuthDefault.css";
 import "./SignUpDefault.css";
 
@@ -32,10 +31,10 @@ const SignUpDefault = () => {
   };
 
   return (
-    <div className="signup-default j-content-center">
+    <div className="signup-default flex justify-center">
       <div className="signup-container">
         <Selector index={step} />
-        <h2 className="title p-36-400 t-align-center">회원가입</h2>
+        <h2 className="title text-[36px] text-center">회원가입</h2>
         {step === 1 && <SignUp1 onNext={onNext} userInfo={userInfo} setUserInfo={setUserInfo} />}
         {step === 2 && <SignUp2 onNext={onNext} userInfo={userInfo} setUserInfo={setUserInfo} />}
         {step === 3 && <SignUp3 userInfo={userInfo} setUserInfo={setUserInfo} />}

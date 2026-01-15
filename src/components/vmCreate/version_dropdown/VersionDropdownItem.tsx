@@ -10,19 +10,18 @@ interface VersionDropdownItemProps {
   setToggle: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const VersionDropdownItem: React.FC<VersionDropdownItemProps> = ({
+const VersionDropdownItem = ({
   children,
   item,
   versionObj,
   setToggle,
   ...props
-}) => {
-  const { setOsVersion, setOsVersionImgName, setOs } =
-    useContext(VMCreateContext)!;
+}: VersionDropdownItemProps) => {
+  const { setOsVersion, setOsVersionImgName, setOs } = useContext(VMCreateContext)!;
 
   return (
     <button
-      className="w-full h-[48px] p-14-400 bg-white hover:text-(--Main_Blue) hover:bg-[#ECF2FF] cursor-pointer z-10"
+      className="w-full h-[48px] typo-pr-r-14 bg-white hover:text-main-blue hover:bg-bar-blue cursor-pointer z-10"
       onClick={() => {
         const label = Object.keys(versionObj)[0];
         setOsVersion(label);

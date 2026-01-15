@@ -18,7 +18,7 @@ interface SignUp1Props {
   setUserInfo: React.Dispatch<React.SetStateAction<UserInfo>>;
 }
 
-const SignUp1: React.FC<SignUp1Props> = ({ onNext, userInfo, setUserInfo }) => {
+const SignUp1 = ({ onNext, userInfo, setUserInfo }: SignUp1Props) => {
   const [email, setEmail] = useState(userInfo.email);
   const [emailChecker, setEmailChecker] = useState({
     show: false,
@@ -57,10 +57,7 @@ const SignUp1: React.FC<SignUp1Props> = ({ onNext, userInfo, setUserInfo }) => {
       const err = error as AxiosError<ServerError>;
 
       // 에러 응답이 detail 배열 형태인 경우 처리
-      if (
-        err.response?.data?.detail &&
-        Array.isArray(err.response.data.detail)
-      ) {
+      if (err.response?.data?.detail && Array.isArray(err.response.data.detail)) {
         const duplicateError = err.response.data.detail.find(
           (detail: { msg: string }) => detail.msg === "이메일 중복"
         );
@@ -102,7 +99,7 @@ const SignUp1: React.FC<SignUp1Props> = ({ onNext, userInfo, setUserInfo }) => {
   return (
     <Form
       onSubmit={!emailSended ? onClickEmailSend : checkEmailCode}
-      className="signup-1 f-dir-column f-center"
+      className="signup-1 flex flex-col items-center justify-center"
     >
       {/* 더미용 submit 버튼 */}
       <button type="submit"></button>
@@ -126,13 +123,9 @@ const SignUp1: React.FC<SignUp1Props> = ({ onNext, userInfo, setUserInfo }) => {
             errorMessageCondition={emailChecker.show && !emailChecker.format}
             errorMessageContent="@kw.ac.kr 이메일 형식과 맞지 않습니다."
           />
-          <div style={{ height: "3.333vh" }}></div> {/* 36px */}
+          <div className="h-[36px]"></div>
           {!emailSended && (
-            <BottomBtn
-              variant="contained"
-              disabled={!emailChecker.format}
-              type="submit"
-            >
+            <BottomBtn variant="contained" disabled={!emailChecker.format} type="submit">
               인증코드 발송
             </BottomBtn>
           )}
@@ -140,7 +133,7 @@ const SignUp1: React.FC<SignUp1Props> = ({ onNext, userInfo, setUserInfo }) => {
 
         {emailSended && (
           <>
-            <div className="email-code-wrap j-content-between a-items-end">
+            <div className="email-code-wrap flex justify-between items-end">
               <div className="email-code-field">
                 <AuthTextFieldV2
                   label="인증번호"
@@ -162,12 +155,8 @@ const SignUp1: React.FC<SignUp1Props> = ({ onNext, userInfo, setUserInfo }) => {
                 재전송
               </Button>
             </div>
-            <div className="button-wrap j-content-end">
-              <BottomBtn
-                variant="contained"
-                type="submit"
-                disabled={!emailCode}
-              >
+            <div className="button-wrap flex justify-end">
+              <BottomBtn variant="contained" type="submit" disabled={!emailCode}>
                 인증
               </BottomBtn>
             </div>

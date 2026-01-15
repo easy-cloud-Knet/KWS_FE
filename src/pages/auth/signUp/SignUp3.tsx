@@ -16,7 +16,7 @@ interface SignUp3Props {
 /**
  * @param {function} onClickRegisterAllowButton - 회원가입 완료 버튼 클릭 시 호출되는 함수
  */
-const SignUp3: React.FC<SignUp3Props> = ({ userInfo, setUserInfo }) => {
+const SignUp3 = ({ userInfo, setUserInfo }: SignUp3Props) => {
   const [name, setName] = useState(userInfo.name);
   const [nameChecker, setNameChecker] = useState({
     show: false,
@@ -78,7 +78,7 @@ const SignUp3: React.FC<SignUp3Props> = ({ userInfo, setUserInfo }) => {
         errorMessageContent="한글/영문/숫자 포함 가능, 2~12자"
       />
 
-      <div className="button-wrap j-content-between">
+      <div className="button-wrap flex justify-between">
         <BottomBtn
           variant="contained"
           disabled={!nameChecker.format}

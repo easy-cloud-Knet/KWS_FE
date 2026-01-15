@@ -1,7 +1,12 @@
+@import "tailwindcss/preflight";
+@import "tailwindcss/theme";
+@import "tailwindcss/utilities";
+
 @import "@fontsource/pretendard/index.css";
 @import "@fontsource/inter/index.css";
 
-@import "tailwindcss";
+@import "./styles/colors.css";
+@import "./styles/text.css";
 
 @layer base {
   h1,

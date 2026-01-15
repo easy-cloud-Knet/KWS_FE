@@ -1,10 +1,12 @@
-import invalid from "../../../../assets/image/input/invalid.svg";
+import { PropsWithChildren } from "react";
 
-const ErrorMessage = ({ children }: { children: React.ReactNode }) => {
+import invalid from "@/assets/image/input/invalid.svg";
+
+const ErrorMessage = ({ children }: PropsWithChildren) => {
   return (
-    <div className="a-items-center">
+    <div className="flex items-center">
       <img src={invalid} alt="" />
-      <p className="p-12-400 c-red">{children}</p>
+      <p className="typo-pr-r-12 text-red">{children}</p>
     </div>
   );
 };

@@ -21,9 +21,7 @@ const ResetPw = () => {
 
   return (
     <main className="flex flex-col items-center size-full pt-[169px]">
-      <h1 className="text-pr-sb-36 text-center text-(--BlueBlack)">
-        비밀번호 재설정
-      </h1>
+      <h1 className="typo-pr-sb-36 text-center text-blue-black">비밀번호 재설정</h1>
 
       <form
         onSubmit={onClickResetPassword}
@@ -60,19 +58,17 @@ const ResetPw = () => {
           errorMessageContent="비밀번호가 일치하지 않습니다."
         />
 
-        <div className="button-wrap j-content-between">
+        <div className="button-wrap flex justify-between">
           <BottomBtn
             variant="contained"
             onClick={onClickResetPassword}
-            disabled={
-              !(pw && pwChecker.format && pwCheck && pwCheckChecker.equal)
-            }
+            disabled={!(pw && pwChecker.format && pwCheck && pwCheckChecker.equal)}
           >
             완료
           </BottomBtn>
 
           {/* 엔터키 입력을 위한 보이지 않는 버튼 */}
-          <button type="submit" style={{ display: "none" }}></button>
+          <button type="submit" className="hidden"></button>
         </div>
       </form>
     </main>

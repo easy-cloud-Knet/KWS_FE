@@ -13,12 +13,7 @@ interface VersionDropdownProps {
   setToggle: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const VersionDropdown: React.FC<VersionDropdownProps> = ({
-  item,
-  osVersion,
-  toggle,
-  setToggle,
-}) => {
+const VersionDropdown = ({ item, osVersion, toggle, setToggle }: VersionDropdownProps) => {
   const currentRef = useRef<HTMLDivElement>(null);
   const { isOutside } = useOutsideClick({ ref: currentRef });
 
@@ -29,17 +24,17 @@ const VersionDropdown: React.FC<VersionDropdownProps> = ({
   }, [isOutside, setToggle]);
 
   return (
-    <div className="f-center w-full h-full relative" ref={currentRef}>
+    <div className="flex items-center justify-center w-full h-full relative" ref={currentRef}>
       <button
-        className="absolute bg-transparent cursor-pointer z-10 w-full h-full"
+        className="absolute w-full h-full bg-transparent cursor-pointer z-10"
         onClick={() => {
           setToggle(!toggle);
         }}
       ></button>
-      <p className="p-14-400 c-text1">{osVersion || "버전 선택"}</p>
+      <p className="typo-pr-r-14 text-text1">{osVersion || "버전 선택"}</p>
       <img className={`${toggle && "rotate-180"}`} src={ic_arrow_down} alt="" />
       {toggle && (
-        <div className="absolute top-[40px] left-0 bg-white w-[252px] h-[240px] border-[1px] border-[#E6E7EB] rounded-[10px] overflow-y-scroll">
+        <div className="absolute top-[40px] left-0 bg-white w-[252px] h-[240px] border-[1px] border-line rounded-[10px] overflow-y-scroll">
           {item.version.map((versionObj, index) => {
             return (
               <VersionDropdownItem

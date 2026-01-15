@@ -44,8 +44,7 @@ const bellItemList: BellItemList[] = [
 ];
 
 const NavBar = () => {
-  const { isAuthenticated, logout, userNickname, userEmail } =
-    useContext(AuthContext)!;
+  const { isAuthenticated, logout, userNickname, userEmail } = useContext(AuthContext)!;
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -53,10 +52,7 @@ const NavBar = () => {
   const [isAlarmExist, setIsAlarmExist] = useState(false);
   const [openLogoutDialog, setOpenLogoutDialog] = useState(false);
 
-  const onClickLink = (
-    event: React.MouseEvent<HTMLAnchorElement>,
-    path: string
-  ): void => {
+  const onClickLink = (event: React.MouseEvent<HTMLAnchorElement>, path: string): void => {
     if (location.pathname === path) {
       event.preventDefault(); // 링크 기본 동작 block
       window.location.reload(); // 새로고침 수행
@@ -110,7 +106,7 @@ const NavBar = () => {
             <img src={!isAlarmExist ? ic_bell : ic_bell_with_alarm} alt="" />
           </button>
           {openBellDialog && (
-            <div className="absolute bottom-0 translate-x-[calc(-100%+36px)] translate-y-[calc(100%+16px)] py-[8px] px-[24px] w-[549px] min-h-[120px] rounded-[10px] bg-[#F2F8FF]">
+            <div className="absolute bottom-0 translate-x-[calc(-100%+36px)] translate-y-[calc(100%+16px)] py-[8px] px-[24px] w-[549px] min-h-[120px] rounded-[10px] bg-bg-blue2">
               {bellItemList.map((item, index) => (
                 <>
                   <NavBarBellItem
@@ -126,8 +122,8 @@ const NavBar = () => {
             </div>
           )}
           <div className="ml-[12px] mr-[20px] w-[1px] h-[36px] bg-[#E6E7EB]" />
-          <p className="p-18-500 c-text1 flex">
-            환영합니다,&nbsp;<p className="c-black">{userNickname}</p>&nbsp;
+          <p className="typo-pr-m-18 text-text1 flex">
+            환영합니다,&nbsp;<p className="text-blue-black">{userNickname}</p>&nbsp;
             {userEmail}&nbsp;님!
           </p>
           <button
@@ -140,7 +136,7 @@ const NavBar = () => {
           </button>
           {openLogoutDialog && (
             <button
-              className="absolute top-0 right-0 translate-y-[100%] w-[127px] h-[45px] bg-[#ECEFF3] rounded-b-[4px] text-[18px] font-medium text-[#272B33] cursor-pointer"
+              className="absolute top-0 right-0 translate-y-[100%] w-[127px] h-[45px] bg-grey2 rounded-b-[4px] text-[18px] font-medium text-blue-black cursor-pointer"
               onClick={() => {
                 // context 호출
                 logout();

@@ -1,10 +1,12 @@
-import valid from "./../../../../assets/image/input/valid.svg";
+import { PropsWithChildren } from "react";
 
-const CheckMessage = ({ children }: { children: React.ReactNode }) => {
+import valid from "@/assets/image/input/valid.svg";
+
+const CheckMessage = ({ children }: PropsWithChildren) => {
   return (
-    <div className="a-items-center" style={{ gap: "5px", paddingLeft: "3px", marginBottom: "4px" }}>
+    <div className="flex items-center gap-[5px] pl-[3px] mb-[4px]">
       <img src={valid} alt="" />
-      <p className="p-12-400 c-green">{children}</p>
+      <p className="typo-pr-r-12 text-sub-green1">{children}</p>
     </div>
   );
 };

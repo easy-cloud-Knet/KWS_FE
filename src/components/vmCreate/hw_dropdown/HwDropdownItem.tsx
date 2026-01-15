@@ -3,10 +3,10 @@ interface HwDropdownItemProps extends React.ButtonHTMLAttributes<HTMLButtonEleme
   setToggle?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const HwDropdownItem: React.FC<HwDropdownItemProps> = ({ children, ...props }) => {
+const HwDropdownItem = ({ children, ...props }: HwDropdownItemProps) => {
   return (
     <button
-      className="p-16-400 pl-[20px] w-full h-[48px] bg-white rounded-[10px] text-left hover:text-(--Main_Blue) hover:bg-[#ECF2FF] cursor-pointer z-20"
+      className="pl-[20px] w-full h-[48px] bg-white rounded-[10px] text-left hover:text-main-blue hover:bg-bar-blue typo-pr-r-16 cursor-pointer z-20"
       {...props}
     >
       {children}

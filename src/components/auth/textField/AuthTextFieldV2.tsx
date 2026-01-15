@@ -1,12 +1,11 @@
 import React, { useState } from "react";
 
-import remove from "../../../assets/image/input/remove.svg";
-import ImageBtn from "../../button/ImageBtn";
+import remove from "@/assets/image/input/remove.svg";
+import ImageBtn from "@/components/button/ImageBtn";
 
 import CheckMessage from "./bottomMessages/CheckMessage";
 import ErrorMessage from "./bottomMessages/ErrorMessage";
 import { AuthTextFieldV2Props } from "./types/textField";
-
 
 import "./AuthTextFieldV2.css";
 /**
@@ -20,7 +19,7 @@ import "./AuthTextFieldV2.css";
  * @param {boolean} props.errorMessageCondition - errorMessage 표시 여부
  * @param {string} props.errorMessageContent - errorMessage 내용
  */
-const AuthTextFieldV2: React.FC<AuthTextFieldV2Props> = ({
+const AuthTextFieldV2 = ({
   label,
   style,
   onBlur,
@@ -31,7 +30,7 @@ const AuthTextFieldV2: React.FC<AuthTextFieldV2Props> = ({
   errorMessageCondition = false,
   errorMessageContent,
   ...props
-}) => {
+}: AuthTextFieldV2Props) => {
   const [showDeleteBtn, setShowDeleteBtn] = useState(false);
 
   let className = "";
@@ -49,9 +48,9 @@ const AuthTextFieldV2: React.FC<AuthTextFieldV2Props> = ({
   }
 
   return (
-    <div className="auth-text-field f-dir-column">
+    <div className="auth-text-field flex flex-col">
       {typeof label === "string" && (
-        <label className="p-16-400" htmlFor={label}>
+        <label className="typo-pr-r-16" htmlFor={label}>
           {label}
         </label>
       )}
@@ -101,15 +100,15 @@ const AuthTextFieldV2: React.FC<AuthTextFieldV2Props> = ({
 
       {checkMessageContent || errorMessageContent ? (
         checkMessageCondition ? (
-          <div style={{ marginTop: "8px" }}>
+          <div className="mt-[8px]">
             <CheckMessage>{checkMessageContent}</CheckMessage>
           </div>
         ) : errorMessageCondition ? (
-          <div style={{ marginTop: "4px" }}>
+          <div className="mt-[4px]">
             <ErrorMessage>{errorMessageContent}</ErrorMessage>
           </div>
         ) : (
-          <p style={{ height: "28px" }}>&nbsp;</p>
+          <p className="h-[28px]">&nbsp;</p>
         )
       ) : null}
     </div>

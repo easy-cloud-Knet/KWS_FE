@@ -37,7 +37,12 @@ const ImageBtn: React.FC<ImageBtnProps> = ({
   const { style: imgStyle, ...restImgProps } = imgProps;
 
   return (
-    <button id={id} className={`${className} image-btn c-pointer`} onClick={onClick} {...props}>
+    <button
+      id={id}
+      className={`${className} image-btn cursor-pointer`}
+      onClick={onClick}
+      {...props}
+    >
       <img
         src={src}
         alt={alt}

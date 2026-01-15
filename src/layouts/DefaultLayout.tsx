@@ -10,9 +10,9 @@ const DefaultLayout: React.FC = () => {
   const auth = useContext(AuthContext);
   const location = useLocation();
 
-  if (!auth?.isAuthenticated) {
-    return <Navigate to="/signin" state={{ from: location }} replace />;
-  }
+  // if (!auth?.isAuthenticated) {
+  //   return <Navigate to="/signin" state={{ from: location }} replace />;
+  // }
 
   return (
     <>

@@ -1,7 +1,7 @@
 import ModeEditOutlineOutlinedIcon from "@mui/icons-material/ModeEditOutlineOutlined";
 import { Box, IconButton, Slide, TextField, Typography } from "@mui/material";
-import clsx from "clsx";
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { twMerge } from "tailwind-merge";
 
 // import closeBtn from "@/assets/image/button/closeBtn.svg";
 import link from "@/assets/image/vmManage/vmManageModal/link.svg";
@@ -114,11 +114,7 @@ const VMDetailModal = ({
   }, [open, onClose]);
 
   const onSaveName = async () => {
-    if (
-      vmStatus &&
-      editedName.trim() !== "" &&
-      editedName !== vmStatus.vm_name
-    ) {
+    if (vmStatus && editedName.trim() !== "" && editedName !== vmStatus.vm_name) {
       onChangeName(vmStatus.vm_id, editedName.trim());
       try {
         await axiosClient.patch(`/vm/${vmId}/name`, {
@@ -142,13 +138,7 @@ const VMDetailModal = ({
 
   return (
     <div>
-      <Slide
-        className="vm-manage-modal"
-        direction="up"
-        in={open}
-        mountOnEnter
-        unmountOnExit
-      >
+      <Slide className="vm-manage-modal" direction="up" in={open} mountOnEnter unmountOnExit>
         <Box
           ref={modalRef}
           sx={{
@@ -165,10 +155,7 @@ const VMDetailModal = ({
             zIndex: 1300,
           }}
         >
-          <section
-            className="flex flex-col justify-between pt-[44px] pl-[4.167%] pr-[2.8125%] pb-[1.4583%]"
-            style={{ height: "100%" }}
-          >
+          <section className="flex flex-col justify-between pt-[44px] pl-[4.167%] pr-[2.8125%] pb-[1.4583%] h-full">
             {vmStatus ? (
               <div className="flex flex-col h-full gap-[19.166267369429803545759463344514%]">
                 {/* <div className="flex justify-between items-start">
@@ -184,22 +171,19 @@ const VMDetailModal = ({
                   <section className="flex justify-between w-[75.26041666666666666666666666666667%]">
                     <ModalColumn>
                       <Typography>
-                        <p className="p-18-400 flex items-center w-full whitespace-nowrap">
+                        <p className="flex items-center w-full whitespace-nowrap typo-pr-r-18">
                           인스턴스 이름:
                           {!isUnderEditingName ? (
                             <div className="flex items-center ml-[8px] w-full">
                               <span
-                                className="w-full c-pointer"
+                                className="w-full cursor-pointer"
                                 onClick={() => setIsUnderEditingName(true)}
                               >
-                                <p className="w-full p-18-400 line-clamp-1 overflow-ellipsis">
+                                <p className="w-full typo-pr-r-18 line-clamp-1 overflow-ellipsis">
                                   {editedName}
                                 </p>
                               </span>
-                              <IconButton
-                                size="small"
-                                onClick={() => setIsUnderEditingName(true)}
-                              >
+                              <IconButton size="small" onClick={() => setIsUnderEditingName(true)}>
                                 <ModeEditOutlineOutlinedIcon />
                               </IconButton>
                             </div>
@@ -231,14 +215,10 @@ const VMDetailModal = ({
                         <p className="p-18-400">OS: {vmStatus.os}</p>
                       </Typography>
                       <Typography>
-                        <p className="p-18-400">
-                          인스턴스 유형: {vmStatus.instance_type}
-                        </p>
+                        <p className="p-18-400">인스턴스 유형: {vmStatus.instance_type}</p>
                       </Typography>
                       <Typography>
-                        <p className="p-18-400">
-                          RAM: {vmStatus.resources.ram}GB
-                        </p>
+                        <p className="p-18-400">RAM: {vmStatus.resources.ram}GB</p>
                       </Typography>
                     </ModalColumn>
                     <ModalColumn>
@@ -250,7 +230,7 @@ const VMDetailModal = ({
                           position: "relative",
                         }}
                       >
-                        <p className="p-18-400">인스턴스 상태: </p>
+                        <p className="typo-pr-r-18">인스턴스 상태: </p>
                         <div className="relative size-1">
                           <ToggleSwitch
                             className="absolute top-[50%] left-0 -translate-y-1/2"
@@ -277,34 +257,24 @@ const VMDetailModal = ({
                         </div>
                       </Typography>
                       <Typography>
-                        <p className="p-18-400">
-                          Public IP 주소: {vmStatus.network.ip || "-"}
-                        </p>
+                        <p className="typo-pr-r-18">Public IP 주소: {vmStatus.network.ip || "-"}</p>
                       </Typography>
                       <Typography>
-                        <p className="p-18-400">
-                          vCPU: {vmStatus.resources.vcpu}
-                        </p>
+                        <p className="typo-pr-r-18">vCPU: {vmStatus.resources.vcpu}</p>
                       </Typography>
                       <Typography>
-                        <p className="p-18-400">
-                          DISK: {vmStatus.resources.disk}GB
-                        </p>
+                        <p className="typo-pr-r-18">DISK: {vmStatus.resources.disk}GB</p>
                       </Typography>
                     </ModalColumn>
                     <ModalColumn>
                       <Typography>
-                        <p className="p-18-400">&nbsp;</p>
+                        <p className="typo-pr-r-18">&nbsp;</p>
                       </Typography>
                       <Typography>
-                        <p className="p-18-400">
-                          시작 시간: {vmStatus.time_info.start_time}
-                        </p>
+                        <p className="typo-pr-r-18">시작 시간: {vmStatus.time_info.start_time}</p>
                       </Typography>
                       <Typography>
-                        <p className="p-18-400">
-                          실행 시간: {vmStatus.time_info.uptime}
-                        </p>
+                        <p className="typo-pr-r-18">실행 시간: {vmStatus.time_info.uptime}</p>
                       </Typography>
                     </ModalColumn>
                   </section>
@@ -318,11 +288,7 @@ const VMDetailModal = ({
                     >
                       유저 관리
                     </VMManageBtn>
-                    <VMManageBtn
-                      className="link-btn"
-                      src={link}
-                      onClick={onClickConnectBtn}
-                    >
+                    <VMManageBtn className="link-btn" src={link} onClick={onClickConnectBtn}>
                       연결
                     </VMManageBtn>
                   </section>
@@ -340,15 +306,9 @@ const VMDetailModal = ({
   );
 };
 
-const ModalColumn: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
-  className,
-  ...props
-}) => {
+const ModalColumn: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({ className, ...props }) => {
   return (
-    <div
-      className={clsx("vm-modal-column flex flex-col w-[310px]", className)}
-      {...props}
-    ></div>
+    <div className={twMerge("vm-modal-column flex flex-col w-[310px]", className)} {...props}></div>
   );
 };
 

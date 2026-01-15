@@ -4,18 +4,18 @@ interface VMInfoToBeCreatedItemProps {
   className?: string;
 }
 
-const VMInfoToBeCreatedItem: React.FC<VMInfoToBeCreatedItemProps> = ({
+const VMInfoToBeCreatedItem = ({
   title,
   content,
   className,
   ...props
-}) => {
+}: VMInfoToBeCreatedItemProps) => {
   const defaultClassName =
-    "flex flex-col justify-between px-[32px] py-[24px] h-[108px] rounded-[10px] border-[1px] border-(--Line)";
+    "flex flex-col justify-between px-[32px] py-[24px] h-[108px] rounded-[10px] border-[1px] border-line";
   return (
     <div className={defaultClassName + " " + className} {...props}>
-      <p className="p-16-400">{title}</p>
-      <p className="p-16-400 text-(--Grey1)">{content}</p>
+      <p className="typo-pr-r-16">{title}</p>
+      <p className="typo-pr-r-16 text-grey1">{content}</p>
     </div>
   );
 };

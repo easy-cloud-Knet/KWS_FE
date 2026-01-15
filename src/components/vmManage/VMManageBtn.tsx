@@ -1,5 +1,5 @@
-import clsx from "clsx";
 import React from "react";
+import { twMerge } from "tailwind-merge";
 
 import "./VMManageBtn.css";
 
@@ -9,9 +9,15 @@ interface VMManageBtnProps extends React.ButtonHTMLAttributes<HTMLButtonElement>
   className?: string;
 }
 
-const VMManageBtn: React.FC<VMManageBtnProps> = ({ children, src, className, ...props }) => {
+const VMManageBtn = ({ children, src, className, ...props }: VMManageBtnProps) => {
   return (
-    <button className={clsx("vm-manage-btn default-button cursor-pointer disabled:cursor-default", className)} {...props}>
+    <button
+      className={twMerge(
+        "vm-manage-btn default-button cursor-pointer disabled:cursor-default",
+        className
+      )}
+      {...props}
+    >
       <img src={src} alt="" />
       {children}
     </button>
