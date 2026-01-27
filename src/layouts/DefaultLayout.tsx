@@ -1,14 +1,14 @@
-import { useContext } from "react";
-import { Outlet, Navigate, useLocation } from "react-router-dom";
+//import { useContext } from "react";
+import { Outlet } from "react-router-dom";
 
 import NavBar from "@/components/navbar/NavBar";
-import AuthContext from "@/contexts/AuthContext.tsx";
+//import AuthContext from "@/contexts/AuthContext.tsx";
 
 import "./DefaultLayout.css";
 
 const DefaultLayout: React.FC = () => {
-  const auth = useContext(AuthContext);
-  const location = useLocation();
+  //const auth = useContext(AuthContext);
+  //const location = useLocation();
 
   // if (!auth?.isAuthenticated) {
   //   return <Navigate to="/signin" state={{ from: location }} replace />;

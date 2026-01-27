@@ -44,15 +44,19 @@ const bellItemList: BellItemList[] = [
 ];
 
 const NavBar = () => {
-  const { isAuthenticated, logout, userNickname, userEmail } = useContext(AuthContext)!;
+  const { isAuthenticated, logout, userNickname, userEmail } =
+    useContext(AuthContext)!;
   const navigate = useNavigate();
   const location = useLocation();
 
   const [openBellDialog, setOpenBellDialog] = useState(false);
-  const [isAlarmExist, setIsAlarmExist] = useState(false);
+  const [isAlarmExist] = useState(false);
   const [openLogoutDialog, setOpenLogoutDialog] = useState(false);
 
-  const onClickLink = (event: React.MouseEvent<HTMLAnchorElement>, path: string): void => {
+  const onClickLink = (
+    event: React.MouseEvent<HTMLAnchorElement>,
+    path: string,
+  ): void => {
     if (location.pathname === path) {
       event.preventDefault(); // 링크 기본 동작 block
       window.location.reload(); // 새로고침 수행
@@ -123,7 +127,8 @@ const NavBar = () => {
           )}
           <div className="ml-[12px] mr-[20px] w-[1px] h-[36px] bg-[#E6E7EB]" />
           <p className="typo-pr-m-18 text-text1 flex">
-            환영합니다,&nbsp;<p className="text-blue-black">{userNickname}</p>&nbsp;
+            환영합니다,&nbsp;<p className="text-blue-black">{userNickname}</p>
+            &nbsp;
             {userEmail}&nbsp;님!
           </p>
           <button
