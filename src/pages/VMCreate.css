@@ -13,24 +13,25 @@
   align-items: center;
   border: 1px solid #e6e7eb;
   border-radius: 8px;
-  padding: 20px 16px;
+  padding: 16px;
   height: auto;
-  min-height: 160px;
+  min-height: 140px;
   background: #fff;
   transition: all 0.3s ease;
 }
 
 .vm-create .inline-grid img {
-  width: 50px;
-  height: 50px;
+  width: 42px;
+  height: 42px;
   object-fit: contain;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
 }
 
 .vm-create .inline-grid span,
 .vm-create .inline-grid p {
   font-weight: 500;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
+  font-size: 15px;
 }
 
 .vm-create select,
@@ -42,4 +43,5 @@
   border-radius: 4px;
   font-size: 14px;
   color: #666;
+  padding: 4px 0;
 }
