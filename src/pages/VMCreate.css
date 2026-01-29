@@ -7,13 +7,6 @@
   box-shadow: 0px 0px 25px -8px rgba(0, 0, 0, 0.2);
 }
 
-.os-image-style {
-  width: 40px;
-  height: 40px;
-  object-fit: contain;
-  margin-bottom: 8px;
-}
-
 .vm-create .inline-grid > div {
   display: flex;
   flex-direction: column;
@@ -26,11 +19,10 @@
 }
 
 .vm-create .inline-grid img {
-  width: 100%;
-  max-width: 50px;
-  height: 50px;
+  width: 56px;
+  height: 56px;
   object-fit: contain;
-  margin-bottom: 8px;
+  margin-bottom: 12px;
 }
 
 .vm-create .mt-\[20px\] {
