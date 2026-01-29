@@ -6,3 +6,36 @@
   border-radius: 10px;
   box-shadow: 0px 0px 25px -8px rgba(0, 0, 0, 0.2);
 }
+
+.vm-create .inline-grid > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #e6e7eb;
+  border-radius: 8px;
+  padding: 16px;
+  height: 120px;
+}
+
+.vm-create .inline-grid img {
+  width: 100%;
+  max-width: 50px;
+  height: 50px;
+  object-fit: contain;
+  margin-bottom: 8px;
+}
+
+.vm-create .mt-\[20px\] {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  clear: both;
+}
+
+.vm-create select,
+.vm-create .hw-dropdown-root {
+  width: 100% !important;
+  min-height: 45px;
+  margin-top: 8px;
+}
