@@ -7,6 +7,13 @@
   box-shadow: 0px 0px 25px -8px rgba(0, 0, 0, 0.2);
 }
 
+.os-image-style {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  margin-bottom: 8px;
+}
+
 .vm-create .inline-grid > div {
   display: flex;
   flex-direction: column;
