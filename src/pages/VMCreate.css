@@ -36,7 +36,7 @@
 .vm-create select,
 .vm-create .hw-dropdown-root {
   width: 100% !important;
-  min-height: 35px;
+  min-height: 20px;
   margin-top: auto;
   border: 1px solid #ddd;
   border-radius: 4px;
