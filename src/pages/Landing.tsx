@@ -18,12 +18,12 @@ const Landing = () => {
       <img
         src={cloud}
         alt=""
-        className="absolute size-[655px] transform -scale-x-100 mx-auto mt-[-140px] ml-[15px] blur-[18px]"
+        className="absolute pointer-events-none size-[655px] transform -scale-x-100 mx-auto mt-[-140px] ml-[15px] blur-[18px]"
       />
       <img
         src={cloud}
         alt=""
-        className="absolute size-[1558px] mx-auto mt-[-230px] ml-[600px] blur-[5px] overflow-hidden"
+        className="absolute pointer-events-none size-[1558px] mx-auto mt-[-230px] ml-[600px] blur-[5px] overflow-hidden"
       />
       <section className="flex justify-center items-center w-full h-[calc(100vh-290px)]">
         <div className="flex flex-col justify-between pt-[82px] pb-[68px] h-[502px]">
