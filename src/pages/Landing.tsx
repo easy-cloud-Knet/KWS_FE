@@ -14,7 +14,7 @@ const Landing = () => {
     <main className="w-full mx-auto">
       {" "}
       {/*max-w-[1200px]가 자꾸 방해해서 일단 잠시 지움*/}
-      <div className="pointer-events-none absolute inset-x-1/2 -translate-x-1/2 w-full h-full bg-[var(--BG_Blue2)] -z-10" />
+      <div className="absolute inset-x-1/2 -translate-x-1/2 w-full h-full bg-[var(--BG_Blue2)] -z-10" />
       <img
         src={cloud}
         alt=""
