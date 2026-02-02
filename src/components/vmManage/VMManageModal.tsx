@@ -114,7 +114,11 @@ const VMDetailModal = ({
   }, [open, onClose]);
 
   const onSaveName = async () => {
-    if (vmStatus && editedName.trim() !== "" && editedName !== vmStatus.vm_name) {
+    if (
+      vmStatus &&
+      editedName.trim() !== "" &&
+      editedName !== vmStatus.vm_name
+    ) {
       onChangeName(vmStatus.vm_id, editedName.trim());
       try {
         await axiosClient.patch(`/vm/${vmId}/name`, {
@@ -130,7 +134,7 @@ const VMDetailModal = ({
   const onClickConnectBtn = async () => {
     try {
       const { data } = await axiosClient.get(`/vm/${vmId}/connect`);
-      window.location.href = data.url;
+      window.open(data.url, "_blank", "noopener,noreferrer");
     } catch (error) {
       console.error(error);
     }
@@ -138,7 +142,13 @@ const VMDetailModal = ({
 
   return (
     <div>
-      <Slide className="vm-manage-modal" direction="up" in={open} mountOnEnter unmountOnExit>
+      <Slide
+        className="vm-manage-modal"
+        direction="up"
+        in={open}
+        mountOnEnter
+        unmountOnExit
+      >
         <Box
           ref={modalRef}
           sx={{
@@ -183,7 +193,10 @@ const VMDetailModal = ({
                                   {editedName}
                                 </p>
                               </span>
-                              <IconButton size="small" onClick={() => setIsUnderEditingName(true)}>
+                              <IconButton
+                                size="small"
+                                onClick={() => setIsUnderEditingName(true)}
+                              >
                                 <ModeEditOutlineOutlinedIcon />
                               </IconButton>
                             </div>
@@ -215,10 +228,14 @@ const VMDetailModal = ({
                         <p className="p-18-400">OS: {vmStatus.os}</p>
                       </Typography>
                       <Typography>
-                        <p className="p-18-400">인스턴스 유형: {vmStatus.instance_type}</p>
+                        <p className="p-18-400">
+                          인스턴스 유형: {vmStatus.instance_type}
+                        </p>
                       </Typography>
                       <Typography>
-                        <p className="p-18-400">RAM: {vmStatus.resources.ram}GB</p>
+                        <p className="p-18-400">
+                          RAM: {vmStatus.resources.ram}GB
+                        </p>
                       </Typography>
                     </ModalColumn>
                     <ModalColumn>
@@ -257,13 +274,19 @@ const VMDetailModal = ({
                         </div>
                       </Typography>
                       <Typography>
-                        <p className="typo-pr-r-18">Public IP 주소: {vmStatus.network.ip || "-"}</p>
+                        <p className="typo-pr-r-18">
+                          Public IP 주소: {vmStatus.network.ip || "-"}
+                        </p>
                       </Typography>
                       <Typography>
-                        <p className="typo-pr-r-18">vCPU: {vmStatus.resources.vcpu}</p>
+                        <p className="typo-pr-r-18">
+                          vCPU: {vmStatus.resources.vcpu}
+                        </p>
                       </Typography>
                       <Typography>
-                        <p className="typo-pr-r-18">DISK: {vmStatus.resources.disk}GB</p>
+                        <p className="typo-pr-r-18">
+                          DISK: {vmStatus.resources.disk}GB
+                        </p>
                       </Typography>
                     </ModalColumn>
                     <ModalColumn>
@@ -271,10 +294,14 @@ const VMDetailModal = ({
                         <p className="typo-pr-r-18">&nbsp;</p>
                       </Typography>
                       <Typography>
-                        <p className="typo-pr-r-18">시작 시간: {vmStatus.time_info.start_time}</p>
+                        <p className="typo-pr-r-18">
+                          시작 시간: {vmStatus.time_info.start_time}
+                        </p>
                       </Typography>
                       <Typography>
-                        <p className="typo-pr-r-18">실행 시간: {vmStatus.time_info.uptime}</p>
+                        <p className="typo-pr-r-18">
+                          실행 시간: {vmStatus.time_info.uptime}
+                        </p>
                       </Typography>
                     </ModalColumn>
                   </section>
@@ -288,7 +315,11 @@ const VMDetailModal = ({
                     >
                       유저 관리
                     </VMManageBtn>
-                    <VMManageBtn className="link-btn" src={link} onClick={onClickConnectBtn}>
+                    <VMManageBtn
+                      className="link-btn"
+                      src={link}
+                      onClick={onClickConnectBtn}
+                    >
                       연결
                     </VMManageBtn>
                   </section>
@@ -306,9 +337,15 @@ const VMDetailModal = ({
   );
 };
 
-const ModalColumn: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({ className, ...props }) => {
+const ModalColumn: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
+  className,
+  ...props
+}) => {
   return (
-    <div className={twMerge("vm-modal-column flex flex-col w-[310px]", className)} {...props}></div>
+    <div
+      className={twMerge("vm-modal-column flex flex-col w-[310px]", className)}
+      {...props}
+    ></div>
   );
 };
 

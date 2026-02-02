@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
-import ic_logo from "@/assets/image/ic_logo.svg";
+import ic_logo from "@/assets/image/new_ic_logo.png";
 import ic_arrow_down from "@/assets/image/navbar/ic_arrow_down.svg";
 import ic_arrow_up from "@/assets/image/navbar/ic_arrow_up.svg";
 import ic_bell from "@/assets/image/navbar/ic_bell.svg";
@@ -85,7 +85,7 @@ const NavBar = () => {
           onClickLink(event, "/");
         }}
       >
-        <img src={ic_logo} alt="" className="size-[64px]" />
+        <img src={ic_logo} alt="" className="size-[115px]" />
       </Link>
       {!isAuthenticated ? (
         <div className="navbar_login">
