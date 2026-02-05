@@ -63,17 +63,20 @@ const VMDetailModal = ({
 
   const modalRef = useRef<HTMLDivElement>(null);
 
+  const fetchData = async () => {
+    const { data } = await axiosClient.get(`/vm/${vmId}/status`);
+    setVmStatus(data);
+    setEditedName(data.vm_name);
+
+    if (data.status === "start begin" || data.status === "started begin") {
+      setToggleSwitch(true);
+    } else {
+      setToggleSwitch(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchData = async () => {
-      const { data } = await axiosClient.get(`/vm/${vmId}/status`);
-      setVmStatus(data);
-      setEditedName(data.vm_name);
-      if (data.status === "start begin" || data.status === "started begin") {
-        setToggleSwitch(true);
-      } else {
-        setToggleSwitch(false);
-      }
-    };
+    if (!vmId) return; // vmId 없을 때 방어
     fetchData();
   }, [vmId]);
 
@@ -134,7 +137,7 @@ const VMDetailModal = ({
   const onClickConnectBtn = async () => {
     try {
       const { data } = await axiosClient.get(`/vm/${vmId}/connect`);
-      window.open(data.url, "_blank", "noopener,noreferrer");
+      window.open(data.url, "guacamole-console", "noopener,noreferrer");
     } catch (error) {
       console.error(error);
     }
@@ -264,6 +267,7 @@ const VMDetailModal = ({
                                 await axiosClient.patch(`/vm/${vmId}/state`, {
                                   state: next ? "run" : "stop",
                                 });
+                                await fetchData();
                               } catch {
                                 setToggleSwitch(!next);
                               } finally {

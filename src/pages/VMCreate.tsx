@@ -36,13 +36,25 @@ const VMCreateContent = () => {
     value: "",
     showError: false,
   });
-  const { os, osVersion, osVersionImgName, hw, setHw, openSharedUser, setOpenSharedUser } =
-    useContext(VMCreateContext)!;
+  const {
+    os,
+    osVersion,
+    osVersionImgName,
+    hw,
+    setHw,
+    openSharedUser,
+    setOpenSharedUser,
+  } = useContext(VMCreateContext)!;
   const navigate = useNavigate();
 
   // Backend에서 제공하는 인스턴스 타입/OS 목록 (id 매핑용)
   const [instanceTypes, setInstanceTypes] = useState<InstanceTypes[]>([]);
-  const [osOptions, setOsOptions] = useState<{ id: number; name: string }[]>([]);
+  const [osOptions, setOsOptions] = useState<{ id: number; name: string }[]>(
+    [],
+  );
+
+  //생성버튼 누른 후 생성버튼 비활성화
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // ubuntu-cloud-24.04.img -> nameLabel: ubuntu, versionLabel: 24.04
   const computedOsList: OsList[] = osOptions.map((o) => {
@@ -78,14 +90,16 @@ const VMCreateContent = () => {
     try {
       // 선택된 OS 이미지 파일명(`osVersionImgName`)과 매칭되는 id를 찾고, 없으면 첫 번째 항목 사용
       const selectedOsId =
-        osOptions.find((o) => o.name === osVersionImgName)?.id ?? osOptions[0]?.id;
+        osOptions.find((o) => o.name === osVersionImgName)?.id ??
+        osOptions[0]?.id;
 
       const selectedTypeId =
-        instanceTypes.find((t) => t.typename === hw)?.id ?? instanceTypes[0]?.id;
+        instanceTypes.find((t) => t.typename === hw)?.id ??
+        instanceTypes[0]?.id;
 
       if (!selectedOsId || !selectedTypeId) {
         alert(
-          "VM 생성에 필요한 정보(OS/Instance Type)가 준비되지 않았습니다. 잠시 후 다시 시도해주세요."
+          "VM 생성에 필요한 정보(OS/Instance Type)가 준비되지 않았습니다. 잠시 후 다시 시도해주세요.",
         );
         return;
       }
@@ -126,8 +140,12 @@ const VMCreateContent = () => {
                 <AuthTextFieldV2
                   value={vmName.value}
                   placeholder="한글, 영문, 숫자 포함 가능, 2~12자"
-                  onBlur={() => setVmName({ ...vmName, showError: true as boolean })}
-                  onChange={(e) => setVmName({ ...vmName, value: e.target.value as string })}
+                  onBlur={() =>
+                    setVmName({ ...vmName, showError: true as boolean })
+                  }
+                  onChange={(e) =>
+                    setVmName({ ...vmName, value: e.target.value as string })
+                  }
                   error={vmName.showError && !vmName.value}
                   helperText={vmName.showError && "* 필수"}
                   required
@@ -138,7 +156,10 @@ const VMCreateContent = () => {
                 <p className="mb-[20px] typo-pr-r-16">OS 선택</p>
                 <div className="inline-grid grid-cols-4 gap-[20px]">
                   {computedOsList.map((item) => (
-                    <VMCreateOsImage key={String(item.id ?? item.name)} item={item} />
+                    <VMCreateOsImage
+                      key={String(item.id ?? item.name)}
+                      item={item}
+                    />
                   ))}
                 </div>
                 <div className="mt-[20px]">
@@ -162,8 +183,16 @@ const VMCreateContent = () => {
                     setOpenSharedUser(event.target.value as unknown as string);
                   }}
                 >
-                  <FormControlLabel value="private" control={<Radio />} label="private" />
-                  <FormControlLabel value="public" control={<Radio />} label="Public" />
+                  <FormControlLabel
+                    value="private"
+                    control={<Radio />}
+                    label="private"
+                  />
+                  <FormControlLabel
+                    value="public"
+                    control={<Radio />}
+                    label="Public"
+                  />
                 </RadioGroup>
               </div>
             </section>
@@ -197,17 +226,26 @@ const VMCreateContent = () => {
                 <VMInfoToBeCreatedItem
                   className="w-[26.72131147540984%] bg-grey2"
                   title="vCPU"
-                  content={instanceTypes.find((t) => t.typename === hw)?.vcpu || "(비어 있음)"}
+                  content={
+                    instanceTypes.find((t) => t.typename === hw)?.vcpu ||
+                    "(비어 있음)"
+                  }
                 />
                 <VMInfoToBeCreatedItem
                   className="w-[26.72131147540984%] bg-grey2"
                   title="Ram"
-                  content={instanceTypes.find((t) => t.typename === hw)?.ram || "(비어 있음)"}
+                  content={
+                    instanceTypes.find((t) => t.typename === hw)?.ram ||
+                    "(비어 있음)"
+                  }
                 />
                 <VMInfoToBeCreatedItem
                   className="w-[26.72131147540984%] bg-grey2"
                   title="Disk"
-                  content={instanceTypes.find((t) => t.typename === hw)?.dsk || "(비어 있음)"}
+                  content={
+                    instanceTypes.find((t) => t.typename === hw)?.dsk ||
+                    "(비어 있음)"
+                  }
                 />
               </div>
               <div className="flex justify-between w-full">
@@ -237,8 +275,21 @@ const VMCreateContent = () => {
                 >
                   취소
                 </MuiBtn>
-                <VMManageBtn className="add cursor-pointer" src={addIcon} onClick={onCreateVM}>
-                  생성
+                <VMManageBtn
+                  disabled={isSubmitting || !vmName.value || !osVersion || !hw}
+                  className="add disabled:opacity-50 disabled:cursor-not-allowed"
+                  src={addIcon}
+                  onClick={async () => {
+                    if (isSubmitting) return;
+                    setIsSubmitting(true);
+                    try {
+                      await onCreateVM();
+                    } finally {
+                      setIsSubmitting(false);
+                    }
+                  }}
+                >
+                  {isSubmitting ? "생성중" : "생성"}
                 </VMManageBtn>
               </div>
             </section>
