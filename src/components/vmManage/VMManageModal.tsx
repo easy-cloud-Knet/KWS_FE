@@ -268,6 +268,9 @@ const VMDetailModal = ({
                                   state: next ? "run" : "stop",
                                 });
                                 await fetchData();
+                                setTimeout(() => {
+                                  fetchData();
+                                }, 1500);
                               } catch {
                                 setToggleSwitch(!next);
                               } finally {
