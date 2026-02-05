@@ -20,10 +20,6 @@
   transition: all 0.3s ease;
 }
 
-.vm-create .inline-grid > div:first-child img {
-  transform: scale(1.1);
-}
-
 .vm-create .inline-grid img {
   width: 40px;
   height: 40px;

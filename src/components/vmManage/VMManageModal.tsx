@@ -63,21 +63,22 @@ const VMDetailModal = ({
 
   const modalRef = useRef<HTMLDivElement>(null);
 
-  const fetchData = async () => {
-    const { data } = await axiosClient.get(`/vm/${vmId}/status`);
-    setVmStatus(data);
-    setEditedName(data.vm_name);
-
-    if (data.status === "start begin" || data.status === "started begin") {
-      setToggleSwitch(true);
-    } else {
-      setToggleSwitch(false);
-    }
-  };
-
   useEffect(() => {
-    if (!vmId) return; // vmId 없을 때 방어
-    fetchData();
+    const fetchData = async () => {
+      const { data } = await axiosClient.get(`/vm/${vmId}/status`);
+      setVmStatus(data);
+      setEditedName(data.vm_name);
+
+      if (data.status === "start begin" || data.status === "started begin") {
+        setToggleSwitch(true);
+      } else {
+        setToggleSwitch(false);
+      }
+    };
+
+    if (vmId) {
+      fetchData();
+    }
   }, [vmId]);
 
   useEffect(() => {
@@ -267,10 +268,6 @@ const VMDetailModal = ({
                                 await axiosClient.patch(`/vm/${vmId}/state`, {
                                   state: next ? "run" : "stop",
                                 });
-                                await fetchData();
-                                setTimeout(() => {
-                                  fetchData();
-                                }, 1500);
                               } catch {
                                 setToggleSwitch(!next);
                               } finally {
