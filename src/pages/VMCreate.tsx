@@ -3,7 +3,7 @@ import { AxiosError } from "axios";
 import { useContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-import debian from "@/assets/image/vmCreate/debian.png";
+import debian from "@/assets/image/vmCreate/debian.svg";
 import ubuntu from "@/assets/image/vmCreate/ubuntu.svg";
 import addIcon from "@/assets/image/vmManage/button/add.svg";
 import AuthTextFieldV2 from "@/components/auth/textField/AuthTextFieldV2";
