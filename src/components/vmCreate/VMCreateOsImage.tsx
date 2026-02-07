@@ -27,14 +27,13 @@ const VMCreateOsImage = ({ item }: VMCreateOsImageProps) => {
       <img src={item.img} alt={item.name} className="h-[48px] mt-[20px]" />
       <p className="mt-[8px] mb-[16px] typo-pr-m-16">{item.name}</p>
       <hr className="w-full border-line" />
-      <div className="absolute z-[9999] top-full left-0">
-        <VersionDropdown
-          item={item}
-          osVersion={isSelected ? osVersion : ""}
-          toggle={toggle}
-          setToggle={setToggle}
-        />
-      </div>
+
+      <VersionDropdown
+        item={item}
+        osVersion={isSelected ? osVersion : ""}
+        toggle={toggle}
+        setToggle={setToggle}
+      />
     </div>
   );
 };
