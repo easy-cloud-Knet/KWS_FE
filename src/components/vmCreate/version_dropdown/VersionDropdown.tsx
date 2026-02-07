@@ -42,7 +42,7 @@ const VersionDropdown = ({
       <p className="typo-pr-r-14 text-text1">{osVersion || "버전 선택"}</p>
       <img className={`${toggle && "rotate-180"}`} src={ic_arrow_down} alt="" />
       {toggle && (
-        <div className="absolute absolute top-full left-0 mt-2 bg-white w-[252px] h-[240px] border-[1px] border-line rounded-[10px] overflow-y-scroll z-[50]">
+        <div className="absolute top-full left-0 mt-2 bg-white w-[252px] h-[240px] border-[1px] border-line rounded-[10px] overflow-y-scroll z-[100]">
           {item.version.map((versionObj, index) => {
             return (
               <VersionDropdownItem
