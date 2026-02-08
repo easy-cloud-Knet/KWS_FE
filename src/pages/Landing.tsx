@@ -200,7 +200,7 @@ const Landing = () => {
           </div>
         </div>
       </section>
-      <section className="flex justify-between h-[1080px] pt-[188px] max-w-[1200px]">
+      <section className="flex justify-between h-[1080px] pt-[188px] max-w-[1200px] mx-auto">
         <div>
           <h1 className="text-(--Main_Blue) text-[32px] font-semibold">
             도들에게 문의해 주세요.
