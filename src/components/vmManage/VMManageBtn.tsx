@@ -10,6 +10,7 @@ interface VMManageBtnProps extends React.ButtonHTMLAttributes<HTMLButtonElement>
 }
 
 const VMManageBtn = ({
+  disabled,
   children,
   src,
   className,
@@ -18,9 +19,9 @@ const VMManageBtn = ({
   return (
     <button
       {...props}
-      disabled={props.disabled}
+      disabled={disabled}
       className={twMerge(
-        "vm-manage-btn default-button cursor-pointer disabled:cursor-default",
+        "vm-manage-btn default-button cursor-pointer disabled:cursor-default disabled:cursor-not-allowed disabled:opacity-50",
         className,
       )}
     >

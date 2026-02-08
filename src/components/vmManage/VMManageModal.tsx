@@ -6,6 +6,7 @@ import { twMerge } from "tailwind-merge";
 // import closeBtn from "@/assets/image/button/closeBtn.svg";
 import link from "@/assets/image/vmManage/vmManageModal/link.svg";
 import user from "@/assets/image/vmManage/vmManageModal/user.svg";
+import copyBtn from "@/assets/image/vmManage/vmManageModal/copy.svg";
 import axiosClient from "@/services/api";
 import { CurrentStatus } from "@/types/vm";
 
@@ -311,6 +312,7 @@ const VMDetailModal = ({
                   </section>
                   <section className="bottom-btn-wrap flex justify-end items-end">
                     <VMManageBtn
+                      disabled
                       className="user-manage-btn"
                       src={user}
                       onClick={() => {
@@ -352,5 +354,4 @@ const ModalColumn: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
     ></div>
   );
 };
-
 export default VMDetailModal;

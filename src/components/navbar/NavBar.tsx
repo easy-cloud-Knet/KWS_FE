@@ -109,22 +109,23 @@ const NavBar = () => {
           >
             <img src={!isAlarmExist ? ic_bell : ic_bell_with_alarm} alt="" />
           </button>
-          {false && openBellDialog && (
-            <div className="absolute bottom-0 translate-x-[calc(-100%+36px)] translate-y-[calc(100%+16px)] py-[8px] px-[24px] w-[549px] min-h-[120px] rounded-[10px] bg-bg-blue2">
-              {bellItemList.map((item, index) => (
-                <>
-                  <NavBarBellItem
-                    key={item.id}
-                    from={item.from}
-                    content={`[${item.target}] ${mapTypeToContent(item.type)}`}
-                  />
-                  {index !== bellItemList.length - 1 && (
-                    <div className="w-full h-[0.5px] bg-[#E6E7E8]" />
-                  )}
-                </>
-              ))}
-            </div>
-          )}
+          {false &&
+            openBellDialog && ( //false만 지우면 더미데이터 생성됨
+              <div className="absolute bottom-0 translate-x-[calc(-100%+36px)] translate-y-[calc(100%+16px)] py-[8px] px-[24px] w-[549px] min-h-[120px] rounded-[10px] bg-bg-blue2">
+                {bellItemList.map((item, index) => (
+                  <>
+                    <NavBarBellItem
+                      key={item.id}
+                      from={item.from}
+                      content={`[${item.target}] ${mapTypeToContent(item.type)}`}
+                    />
+                    {index !== bellItemList.length - 1 && (
+                      <div className="w-full h-[0.5px] bg-[#E6E7E8]" />
+                    )}
+                  </>
+                ))}
+              </div>
+            )}
           <div className="ml-[12px] mr-[20px] w-[1px] h-[36px] bg-[#E6E7EB]" />
           <p className="typo-pr-m-18 text-text1 flex">
             환영합니다,&nbsp;<p className="text-blue-black">{userNickname}</p>
