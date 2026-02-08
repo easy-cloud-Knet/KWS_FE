@@ -11,7 +11,7 @@ const VMInfoToBeCreatedItem = ({
   ...props
 }: VMInfoToBeCreatedItemProps) => {
   const defaultClassName =
-    "flex flex-col justify-between px-[32px] py-[24px] h-[108px] rounded-[10px] border-[1px] border-line";
+    "flex flex-col items-center px-[32px] py-[24px] h-[108px] rounded-[10px] border-[1px] border-line";
   return (
     <div className={defaultClassName + " " + className} {...props}>
       <p className="typo-pr-r-16">{title}</p>

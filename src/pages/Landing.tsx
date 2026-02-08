@@ -220,19 +220,28 @@ const Landing = () => {
                 <p className="w-[68.77px] text-[24px] font-semibold text-(--BlueBlack) text-right">
                   제목:
                 </p>
-                <LandingInputField className="w-[423px]" />
+                <LandingInputField
+                  className="w-[423px]"
+                  placeholder="제목을 작성해 주세요."
+                />
               </div>
               <div className="flex justify-between">
                 <p className="text-[24px] font-semibold text-(--BlueBlack) text-right whitespace-nowrap">
                   회사명:
                 </p>
-                <LandingInputField className="w-[423px]" />
+                <LandingInputField
+                  className="w-[423px]"
+                  placeholder="회사명을 작성해 주세요."
+                />
               </div>
               <div className="flex justify-between">
                 <p className="text-[24px] font-semibold text-(--BlueBlack) text-right whitespace-nowrap">
                   이메일:
                 </p>
-                <LandingInputField className="w-[423px]" />
+                <LandingInputField
+                  className="w-[423px]"
+                  placeholder="알림 받을 이메일을 작성해 주세요."
+                />
               </div>
               <div className="flex justify-between">
                 <p className="w-[68.77px] text-[24px] font-semibold text-(--BlueBlack) text-right">
