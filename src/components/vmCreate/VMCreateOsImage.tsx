@@ -20,11 +20,11 @@ const VMCreateOsImage = ({ item }: VMCreateOsImageProps) => {
     <div
       key={item.name}
       className={twJoin(
-        "relative border-[1px] rounded-[10px] w-[160px] h-[151px] flex flex-col items-center text-center",
+        "relative border-[1px] rounded-[10px] w-[160px] h-[151px] flex flex-col items-center justify-center",
         isSelected ? "border-main-blue" : "border-line",
       )}
     >
-      <img src={item.img} alt={item.name} className="h-[48px] mt-[20px]" />
+      <img src={item.img} alt={item.name} className="h-[48px] my-[15px]" />
       <p className="mt-[8px] mb-[16px] typo-pr-m-16">{item.name}</p>
       <hr className="w-full border-line" />
 
