@@ -109,7 +109,7 @@ const NavBar = () => {
           >
             <img src={!isAlarmExist ? ic_bell : ic_bell_with_alarm} alt="" />
           </button>
-          {openBellDialog && (
+          {false && openBellDialog && (
             <div className="absolute bottom-0 translate-x-[calc(-100%+36px)] translate-y-[calc(100%+16px)] py-[8px] px-[24px] w-[549px] min-h-[120px] rounded-[10px] bg-bg-blue2">
               {bellItemList.map((item, index) => (
                 <>
