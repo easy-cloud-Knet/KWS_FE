@@ -9,14 +9,20 @@ interface VMManageBtnProps extends React.ButtonHTMLAttributes<HTMLButtonElement>
   className?: string;
 }
 
-const VMManageBtn = ({ children, src, className, ...props }: VMManageBtnProps) => {
+const VMManageBtn = ({
+  children,
+  src,
+  className,
+  ...props
+}: VMManageBtnProps) => {
   return (
     <button
+      {...props}
+      disabled={props.disabled}
       className={twMerge(
         "vm-manage-btn default-button cursor-pointer disabled:cursor-default",
-        className
+        className,
       )}
-      {...props}
     >
       <img src={src} alt="" />
       {children}

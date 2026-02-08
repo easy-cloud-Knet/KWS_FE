@@ -1,12 +1,13 @@
-import { useNavigate } from "react-router-dom";
+//import { useNavigate } from "react-router-dom";
 
-import MuiBtn from "../components/button/MuiBtn";
+//import MuiBtn from "../components/button/MuiBtn";
 
 import "./Invitation.css";
 
 const Invitation = () => {
-  const navigate = useNavigate();
-  return (
+  //const navigate = useNavigate();
+  return null;
+  /*
     <section className="invitation flex justify-center items-center">
       <div className="invitation-card relative">
         <p className="absolute top-[24px] left-[32px] text-[21px] font-semibold">사용자 초대</p>
@@ -36,7 +37,7 @@ const Invitation = () => {
         </div>
       </div>
     </section>
-  );
+    */
 };
 
 export default Invitation;
