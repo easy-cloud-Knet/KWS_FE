@@ -325,6 +325,7 @@ const VMDetailModal = ({
                       className="link-btn"
                       src={link}
                       onClick={onClickConnectBtn}
+                      disabled={!toggleSwitch}
                     >
                       연결
                     </VMManageBtn>
