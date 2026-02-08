@@ -154,7 +154,7 @@ const VMCreateContent = () => {
               </div>
               <div className="z-10">
                 <p className="mb-[20px] typo-pr-r-16">OS 선택</p>
-                <div className="grid grid-cols-2 gap-2 mb-[70px]">
+                <div className="inline-grid grid-cols-2 gap-2 mb-[70px]">
                   {computedOsList.map((item) => (
                     <VMCreateOsImage
                       key={String(item.id ?? item.name)}
