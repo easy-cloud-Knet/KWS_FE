@@ -63,31 +63,31 @@ const VMManage = () => {
 
   const navigate = useNavigate();
 
-  useEffect(() => {
+  const fetchData = async () => {
     try {
-      const fetchData = async () => {
-        const { data } = await axiosClient.get("/vm/status");
+      const { data } = await axiosClient.get("/vm/status");
 
-        setVmList(
-          data.map((vm: VMInitStatus) => ({
-            id: vm.vm_id,
-            vmName: vm.vm_name,
-            status: vm.status,
-            instanceType: vm.instance_type,
-            publicIP: vm.ip,
-            key: vm.is_owner,
-            os: vm.os,
-            startTime: vm.uptime,
-            runTime: vm.uptime,
-            userType: vm.is_owner,
-          })),
-        );
-      };
-
-      fetchData();
+      setVmList(
+        data.map((vm: VMInitStatus) => ({
+          id: vm.vm_id,
+          vmName: vm.vm_name,
+          status: vm.status,
+          instanceType: vm.instance_type,
+          publicIP: vm.ip,
+          key: vm.is_owner,
+          os: vm.os,
+          startTime: vm.uptime,
+          runTime: vm.uptime,
+          userType: vm.is_owner,
+        })),
+      );
     } catch (error) {
       console.error(error);
     }
+  };
+
+  useEffect(() => {
+    fetchData();
   }, []);
 
   const onCloseDeleteDialog = () => {

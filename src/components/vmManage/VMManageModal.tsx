@@ -50,7 +50,7 @@ const VMDetailModal = ({
   open,
   vmId,
   onClose,
-  // onChangeStatus,
+  onChangeStatus,
   onChangeName,
 }: VMDetailModalProps) => {
   const [isUnderEditingName, setIsUnderEditingName] = useState(false);
@@ -269,6 +269,20 @@ const VMDetailModal = ({
                                 await axiosClient.patch(`/vm/${vmId}/state`, {
                                   state: next ? "run" : "stop",
                                 });
+                                onChangeStatus(
+                                  vmId,
+                                  next ? "started begin" : "stopped end",
+                                );
+                                setVmStatus((prev) =>
+                                  prev
+                                    ? {
+                                        ...prev,
+                                        status: next
+                                          ? "started begin"
+                                          : "stopped",
+                                      }
+                                    : prev,
+                                );
                               } catch {
                                 setToggleSwitch(!next);
                               } finally {
