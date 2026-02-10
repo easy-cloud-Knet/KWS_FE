@@ -7,7 +7,6 @@ import AuthTextFieldV2 from "../auth/textField/AuthTextFieldV2";
 import MuiBtn from "../button/MuiBtn";
 import TextBtn from "../button/TextBtn";
 
-
 import ToggleList from "./ToggleList";
 
 import "./VMManageUsers.css";
@@ -17,7 +16,7 @@ interface VMManageUsersProps {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const VMManageUsers: React.FC<VMManageUsersProps> = ({ open, setOpen }) => {
+const VMManageUsers = ({ open, setOpen }: VMManageUsersProps) => {
   const handleClose = (reason: string) => {
     if (reason === "backdropClick") {
       setOpen(false);
@@ -43,9 +42,9 @@ const VMManageUsers: React.FC<VMManageUsersProps> = ({ open, setOpen }) => {
       aria-labelledby="scroll-dialog-title"
       aria-describedby="scroll-dialog-description"
     >
-      <section className="vm-manage-users-header f-dir-column">
-        <p className="p-16-400">사용자 초대</p>
-        <div className="input-wrap j-content-between">
+      <section className="vm-manage-users-header flex flex-col">
+        <p className="typo-pr-r-16">사용자 초대</p>
+        <div className="input-wrap flex justify-between">
           <div className="input">
             <AuthTextFieldV2 placeholder="이메일 아이디" />
           </div>
@@ -55,7 +54,7 @@ const VMManageUsers: React.FC<VMManageUsersProps> = ({ open, setOpen }) => {
         </div>
       </section>
 
-      <section className="flex-col j-content-between h-full">
+      <section className="flex flex-col justify-between h-full">
         <DialogContent className="contents" dividers={false}>
           <DialogContentText
             id="scroll-dialog-description"
@@ -64,19 +63,19 @@ const VMManageUsers: React.FC<VMManageUsersProps> = ({ open, setOpen }) => {
             sx={{ paddingBottom: "12px", maxHeight: "260px", overflowY: "scroll" }}
           >
             <section className="admin-list user-list">
-              <h4 className="p-14-400 c-grey1">admin</h4>
-              <p className="user-name p-16-400 c-black">미숫가루</p>
+              <h4 className="typo-pr-r-14 text-grey1">admin</h4>
+              <p className="user-name typo-pr-r-16">미숫가루</p>
             </section>
 
             <section className="shared-user-list user-list">
-              <h4 className="p-14-400 c-grey1">shared user</h4>
+              <h4 className="typo-pr-r-14 text-grey1">shared user</h4>
               <User email="msgr@kw.ac.kr">미숫가루</User>
               <User email="msgr@kw.ac.kr">미숫가루</User>
             </section>
 
             <ToggleList title="대기중">
-              <p className="p-16-400 c-black">pizza1</p>
-              <p className="p-16-400 c-black">pizza2</p>
+              <p className="typo-pr-r-16">pizza1</p>
+              <p className="typo-pr-r-16">pizza2</p>
             </ToggleList>
           </DialogContentText>
         </DialogContent>
@@ -97,7 +96,7 @@ interface UserProps {
   email?: string;
 }
 
-const User: React.FC<UserProps> = ({ children, email }) => {
+const User = ({ children, email }: UserProps) => {
   const [hover, setHover] = useState(false);
   const userRef = useRef<HTMLDivElement>(null);
 
@@ -118,21 +117,21 @@ const User: React.FC<UserProps> = ({ children, email }) => {
   }, []);
 
   return (
-    <div className="user j-content-between a-items-center" ref={userRef}>
+    <div className="user flex justify-between items-center" ref={userRef}>
       <div className="flex">
-        <p className="user-name p-16-400 c-black">{children}</p>
-        <p className="user-name p-16-400 c-grey1">{email}</p>
+        <p className="user-name typo-pr-r-16">{children}</p>
+        <p className="user-name typo-pr-r-16 text-grey1">{email}</p>
       </div>
       {hover && (
-        <div className="user-btn-wrap a-items-center">
-          <TextBtn className="user-btn-inside-wrap a-items-center">
+        <div className="user-btn-wrap flex items-center">
+          <TextBtn className="user-btn-inside-wrap flex items-center">
             <img src={deletion} alt="X" />
-            <p className="p-12-400 c-red">삭제</p>
+            <p className="typo-pr-r-12 text-red">삭제</p>
           </TextBtn>
 
-          <TextBtn className="user-btn-inside-wrap a-items-center">
+          <TextBtn className="user-btn-inside-wrap flex items-center">
             <img src={succession} alt="->" />
-            <p className="p-12-400 c-blue">admin 계승</p>
+            <p className="typo-pr-r-12 text-main-blue">admin 계승</p>
           </TextBtn>
         </div>
       )}

@@ -3,6 +3,7 @@ import { AxiosError } from "axios";
 import { useContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
+import debian from "@/assets/image/vmCreate/debian.svg";
 import ubuntu from "@/assets/image/vmCreate/ubuntu.svg";
 import addIcon from "@/assets/image/vmManage/button/add.svg";
 import AuthTextFieldV2 from "@/components/auth/textField/AuthTextFieldV2";
@@ -22,44 +23,55 @@ interface RequiredInput {
   showError: boolean;
 }
 
-const VMCreateContent: React.FC = () => {
+interface InstanceTypes {
+  id: number;
+  typename: string;
+  vcpu: number;
+  ram: number;
+  dsk: number;
+}
+
+const VMCreateContent = () => {
   const [vmName, setVmName] = useState<RequiredInput>({
     value: "",
     showError: false,
   });
-  const osList: OsList[] = [
-    {
-      name: "Ubuntu",
-      img: ubuntu,
-      version: [
-        { "24.04 LTS": "ubuntu-cloud-24.04.img" },
-        { "22.04 LTS": "ubuntu-cloud-22.04.img" },
-        // "20.04 LTS",
-        // "24.10",
-        // "23.10",
-        // "23.04",
-      ],
-      hardware: ["Light (Server)" /*, "Heavy (Storage)", "GPU (AI/ML)"*/],
-    },
-    // {
-    //   name: "CentOS",
-    //   img: ubuntu,
-    //   version: ["8 Stream", "7 Stream"],
-    //   hardware: ["Light (Server)", "Heavy (Storage)"],
-    // },
-  ];
-
-  const { os, osVersion, hw, setHw, openSharedUser, setOpenSharedUser } =
-    useContext(VMCreateContext)!;
+  const {
+    os,
+    osVersion,
+    osVersionImgName,
+    hw,
+    setHw,
+    openSharedUser,
+    setOpenSharedUser,
+  } = useContext(VMCreateContext)!;
   const navigate = useNavigate();
 
   // Backend에서 제공하는 인스턴스 타입/OS 목록 (id 매핑용)
-  const [instanceTypes, setInstanceTypes] = useState<
-    { id: number; typename: string; vcpu: number; ram: number; dsk: number }[]
-  >([]);
+  const [instanceTypes, setInstanceTypes] = useState<InstanceTypes[]>([]);
   const [osOptions, setOsOptions] = useState<{ id: number; name: string }[]>(
-    []
+    [],
   );
+
+  //생성버튼 누른 후 생성버튼 비활성화
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // ubuntu-cloud-24.04.img -> nameLabel: ubuntu, versionLabel: 24.04
+  const computedOsList: OsList[] = osOptions.map((o) => {
+    const dotIdx = o.name.lastIndexOf(".");
+    const noExt = dotIdx > -1 ? o.name.slice(0, dotIdx) : o.name;
+    const parts = noExt.split("-");
+    const nameLabel = parts[0] || noExt;
+    const versionLabel = parts.length > 1 ? parts[parts.length - 1] : "";
+    return {
+      id: o.id,
+      name: nameLabel,
+      img: nameLabel === "ubuntu" ? ubuntu : debian,
+      // label: last segment (version), value: original filename
+      version: [{ [versionLabel || noExt]: o.name }],
+      hardware: instanceTypes.map((t) => t.typename),
+    };
+  });
 
   useEffect(() => {
     const fetchVmRequirements = async () => {
@@ -76,17 +88,18 @@ const VMCreateContent: React.FC = () => {
 
   const onCreateVM = async () => {
     try {
-      // 선택된 OS 이름(`os`)과 매칭되는 id를 찾고, 없으면 첫 번째 항목 사용
+      // 선택된 OS 이미지 파일명(`osVersionImgName`)과 매칭되는 id를 찾고, 없으면 첫 번째 항목 사용
       const selectedOsId =
-        osOptions.find((o) => o.name === os)?.id ?? osOptions[0]?.id;
+        osOptions.find((o) => o.name === osVersionImgName)?.id ??
+        osOptions[0]?.id;
 
-      // 인스턴스 타입 id: 현재 UI와 타입 매핑이 없으므로 일단 첫 번째 항목 사용
-      // 추후 UI에서 실제 타입 선택과 매핑 필요
-      const selectedTypeId = instanceTypes[0]?.id;
+      const selectedTypeId =
+        instanceTypes.find((t) => t.typename === hw)?.id ??
+        instanceTypes[0]?.id;
 
       if (!selectedOsId || !selectedTypeId) {
         alert(
-          "VM 생성에 필요한 정보(OS/Instance Type)가 준비되지 않았습니다. 잠시 후 다시 시도해주세요."
+          "VM 생성에 필요한 정보(OS/Instance Type)가 준비되지 않았습니다. 잠시 후 다시 시도해주세요.",
         );
         return;
       }
@@ -99,7 +112,7 @@ const VMCreateContent: React.FC = () => {
         is_public: openSharedUser === "public",
       });
 
-      navigate("/");
+      navigate("/manage");
     } catch (error) {
       if (error instanceof AxiosError) {
         console.log(error.response?.data);
@@ -111,21 +124,19 @@ const VMCreateContent: React.FC = () => {
   return (
     <div className="vm-create flex justify-center size-full ">
       <section className="pt-[40px] w-[81.04166666666667%]">
-        <h1 className="h1-bold">인스턴스 생성</h1>
+        <h1 className="typo-pr-sb-36">인스턴스 생성</h1>
         <section className="flex justify-between gap-[4.0625%] mt-[32px] mb-[56px]">
           <section className="create-section flex-1 max-w-[868px]">
             <div className="mb-[24px]">
-              <p className="pl-[32px] h-[75px] a-items-center p-16-500 c-text1">
+              <p className="flex items-center pl-[32px] h-[75px] typo-pr-m-16 text-text1">
                 인스턴스 정보 입력
               </p>
               <hr className="border-[#E6E7EB]" />
             </div>
 
-            <section className="px-[32px] flex flex-col gap-[56px]">
+            <section className="flex flex-col gap-[56px] px-[32px]">
               <div>
-                <p className="p-16-400" style={{ marginBottom: "20px" }}>
-                  인스턴스 이름
-                </p>
+                <p className="mb-[20px] typo-pr-r-16">인스턴스 이름</p>
                 <AuthTextFieldV2
                   value={vmName.value}
                   placeholder="한글, 영문, 숫자 포함 가능, 2~12자"
@@ -142,18 +153,19 @@ const VMCreateContent: React.FC = () => {
                 />
               </div>
               <div className="z-10">
-                <p className="p-16-400 mb-[20px]">OS 선택</p>
-                <div className="inline-grid grid-cols-4 gap-[20px]">
-                  {osList.map((item) => (
-                    <VMCreateOsImage key={item.name} item={item} />
+                <p className="mb-[20px] typo-pr-r-16">OS 선택</p>
+                <div className="inline-grid grid-cols-2 gap-4 mb-[40px] flex items-center">
+                  {computedOsList.map((item) => (
+                    <VMCreateOsImage
+                      key={String(item.id ?? item.name)}
+                      item={item}
+                    />
                   ))}
                 </div>
                 <div className="mt-[20px]">
-                  <p className="p-16-400 mb-[20px]">하드웨어 선택</p>
+                  <p className="mb-[20px] typo-pr-r-16">하드웨어 선택</p>
                   <VMCreateHwDropdown
-                    hardwareList={
-                      osList.find((item) => item.name === os)?.hardware || []
-                    }
+                    hardwareList={instanceTypes.map((t) => t.typename)}
                     hw={hw}
                     setHw={setHw}
                     disabled={!osVersion}
@@ -162,7 +174,7 @@ const VMCreateContent: React.FC = () => {
               </div>
 
               <div>
-                <p className="p-16-400 mb-[20px]">Shard User 공개</p>
+                <p className="mb-[20px] typo-pr-r-16">Shard User 공개</p>
                 <RadioGroup
                   className="flex justify-between w-[50.46082949308756%]"
                   row
@@ -187,12 +199,12 @@ const VMCreateContent: React.FC = () => {
           </section>
           <section className="create-section w-[39%]">
             <div className="mb-[24px]">
-              <p className="pl-[32px] h-[75px] a-items-center p-16-500 c-text1">
+              <p className="flex items-center pl-[32px] h-[75px] typo-pr-m-16 text-text1">
                 생성될 인스턴스 요약
               </p>
               <hr className="border-[#E6E7EB]" />
             </div>
-            <section className="px-[32px] flex flex-col gap-[28px]">
+            <section className="flex flex-col gap-[28px] px-[32px]">
               <VMInfoToBeCreatedItem
                 className="w-full"
                 title="인스턴스 이름"
@@ -212,29 +224,38 @@ const VMCreateContent: React.FC = () => {
               </div>
               <div className="flex justify-between w-full">
                 <VMInfoToBeCreatedItem
-                  className="w-[26.72131147540984%] bg-(--Grey2)"
-                  title="vGPU"
-                  content="1"
+                  className="w-[26.72131147540984%] bg-grey2"
+                  title="vCPU"
+                  content={
+                    instanceTypes.find((t) => t.typename === hw)?.vcpu ||
+                    "(비어 있음)"
+                  }
                 />
                 <VMInfoToBeCreatedItem
-                  className="w-[26.72131147540984%] bg-(--Grey2)"
+                  className="w-[26.72131147540984%] bg-grey2"
                   title="Ram"
-                  content="2GB"
+                  content={
+                    instanceTypes.find((t) => t.typename === hw)?.ram ||
+                    "(비어 있음)"
+                  }
                 />
                 <VMInfoToBeCreatedItem
-                  className="w-[26.72131147540984%] bg-(--Grey2)"
+                  className="w-[26.72131147540984%] bg-grey2"
                   title="Disk"
-                  content="20GB"
+                  content={
+                    instanceTypes.find((t) => t.typename === hw)?.dsk ||
+                    "(비어 있음)"
+                  }
                 />
               </div>
               <div className="flex justify-between w-full">
                 <VMInfoToBeCreatedItem
-                  className="w-[47.43589743589744%] bg-(--Grey2)"
+                  className="w-[47.43589743589744%] bg-grey2"
                   title="Virtual ether Port"
                   content="1"
                 />
                 <VMInfoToBeCreatedItem
-                  className="w-[47.43589743589744%] bg-(--Grey2)"
+                  className="w-[47.43589743589744%] bg-grey2"
                   title="netType"
                   content="isolated"
                 />
@@ -249,17 +270,26 @@ const VMCreateContent: React.FC = () => {
                 <MuiBtn
                   className="w-[88px]"
                   onClick={() => {
-                    navigate("/");
+                    navigate("/manage");
                   }}
                 >
                   취소
                 </MuiBtn>
                 <VMManageBtn
-                  className="add cursor-pointer"
+                  disabled={isSubmitting || !vmName.value || !osVersion || !hw}
+                  className="add disabled:opacity-50 disabled:cursor-not-allowed"
                   src={addIcon}
-                  onClick={onCreateVM}
+                  onClick={async () => {
+                    if (isSubmitting) return;
+                    setIsSubmitting(true);
+                    try {
+                      await onCreateVM();
+                    } finally {
+                      setIsSubmitting(false);
+                    }
+                  }}
                 >
-                  생성
+                  {isSubmitting ? "생성중" : "생성"}
                 </VMManageBtn>
               </div>
             </section>

@@ -1,5 +1,6 @@
 import { Button, InputAdornment } from "@mui/material";
 import { useEffect, useState } from "react";
+import { twJoin } from "tailwind-merge";
 
 import AuthTextField from "./AuthTextField";
 import { AuthSideBtnTextFieldProps } from "./types/textField";
@@ -25,7 +26,7 @@ type AuthTimerSideBtnTextFieldProps = AuthSideBtnTextFieldProps & {
  * @param {() => void} props.sideBtnOnClick - onClick
  * @param {boolean} props.sideBtnDisabled - disabled
  */
-const AuthTimerSideBtnTextField: React.FC<AuthTimerSideBtnTextFieldProps> = ({
+const AuthTimerSideBtnTextField = ({
   className = "",
   sideBtnText = "",
   sideBtnOnClick,
@@ -35,7 +36,7 @@ const AuthTimerSideBtnTextField: React.FC<AuthTimerSideBtnTextFieldProps> = ({
   timerReset,
   setTimerValue,
   ...props
-}) => {
+}: AuthTimerSideBtnTextFieldProps) => {
   const [timerId, setTimerId] = useState<NodeJS.Timeout | number>(0);
   const [timeLeft, setTimeLeft] = useState(300); // 300초 = 5분
   const [timerVisible, setTimerVisible] = useState(false);
@@ -84,17 +85,22 @@ const AuthTimerSideBtnTextField: React.FC<AuthTimerSideBtnTextFieldProps> = ({
 
   return (
     <AuthTextField
-      className={"__timer-text-field " + className}
+      className={twJoin("__timer-text-field", className)}
       slotProps={{
         input: {
           endAdornment: (
             <InputAdornment position="end">
               {timerStart ? (
-                <p className={"timer p-medium-medium c-blue" + (timerVisible ? "" : " c-white")}>
+                <p
+                  className={twJoin(
+                    "timer typo-pr-m-16 text-main-blue",
+                    timerVisible ? "" : " text-white"
+                  )}
+                >
                   {timerVisible ? formatTime(timeLeft) : "\u00A0"}
                 </p>
               ) : (
-                <p className="timer p-medium-medium c-white">&nbsp;</p>
+                <p className="timer typo-pr-m-16 text-white">&nbsp;</p>
               )}
               <Button variant="contained" onClick={sideBtnOnClick} disabled={sideBtnDisabled}>
                 {sideBtnText}

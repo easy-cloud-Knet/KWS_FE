@@ -13,12 +13,12 @@ interface VersionDropdownProps {
   setToggle: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const VersionDropdown: React.FC<VersionDropdownProps> = ({
+const VersionDropdown = ({
   item,
   osVersion,
   toggle,
   setToggle,
-}) => {
+}: VersionDropdownProps) => {
   const currentRef = useRef<HTMLDivElement>(null);
   const { isOutside } = useOutsideClick({ ref: currentRef });
 
@@ -29,26 +29,30 @@ const VersionDropdown: React.FC<VersionDropdownProps> = ({
   }, [isOutside, setToggle]);
 
   return (
-    <div className="f-center w-full h-full relative" ref={currentRef}>
-      <button
-        className="absolute bg-transparent cursor-pointer z-10 w-full h-full"
-        onClick={() => {
-          setToggle(!toggle);
-        }}
-      ></button>
-      <p className="p-14-400 c-text1">{osVersion || "버전 선택"}</p>
-      <img className={`${toggle && "rotate-180"}`} src={ic_arrow_down} alt="" />
+    <div
+      className="flex items-center justify-between w-full h-full relative cursor-pointer px-2"
+      ref={currentRef}
+      onClick={() => setToggle((prev) => !prev)}
+    >
+      <p className="typo-pr-r-14 text-text1">{osVersion || "버전 선택"}</p>
+      <img
+        className={`transition-transform ${toggle ? "rotate-180" : ""}`}
+        src={ic_arrow_down}
+        alt=""
+      />
+
       {toggle && (
-        <div className="absolute top-[40px] left-0 bg-white w-[252px] h-[240px] border-[1px] border-[#E6E7EB] rounded-[10px] overflow-y-scroll">
-          {item.version.map((versionObj, index) => {
+        <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 bg-white w-[252px] max-h-[240px] border-[1px] border-line rounded-[10px] overflow-y-auto z-[100]">
+          {item.version.map((versionObj) => {
+            const version = Object.keys(versionObj)[0];
             return (
               <VersionDropdownItem
-                key={index}
+                key={version}
                 item={item}
                 versionObj={versionObj}
                 setToggle={setToggle}
               >
-                {Object.keys(versionObj)[0]}
+                {version}
               </VersionDropdownItem>
             );
           })}

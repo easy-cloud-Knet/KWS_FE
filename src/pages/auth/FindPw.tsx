@@ -62,9 +62,7 @@ const FindPw = () => {
 
   return (
     <main className="flex flex-col items-center size-full pt-[169px]">
-      <h1 className="text-pr-sb-36 text-center text-(--BlueBlack)">
-        비밀번호 재설정
-      </h1>
+      <h1 className="typo-pr-sb-36 text-center text-blue-black">비밀번호 재설정</h1>
 
       <form
         onSubmit={!emailSended ? onClickEmailSend : onClickCheckEmailCode}

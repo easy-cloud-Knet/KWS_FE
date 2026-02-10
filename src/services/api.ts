@@ -2,7 +2,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 
 const axiosClient = axios.create({
-  baseURL: "http://100.101.247.128:25121/api",
+  baseURL: "https://doddle.kr/api",
   headers: {
     "Content-Type": "application/json",
   },

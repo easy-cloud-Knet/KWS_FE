@@ -11,9 +11,9 @@ const ResetPwSuccess = () => {
       <div className="flex flex-col items-center gap-[32px]">
         <img src={ic_check_auth} alt="" />
 
-        <h2 className="text-pr-sb-36 text-center">비밀번호 변경 완료</h2>
+        <h2 className="typo-pr-sb-36 text-center">비밀번호 변경 완료</h2>
 
-        <p className="text-pr-r-21 text-center c-grey">
+        <p className="typo-pr-r-21 text-center text-grey1">
           안전하게 비밀번호를 변경하였습니다. <br />
           변경된 비밀번호로 로그인해 주세요.
         </p>
@@ -24,7 +24,7 @@ const ResetPwSuccess = () => {
           로그인
         </BottomBtn>
         <button
-          className="text-(--Main_Blue) text-pr-r-18 text-center underline underline-offset-8 cursor-pointer"
+          className="text-(--Main_Blue) typo-pr-r-18 text-center underline underline-offset-8 cursor-pointer"
           onClick={() => navigate("/")}
         >
           메인 화면으로

@@ -2,7 +2,7 @@ import { Button, ButtonProps } from "@mui/material";
 
 import "./BottomBtn.css";
 
-const BottomBtn: React.FC<ButtonProps> = ({ children, variant, ...props }) => {
+const BottomBtn = ({ children, variant, ...props }: ButtonProps) => {
   return (
     <Button
       className="__bottom-btn__"
@@ -14,7 +14,7 @@ const BottomBtn: React.FC<ButtonProps> = ({ children, variant, ...props }) => {
       }
       {...props}
     >
-      <p className="p-18-400">{children}</p>
+      <p className="typo-pr-r-18">{children}</p>
     </Button>
   );
 };

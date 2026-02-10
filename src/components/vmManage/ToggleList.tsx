@@ -1,7 +1,7 @@
 import { useState } from "react";
 
-import toggleClosed from "../../assets/image/vmManage/vmManageUsers/toggleClosed.svg";
-import toggleOpened from "../../assets/image/vmManage/vmManageUsers/toggleOpened.svg";
+import toggleClosed from "@/assets/image/vmManage/vmManageUsers/toggleClosed.svg";
+import toggleOpened from "@/assets/image/vmManage/vmManageUsers/toggleOpened.svg";
 
 import "./ToggleList.css";
 
@@ -10,13 +10,13 @@ interface ToggleListProps {
   title?: string;
 }
 
-const ToggleList: React.FC<ToggleListProps> = ({ children, title }) => {
+const ToggleList = ({ children, title }: ToggleListProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
     <div className="toggle-list">
       <div
-        className="toggle-header j-content-start a-items-center c-pointer"
+        className="toggle-header flex justify-start items-center cursor-pointer"
         onClick={() => {
           setIsOpen(!isOpen);
         }}
@@ -24,7 +24,7 @@ const ToggleList: React.FC<ToggleListProps> = ({ children, title }) => {
         {isOpen ? <img src={toggleOpened} alt="▾" /> : <img src={toggleClosed} alt="▸" />}
         <span>{title}</span>
       </div>
-      {isOpen && <div className="toggle-content f-dir-column">{children}</div>}
+      {isOpen && <div className="toggle-content flex flex-col">{children}</div>}
     </div>
   );
 };

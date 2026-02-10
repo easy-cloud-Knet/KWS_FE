@@ -20,7 +20,7 @@ const Selector = ({ index = 1 }) => {
   }
 
   return (
-    <div className="d-flex j-content-center">
+    <div className="flex justify-center">
       <img className="selector" src={select} alt="select" />
     </div>
   );

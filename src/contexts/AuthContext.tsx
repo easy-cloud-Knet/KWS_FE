@@ -1,6 +1,5 @@
 import Cookies from "js-cookie";
 import React, { createContext, useState, useEffect, ReactNode } from "react";
-import { useLocation } from "react-router-dom";
 
 import {
   ACCESS_TOKEN_EXP_TIME,
@@ -31,7 +30,11 @@ interface AuthProviderProps {
 }
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
+    const accessToken = Cookies.get("accessToken");
+    const refreshToken = Cookies.get("refreshToken");
+    return !!accessToken && !!refreshToken;
+  });
   const [userNickname, setUserNickname] = useState<string>(
     () => localStorage.getItem("userNickname") || "username"
   );
@@ -39,13 +42,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     () => localStorage.getItem("userEmail") || ""
   );
 
-  const location = useLocation();
-
   useEffect(() => {
     const accessToken = Cookies.get("accessToken");
     const refreshToken = Cookies.get("refreshToken");
     setIsAuthenticated(!!accessToken && !!refreshToken);
-  }, [location]);
+  }, []);
 
   const login = (
     accessToken: string,

@@ -1,31 +1,32 @@
-import { useNavigate } from "react-router-dom";
+//import { useNavigate } from "react-router-dom";
 
-import MuiBtn from "../components/button/MuiBtn";
+//import MuiBtn from "../components/button/MuiBtn";
 
 import "./Invitation.css";
 
 const Invitation = () => {
-  const navigate = useNavigate();
-  return (
-    <section className="invitation f-center">
-      <div className="invitation-card p-relative">
-        <p className="absolute top-[24px] left-[32px] p-21-600">사용자 초대</p>
-        <div className="invitation-inside f-center t-center">
-          <div className="f-dir-column j-content-between">
-            <p className="p-21-400 d-flex">
-              <p className="c-blue">닉네임&nbsp;</p>
-              <p className="c-text1">(msgr@kw.ac.kr)&nbsp;</p>
-              님으로부터&nbsp;<p className="c-blue">VM1</p>에 초대되었습니다.
+  //const navigate = useNavigate();
+  return null;
+  /*
+    <section className="invitation flex justify-center items-center">
+      <div className="invitation-card relative">
+        <p className="absolute top-[24px] left-[32px] text-[21px] font-semibold">사용자 초대</p>
+        <div className="invitation-inside flex justify-center items-center text-center">
+          <div className="flex flex-col justify-between">
+            <p className="typo-pr-r-21 flex">
+              <p className="text-main-blue">닉네임&nbsp;</p>
+              <p className="text-text1">(msgr@kw.ac.kr)&nbsp;</p>
+              님으로부터&nbsp;<p className="text-main-blue">VM1</p>에 초대되었습니다.
             </p>
-            <p className="p-21-400">&nbsp;</p>
-            <p className="p-21-400">수락하시겠습니까?</p>
+            <p className="typo-pr-r-21">&nbsp;</p>
+            <p className="typo-pr-r-21">수락하시겠습니까?</p>
           </div>
         </div>
-        <div className="invitation-btn-wrap j-content-between">
+        <div className="invitation-btn-wrap flex justify-between">
           <MuiBtn
             variant="text"
             onClick={() => {
-              navigate("/");
+              navigate("/manage");
             }}
           >
             아니오
@@ -36,7 +37,7 @@ const Invitation = () => {
         </div>
       </div>
     </section>
-  );
+    */
 };
 
 export default Invitation;

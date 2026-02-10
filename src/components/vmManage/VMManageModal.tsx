@@ -1,13 +1,16 @@
 import ModeEditOutlineOutlinedIcon from "@mui/icons-material/ModeEditOutlineOutlined";
 import { Box, IconButton, Slide, TextField, Typography } from "@mui/material";
-import clsx from "clsx";
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { twMerge } from "tailwind-merge";
 
-import closeBtn from "../../assets/image/button/closeBtn.svg";
-import link from "../../assets/image/vmManage/vmManageModal/link.svg";
-import user from "../../assets/image/vmManage/vmManageModal/user.svg";
-import { Status, VM } from "../../types/vm";
-import ImageBtn from "../button/ImageBtn";
+// import closeBtn from "@/assets/image/button/closeBtn.svg";
+import link from "@/assets/image/vmManage/vmManageModal/link.svg";
+import user from "@/assets/image/vmManage/vmManageModal/user.svg";
+//import copyBtn from "@/assets/image/vmManage/vmManageModal/copy.svg";
+import axiosClient from "@/services/api";
+import { CurrentStatus } from "@/types/vm";
+
+// import ImageBtn from "../button/ImageBtn";
 import ToggleSwitch from "../button/ToggleSwitch";
 
 import VMManageBtn from "./VMManageBtn";
@@ -17,27 +20,80 @@ import "./VMManageModal.css";
 
 interface VMDetailModalProps {
   open: boolean;
-  vm: VM | null;
+  vmId: string | null;
   onClose: () => void;
-  onChangeStatus: (id: string, newStatus: Status) => void;
+  onChangeStatus: (id: string, newStatus: CurrentStatus) => void;
   onChangeName: (id: string, newName: string) => void;
 }
 
-const VMDetailModal: React.FC<VMDetailModalProps> = ({
+interface VMStatus {
+  vm_id: string;
+  vm_name: string;
+  status: string;
+  os: string;
+  instance_type: string;
+  resources: {
+    vcpu: number;
+    ram: number;
+    disk: number;
+  };
+  network: {
+    ip: string;
+  };
+  time_info: {
+    start_time: string;
+    uptime: string;
+  };
+}
+
+const VMDetailModal = ({
   open,
-  vm,
+  vmId,
   onClose,
-  // onChangeStatus,
+  onChangeStatus,
   onChangeName,
-}) => {
+}: VMDetailModalProps) => {
   const [isUnderEditingName, setIsUnderEditingName] = useState(false);
-  const [editedName, setEditedName] = useState<string>(vm?.vmName || "");
+  const [vmStatus, setVmStatus] = useState<VMStatus | null>(null);
+  const [editedName, setEditedName] = useState<string>("");
   const [toggleSwitch, setToggleSwitch] = useState(false);
+  const [isChangingStatus, setIsChangingStatus] = useState(false);
 
   // 유저 관리 클릭
   const [openUserManage, setOpenUserManage] = useState(false);
 
   const modalRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const { data } = await axiosClient.get(`/vm/${vmId}/status`);
+      setVmStatus(data);
+      setEditedName(data.vm_name);
+
+      if (data.status === "start begin" || data.status === "started begin") {
+        setToggleSwitch(true);
+      } else {
+        setToggleSwitch(false);
+      }
+    };
+
+    if (vmId) {
+      fetchData();
+    }
+  }, [vmId]);
+
+  useEffect(() => {
+    if (!vmStatus || isChangingStatus) {
+      return;
+    }
+    const shouldBeOn =
+      vmStatus.status === "run" ||
+      vmStatus.status === "start begin" ||
+      vmStatus.status === "started begin";
+    if (toggleSwitch !== shouldBeOn) {
+      setToggleSwitch(shouldBeOn);
+    }
+  }, [vmStatus, toggleSwitch, isChangingStatus]);
 
   // 바깥 영역 클릭 처리
   useEffect(() => {
@@ -62,11 +118,31 @@ const VMDetailModal: React.FC<VMDetailModalProps> = ({
     };
   }, [open, onClose]);
 
-  const onSaveName = () => {
-    if (vm && editedName.trim() !== "" && editedName !== vm.vmName) {
-      onChangeName(vm.id, editedName.trim());
+  const onSaveName = async () => {
+    if (
+      vmStatus &&
+      editedName.trim() !== "" &&
+      editedName !== vmStatus.vm_name
+    ) {
+      onChangeName(vmStatus.vm_id, editedName.trim());
+      try {
+        await axiosClient.patch(`/vm/${vmId}/name`, {
+          new_name: editedName.trim(),
+        });
+      } catch (error) {
+        console.error(error);
+      }
     }
     setIsUnderEditingName(false);
+  };
+
+  const onClickConnectBtn = async () => {
+    try {
+      const { data } = await axiosClient.get(`/vm/${vmId}/connect`);
+      window.open(data.url, "guacamole-console", "noopener,noreferrer");
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -94,34 +170,32 @@ const VMDetailModal: React.FC<VMDetailModalProps> = ({
             zIndex: 1300,
           }}
         >
-          <section
-            className="flex flex-col justify-between pt-[44px] pl-[4.167%] pr-[2.8125%] pb-[1.4583%]"
-            style={{ height: "100%" }}
-          >
-            <div className="flex flex-col h-full gap-[19.166267369429803545759463344514%]">
-              <div className="flex justify-between items-start">
-                <Typography variant="h6" gutterBottom>
-                  <p className="p-18-400">인스턴스 ID: {vm?.id}</p>
-                </Typography>
-                <div className="title-btn-wrap a-items-center">
-                  <ImageBtn src={closeBtn} alt="X" onClick={onClose} />
-                </div>
-              </div>
-              {vm ? (
+          <section className="flex flex-col justify-between pt-[44px] pl-[4.167%] pr-[2.8125%] pb-[1.4583%] h-full">
+            {vmStatus ? (
+              <div className="flex flex-col h-full gap-[19.166267369429803545759463344514%]">
+                {/* <div className="flex justify-between items-start">
+                  <Typography variant="h6" gutterBottom>
+                    <p className="p-18-400">인스턴스 ID: {vmStatus?.vm_id}</p>
+                  </Typography>
+                  <div className="title-btn-wrap a-items-center">
+                    <ImageBtn src={closeBtn} alt="X" onClick={onClose} />
+                  </div>
+                </div> */}
+
                 <div className="vm-modal-inside flex justify-between h-full">
                   <section className="flex justify-between w-[75.26041666666666666666666666666667%]">
                     <ModalColumn>
                       <Typography>
-                        <p className="p-18-400 flex items-center w-full whitespace-nowrap">
+                        <p className="flex items-center w-full whitespace-nowrap typo-pr-r-18">
                           인스턴스 이름:
                           {!isUnderEditingName ? (
                             <div className="flex items-center ml-[8px] w-full">
                               <span
-                                className="w-full c-pointer"
+                                className="w-full cursor-pointer"
                                 onClick={() => setIsUnderEditingName(true)}
                               >
-                                <p className="w-full p-18-400 line-clamp-1 overflow-ellipsis">
-                                  {vm.vmName}
+                                <p className="w-full typo-pr-r-18 line-clamp-1 overflow-ellipsis">
+                                  {editedName}
                                 </p>
                               </span>
                               <IconButton
@@ -155,6 +229,21 @@ const VMDetailModal: React.FC<VMDetailModalProps> = ({
                           )}
                         </p>
                       </Typography>
+                      <Typography>
+                        <p className="p-18-400">OS: {vmStatus.os}</p>
+                      </Typography>
+                      <Typography>
+                        <p className="p-18-400">
+                          인스턴스 유형: {vmStatus.instance_type}
+                        </p>
+                      </Typography>
+                      <Typography>
+                        <p className="p-18-400">
+                          RAM: {vmStatus.resources.ram}GB
+                        </p>
+                      </Typography>
+                    </ModalColumn>
+                    <ModalColumn>
                       <Typography
                         sx={{
                           display: "flex",
@@ -163,46 +252,81 @@ const VMDetailModal: React.FC<VMDetailModalProps> = ({
                           position: "relative",
                         }}
                       >
-                        <p className="p-18-400">인스턴스 상태: </p>
+                        <p className="typo-pr-r-18">인스턴스 상태: </p>
                         <div className="relative size-1">
                           <ToggleSwitch
                             className="absolute top-[50%] left-0 -translate-y-1/2"
                             checked={toggleSwitch}
-                            onChange={() => setToggleSwitch(!toggleSwitch)}
+                            disabled={isChangingStatus}
+                            onChange={async () => {
+                              if (isChangingStatus || !vmId) {
+                                return;
+                              }
+                              const next = !toggleSwitch;
+                              setIsChangingStatus(true);
+                              setToggleSwitch(next);
+                              try {
+                                await axiosClient.patch(`/vm/${vmId}/state`, {
+                                  state: next ? "run" : "stop",
+                                });
+                                onChangeStatus(
+                                  vmId,
+                                  next ? "started begin" : "stopped end",
+                                );
+                                setVmStatus((prev) =>
+                                  prev
+                                    ? {
+                                        ...prev,
+                                        status: next
+                                          ? "started begin"
+                                          : "stopped",
+                                      }
+                                    : prev,
+                                );
+                              } catch {
+                                setToggleSwitch(!next);
+                              } finally {
+                                setIsChangingStatus(false);
+                              }
+                            }}
                           />
                         </div>
                       </Typography>
                       <Typography>
-                        <p className="p-18-400">
-                          인스턴스 유형: {vm.instanceType}
+                        <p className="typo-pr-r-18">
+                          Public IP 주소: {vmStatus.network.ip || "-"}
+                        </p>
+                      </Typography>
+                      <Typography>
+                        <p className="typo-pr-r-18">
+                          vCPU: {vmStatus.resources.vcpu}
+                        </p>
+                      </Typography>
+                      <Typography>
+                        <p className="typo-pr-r-18">
+                          DISK: {vmStatus.resources.disk}GB
                         </p>
                       </Typography>
                     </ModalColumn>
                     <ModalColumn>
                       <Typography>
-                        <p className="p-18-400">
-                          Public IP 주소: {vm.publicIP || "-"}
+                        <p className="typo-pr-r-18">&nbsp;</p>
+                      </Typography>
+                      <Typography>
+                        <p className="typo-pr-r-18">
+                          시작 시간: {vmStatus.time_info.start_time}
                         </p>
                       </Typography>
                       <Typography>
-                        <p className="p-18-400">키 이름: {vm.key}</p>
+                        <p className="typo-pr-r-18">
+                          실행 시간: {vmStatus.time_info.uptime}
+                        </p>
                       </Typography>
-                      <Typography>
-                        <p className="p-18-400">OS: {vm.os}</p>
-                      </Typography>
-                    </ModalColumn>
-                    <ModalColumn>
-                      <Typography>
-                        <p className="p-18-400">시작 시간: {vm.startTime}</p>
-                      </Typography>
-                      <Typography>
-                        <p className="p-18-400">실행 시간: {vm.runTime}</p>
-                      </Typography>
-                      <Typography></Typography>
                     </ModalColumn>
                   </section>
                   <section className="bottom-btn-wrap flex justify-end items-end">
                     <VMManageBtn
+                      disabled
                       className="user-manage-btn"
                       src={user}
                       onClick={() => {
@@ -214,16 +338,17 @@ const VMDetailModal: React.FC<VMDetailModalProps> = ({
                     <VMManageBtn
                       className="link-btn"
                       src={link}
-                      onClick={() => {}}
+                      onClick={onClickConnectBtn}
+                      disabled={!toggleSwitch}
                     >
                       연결
                     </VMManageBtn>
                   </section>
                 </div>
-              ) : (
-                <Typography>선택된 VM이 없습니다.</Typography>
-              )}
-            </div>
+              </div>
+            ) : (
+              <Typography>선택된 VM이 없습니다.</Typography>
+            )}
           </section>
         </Box>
       </Slide>
@@ -239,10 +364,9 @@ const ModalColumn: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
 }) => {
   return (
     <div
-      className={clsx("vm-modal-column flex flex-col w-[310px]", className)}
+      className={twMerge("vm-modal-column flex flex-col w-[310px]", className)}
       {...props}
     ></div>
   );
 };
-
 export default VMDetailModal;

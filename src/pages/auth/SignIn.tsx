@@ -12,7 +12,7 @@ import axiosClient from "../../services/api";
 
 import "./SignIn.css";
 
-const SignIn: React.FC = () => {
+const SignIn = () => {
   const [email, setEmail] = useState<string>("");
   const [pw, setPw] = useState<string>("");
 
@@ -75,12 +75,12 @@ const SignIn: React.FC = () => {
   return (
     <form
       onSubmit={onClickSignIn}
-      className="signin-wrap f-dir-column f-center"
+      className="signin-wrap flex flex-col items-center justify-center"
     >
-      <div className="signin f-dir-column a-items-center">
-        <p className="title p-36-600 c-black t-center">KWS</p>
+      <div className="signin flex flex-col items-center">
+        <p className="title typo-pr-sb-36 text-black text-center">KWS</p>
 
-        <div className="input-wrap f-dir-column">
+        <div className="input-wrap flex flex-col">
           <AuthTextFieldV2
             placeholder="E-mail"
             type="text"
@@ -95,20 +95,13 @@ const SignIn: React.FC = () => {
           />
         </div>
 
-        <div className="utils-wrap j-content-between a-items-center">
-          <div
-            className="id-save a-items-center c-pointer"
-            onClick={onClickCheckBox}
-          >
-            <Checkbox
-              checked={checked}
-              onChange={onClickCheckBox}
-              sx={{ padding: "0" }}
-            />
-            <p className="p-16-400">아이디 저장</p>
+        <div className="utils-wrap flex justify-between items-center">
+          <div className="id-save flex items-center cursor-pointer" onClick={onClickCheckBox}>
+            <Checkbox checked={checked} onChange={onClickCheckBox} sx={{ padding: "0" }} />
+            <p className="typo-pr-r-16">아이디 저장</p>
           </div>
           <button
-            className="p-16-400 c-blue cursor-pointer"
+            className="typo-pr-r-16 text-main-blue cursor-pointer"
             type="button"
             onClick={() => navigate("/findpw")}
           >
@@ -124,12 +117,12 @@ const SignIn: React.FC = () => {
           로그인
         </BottomBtn>
 
-        <div className="button-wrap f-dir-column">
+        <div className="button-wrap flex flex-col">
           <hr></hr>
-          <div className="register-btn-wrap j-content-center">
-            <p className="p-16-400">계정이 없으신가요?</p>
+          <div className="register-btn-wrap flex justify-center">
+            <p className="typo-pr-r-16">계정이 없으신가요?</p>
             <TextBtn
-              className="p-16-400 c-blue"
+              className="typo-pr-r-16 text-main-blue"
               onClick={() => navigate("/signup")}
               type="button"
             >

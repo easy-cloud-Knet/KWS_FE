@@ -15,8 +15,9 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-import { useEffect, useState } from "react";
+import { PropsWithChildren, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { twJoin, twMerge } from "tailwind-merge";
 
 import booting from "../assets/image/vmManage/booting.svg";
 import addIcon from "../assets/image/vmManage/button/add.svg";
@@ -28,12 +29,23 @@ import MuiBtn from "../components/button/MuiBtn";
 import VMManageBtn from "../components/vmManage/VMManageBtn";
 import VMDetailModal from "../components/vmManage/VMManageModal";
 import axiosClient from "../services/api";
-import { Status, VM } from "../types/vm";
+import { CurrentStatus, VM } from "../types/vm";
 import { currentStatusMapping, userTypeMapping } from "../utils/MappingToKor";
 
 import "./VMManage.css";
 
-const VMManage: React.FC = () => {
+interface VMInitStatus {
+  vm_id: string;
+  vm_name: string;
+  is_owner: string;
+  instance_type: string;
+  os: string;
+  ip: string;
+  status: CurrentStatus;
+  uptime: string;
+}
+
+const VMManage = () => {
   const [vmList, setVmList] = useState<VM[]>([]);
   const [checkedVMs, setCheckedVMs] = useState<string[]>([]);
 
@@ -47,50 +59,35 @@ const VMManage: React.FC = () => {
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [selectedVMId, setSelectedVMId] = useState<string | null>(null);
 
-  const selectedVM = vmList.find((vm) => vm.id === selectedVMId) || null;
+  // const selectedVM = vmList.find((vm) => vm.id === selectedVMId) || null;
 
   const navigate = useNavigate();
 
-  useEffect(() => {
+  const fetchData = async () => {
     try {
-      const fetchData = async () => {
-        // const response = await axiosClient.get("/vm/status");
-        // console.log(response);
+      const { data } = await axiosClient.get("/vm/status");
 
-        const vmList: VM[] = [
-          {
-            id: "123e4567-e89b-12d3-a456-426614174000",
-            vmName: "VM1",
-            currentStatus: "booting",
-            status: "시작",
-            instanceType: "t2.micro",
-            publicIP: "192.168.1.1",
-            key: "key example",
-            os: "Ubuntu 24.04 LTS",
-            startTime: "2025-01-18 10:00",
-            runTime: "5.5h",
-            userType: "admin",
-          },
-          {
-            id: "123e4567-e89b-12d3-a456-426614174001",
-            vmName: "VM2",
-            currentStatus: "launching",
-            status: "시작",
-            instanceType: "t2.medium",
-            publicIP: "192.168.1.1",
-            key: "key example",
-            os: "Ubuntu 24.04 LTS",
-            startTime: "2025-01-18 10:00",
-            runTime: "5.5h",
-            userType: "user",
-          },
-        ];
-        setVmList(vmList);
-      };
-      fetchData();
+      setVmList(
+        data.map((vm: VMInitStatus) => ({
+          id: vm.vm_id,
+          vmName: vm.vm_name,
+          status: vm.status,
+          instanceType: vm.instance_type,
+          publicIP: vm.ip,
+          key: vm.is_owner,
+          os: vm.os,
+          startTime: vm.uptime,
+          runTime: vm.uptime,
+          userType: vm.is_owner,
+        })),
+      );
     } catch (error) {
       console.error(error);
     }
+  };
+
+  useEffect(() => {
+    fetchData();
   }, []);
 
   const onCloseDeleteDialog = () => {
@@ -101,7 +98,7 @@ const VMManage: React.FC = () => {
     try {
       // 삭제 요청 병렬 수행
       const results = await Promise.allSettled(
-        checkedVMs.map((vmId) => axiosClient.delete(`/vm/${vmId}`))
+        checkedVMs.map((vmId) => axiosClient.delete(`/vm/${vmId}`)),
       );
 
       const succeeded: string[] = [];
@@ -131,9 +128,7 @@ const VMManage: React.FC = () => {
         setDeleteAlert({
           show: true,
           success: false,
-          message: `총 ${
-            failed.length
-          }개의 VM 삭제에 실패했습니다: ${failed.join(", ")}`,
+          message: `총 ${failed.length}개의 VM 삭제에 실패했습니다: ${failed.join(", ")}`,
         });
       } else {
         setDeleteAlert({
@@ -159,21 +154,21 @@ const VMManage: React.FC = () => {
 
   const onChangeName = (id: string, newName: string) => {
     setVmList((prevList) =>
-      prevList.map((vm) => (vm.id === id ? { ...vm, vmName: newName } : vm))
+      prevList.map((vm) => (vm.id === id ? { ...vm, vmName: newName } : vm)),
     );
   };
 
-  const onChangeStatus = (id: string, newStatus: Status) => {
+  const onChangeStatus = (id: string, newStatus: CurrentStatus) => {
     setVmList((prevList) =>
-      prevList.map((vm) => (vm.id === id ? { ...vm, status: newStatus } : vm))
+      prevList.map((vm) => (vm.id === id ? { ...vm, status: newStatus } : vm)),
     );
   };
 
   return (
     <div className="vm-manage">
-      <p className="title p-36-600">VM 리스트</p>
+      <p className="title typo-pr-sb-36">인스턴스 리스트</p>
 
-      <div className="vm-manage-btn-wrap j-content-end">
+      <div className="vm-manage-btn-wrap flex justify-end">
         {checkedVMs.length > 0 && (
           <VMManageBtn
             className="delete"
@@ -213,15 +208,15 @@ const VMManage: React.FC = () => {
           id="alert-dialog-title"
           sx={{ marginBottom: "calc(31px - 16px)" }}
         >
-          <p className="p-21-400">VM 삭제</p>
+          <p className="typo-pr-r-21">VM 삭제</p>
         </DialogTitle>
         <DialogContent>
-          <DialogContentText className="f-dir-column" sx={{ gap: "32px" }}>
-            <p className="p-16-400 c-black">
+          <DialogContentText className="flex flex-col" sx={{ gap: "32px" }}>
+            <p className="typo-pr-r-16">
               {checkedVMs.length}개의 항목을 정말 삭제하시겠습니까?
             </p>
-            <p className="p-16-400 c-black d-flex">
-              삭제 시&nbsp;<p className="c-red">되돌릴 수 없습니다.</p>
+            <p className="typo-pr-r-16 flex">
+              삭제 시&nbsp;<p className="text-red">되돌릴 수 없습니다.</p>
             </p>
           </DialogContentText>
         </DialogContent>
@@ -262,7 +257,7 @@ const VMManage: React.FC = () => {
       {showDetailModal && (
         <VMDetailModal
           open={showDetailModal}
-          vm={selectedVM}
+          vmId={selectedVMId}
           onClose={onCloseDetailModal}
           onChangeStatus={onChangeStatus}
           onChangeName={onChangeName}
@@ -327,38 +322,46 @@ const VMManage: React.FC = () => {
                         // id가 이미 선택된 상태일 경우 제거, 아닐 경우 추가
                         prevSelected.includes(vm.id)
                           ? prevSelected.filter((vmId) => vmId !== vm.id) // 현재의 id를 제외한 나머지 id들만 filter
-                          : [...prevSelected, vm.id]
+                          : [...prevSelected, vm.id],
                       );
                     }}
                     sx={{ color: "var(--Grey1, #808B96)" }}
                   />
                 </TableCell>
                 <TableCell sx={{ width: "25%" }}>
-                  <p className="p-16-600">{vm.vmName}</p>
+                  <p className="text-[16px] font-semibold">{vm.vmName}</p>
                 </TableCell>
                 <TableCell>{vm.instanceType}</TableCell>
                 <TableCell>{vm.publicIP || "-"}</TableCell>
                 <TableCell>
-                  <div className={`user-type ${vm.userType} p-16-400 f-center`}>
+                  <div
+                    className={twMerge(
+                      "user-type typo-pr-r-16 flex items-center justify-center",
+                      vm.userType,
+                    )}
+                  >
                     {userTypeMapping(vm.userType)}
                   </div>
                 </TableCell>
                 <TableCell>
-                  <div className="current-status-wrap a-items-center">
+                  <div className="current-status-wrap flex items-center">
                     <div
-                      className={`current-status ${vm.currentStatus} p-16-400 f-center`}
+                      className={twJoin(
+                        "current-status typo-pr-r-16 flex justify-center items-center",
+                        vm.status === "started begin" ? "launching" : "booting",
+                      )}
                     >
                       <img
                         src={
-                          vm.currentStatus === "booting" ? booting : launching
+                          vm.status === "started begin" ? launching : booting
                         }
                         alt=""
                       />
-                      {currentStatusMapping(vm.currentStatus)}
+                      {currentStatusMapping(vm.status)}
                     </div>
-                    <div className="runtime a-items-center">
+                    <div className="runtime flex items-center">
                       <img src={time} alt="" />
-                      <p className="p-16-400 c-grey1">{vm.runTime}</p>
+                      <p className="typo-pr-r-16 text-grey1">{vm.runTime}</p>
                     </div>
                   </div>
                 </TableCell>
@@ -372,12 +375,10 @@ const VMManage: React.FC = () => {
 };
 export default VMManage;
 
-const TableCellAttribute: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
+const TableCellAttribute = ({ children }: PropsWithChildren) => {
   return (
     <TableCell>
-      <p className="p-14-400 c-grey1">{children}</p>
+      <p className="typo-pr-r-14 text-grey1">{children}</p>
     </TableCell>
   );
 };
