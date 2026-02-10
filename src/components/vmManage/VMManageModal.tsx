@@ -46,6 +46,28 @@ interface VMStatus {
   };
 }
 
+type VMStatusCacheEntry = { data: VMStatus; updatedAt: number };
+const vmStatusCache = new Map<string, VMStatusCacheEntry>();
+const vmStatusInFlight = new Map<string, Promise<VMStatus>>();
+
+const statusToToggle = (status: string) =>
+  status === "run" || status === "start begin" || status === "started begin";
+
+const fetchVmStatus = async (id: string): Promise<VMStatus> => {
+  const existing = vmStatusInFlight.get(id);
+  if (existing) return existing;
+
+  const promise = axiosClient
+    .get(`/vm/${id}/status`)
+    .then(({ data }) => data as VMStatus)
+    .finally(() => {
+      vmStatusInFlight.delete(id);
+    });
+
+  vmStatusInFlight.set(id, promise);
+  return promise;
+};
+
 const VMDetailModal = ({
   open,
   vmId,
@@ -63,24 +85,65 @@ const VMDetailModal = ({
   const [openUserManage, setOpenUserManage] = useState(false);
 
   const modalRef = useRef<HTMLDivElement>(null);
+  const requestSeqRef = useRef(0);
+  const isUnderEditingNameRef = useRef(false);
+  const isChangingStatusRef = useRef(false);
 
   useEffect(() => {
-    const fetchData = async () => {
-      const { data } = await axiosClient.get(`/vm/${vmId}/status`);
-      setVmStatus(data);
-      setEditedName(data.vm_name);
+    isUnderEditingNameRef.current = isUnderEditingName;
+  }, [isUnderEditingName]);
 
-      if (data.status === "start begin" || data.status === "started begin") {
-        setToggleSwitch(true);
-      } else {
-        setToggleSwitch(false);
-      }
-    };
+  useEffect(() => {
+    isChangingStatusRef.current = isChangingStatus;
+  }, [isChangingStatus]);
 
-    if (vmId) {
-      fetchData();
+  useEffect(() => {
+    if (!open) return;
+
+    // reset edit mode when switching instances
+    setIsUnderEditingName(false);
+
+    if (!vmId) {
+      setVmStatus(null);
+      setEditedName("");
+      setToggleSwitch(false);
+      return;
     }
-  }, [vmId]);
+
+    const cached = vmStatusCache.get(vmId)?.data;
+    if (cached) {
+      setVmStatus(cached);
+      setEditedName(cached.vm_name);
+      setToggleSwitch(statusToToggle(cached.status));
+    } else {
+      setVmStatus(null);
+      setEditedName("");
+      setToggleSwitch(false);
+    }
+
+    const seq = ++requestSeqRef.current;
+    void (async () => {
+      try {
+        const fresh = await fetchVmStatus(vmId);
+        if (requestSeqRef.current !== seq) return;
+        if (isChangingStatusRef.current) return;
+
+        vmStatusCache.set(vmId, { data: fresh, updatedAt: Date.now() });
+        setVmStatus(fresh);
+        setEditedName((prev) =>
+          isUnderEditingNameRef.current ? prev : fresh.vm_name,
+        );
+        setToggleSwitch(statusToToggle(fresh.status));
+      } catch (error) {
+        console.error(error);
+      }
+    })();
+  }, [vmId, open]);
+
+  useEffect(() => {
+    if (!vmId || !vmStatus) return;
+    vmStatusCache.set(vmId, { data: vmStatus, updatedAt: Date.now() });
+  }, [vmId, vmStatus]);
 
   useEffect(() => {
     if (!vmStatus || isChangingStatus) {
@@ -125,6 +188,9 @@ const VMDetailModal = ({
       editedName !== vmStatus.vm_name
     ) {
       onChangeName(vmStatus.vm_id, editedName.trim());
+      setVmStatus((prev) =>
+        prev ? { ...prev, vm_name: editedName.trim() } : prev,
+      );
       try {
         await axiosClient.patch(`/vm/${vmId}/name`, {
           new_name: editedName.trim(),
@@ -171,7 +237,7 @@ const VMDetailModal = ({
           }}
         >
           <section className="flex flex-col justify-between pt-[44px] pl-[4.167%] pr-[2.8125%] pb-[1.4583%] h-full">
-            {vmStatus ? (
+            {vmId && vmStatus ? (
               <div className="flex flex-col h-full gap-[19.166267369429803545759463344514%]">
                 {/* <div className="flex justify-between items-start">
                   <Typography variant="h6" gutterBottom>
@@ -346,6 +412,8 @@ const VMDetailModal = ({
                   </section>
                 </div>
               </div>
+            ) : vmId && !vmStatus ? (
+              <Typography>불러오는 중...</Typography>
             ) : (
               <Typography>선택된 VM이 없습니다.</Typography>
             )}
