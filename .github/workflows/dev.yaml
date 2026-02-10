@@ -1,0 +1,28 @@
+name: DEV Deploy Doddle Frontend
+
+on:
+  push:
+    branches:
+      - dev
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: self-hosted
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Build and tag Docker image
+      run: |
+        docker build --no-cache --build-arg API_DOMAIN=${{ secrets.API_DOMAIN_DEV }} -t fe_dev .
+        docker tag fe_dev fe_dev:latest
+
+    - name: Deploy container locally
+      run: |
+        IMAGE=fe_dev:latest
+        docker stop FE_DEV || true
+        docker rm FE_DEV || true
+        docker run -d --name FE_DEV -p 25119:80 $IMAGE
+        docker system prune -af
