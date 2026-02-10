@@ -8,7 +8,7 @@ COPY package*.json ./
 RUN npm install --legacy-peer-deps
 
 ARG API_DOMAIN
-ENV API_DOMAIN=${API_DOMAIN}
+ENV VITE_API_DOMAIN=${API_DOMAIN}
 
 # 애플리케이션 코드 복사 및 빌드
 COPY . .

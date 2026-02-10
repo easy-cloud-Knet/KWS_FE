@@ -1,7 +1,7 @@
 import axios from "axios";
 import Cookies from "js-cookie";
 
-const API_DOMAIN = import.meta.env.API_DOMAIN;
+const API_DOMAIN = import.meta.env.VITE_API_DOMAIN;
 
 const axiosClient = axios.create({
   baseURL: `https://${API_DOMAIN}/api`,
