@@ -1,9 +1,9 @@
-name: Build and Deploy Docker Image
+name: DEV Deploy Doddle Frontend
 
 on:
   push:
     branches:
-      - main
+      - dev
   workflow_dispatch:
 
 jobs:
