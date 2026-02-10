@@ -1,0 +1,28 @@
+name: Build and Deploy Docker Image
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: self-hosted  # 로컬 Ubuntu의 actions 계정에서 실행됨
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Build and tag Docker image
+      run: |
+        docker build --no-cache -t fe_deploy .
+        docker tag fe_deploy fe_deploy:latest
+
+    - name: Deploy container locally
+      run: |
+        IMAGE=fe_deploy:latest
+        docker stop FE_DEPLOY || true
+        docker rm FE_DEPLOY || true
+        docker run -d --name FE_DEPLOY -p 25120:80 $IMAGE
+        docker system prune -af
