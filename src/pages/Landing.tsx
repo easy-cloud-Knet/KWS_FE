@@ -207,7 +207,7 @@ const Landing = () => {
           </h1>
           <img src={horizontalArrow} alt="" />
           <p className="mt-[8px] text-(--Text1) text-[16px] font-normal">
-            연락처: contact@doddle.kr
+            연락처: kwangwoonwebservice@gmail.comcontact@doddle.kr
           </p>
         </div>
         <div>
