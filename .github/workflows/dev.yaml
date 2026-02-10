@@ -8,7 +8,7 @@ on:
 
 jobs:
   build-and-deploy:
-    runs-on: self-hosted  # 로컬 Ubuntu의 actions 계정에서 실행됨
+    runs-on: self-hosted
 
     steps:
     - name: Checkout code
@@ -16,7 +16,7 @@ jobs:
 
     - name: Build and tag Docker image
       run: |
-        docker build --no-cache -t fe_dev .
+        docker build --no-cache --build-arg API_DOMAIN=${{ secrets.API_DOMAIN_DEV }} -t fe_dev .
         docker tag fe_dev fe_dev:latest
 
     - name: Deploy container locally
