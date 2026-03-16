@@ -56,6 +56,16 @@ const VMCreateContent = () => {
   //생성버튼 누른 후 생성버튼 비활성화
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const [count, setCount] = useState<number>(1);
+
+  const increase = () => {
+    setCount((prev) => prev + 1);
+  };
+
+  const decrease = () => {
+    setCount((prev) => (prev > 1 ? prev - 1 : 1));
+  };
+
   // ubuntu-cloud-24.04.img -> nameLabel: ubuntu, versionLabel: 24.04
   const computedOsList: OsList[] = osOptions.map((o) => {
     const dotIdx = o.name.lastIndexOf(".");
@@ -104,13 +114,15 @@ const VMCreateContent = () => {
         return;
       }
 
-      await axiosClient.post("/vm/", {
-        name: vmName.value,
-        os_id: selectedOsId,
-        ip: "0.0.0.0",
-        type_id: selectedTypeId,
-        is_public: openSharedUser === "public",
-      });
+      for (let i = 0; i < count; i++) {
+        await axiosClient.post("/vm/", {
+          name: vmName.value,
+          os_id: selectedOsId,
+          ip: "0.0.0.0",
+          type_id: selectedTypeId,
+          is_public: openSharedUser === "public",
+        });
+      }
 
       navigate("/manage");
     } catch (error) {
@@ -266,6 +278,13 @@ const VMCreateContent = () => {
                 title="Shared User"
                 content={openSharedUser}
               />*/}
+
+              <p className="typo-pr-r-16 text-(--Grey3)">여러개 생성하기</p>
+              <div className="flex items-center gap-3 border rounded-full px-4 py-1 w-fit border-(--Grey1)">
+                <button onClick={decrease}>-</button>
+                <span>{count}</span>
+                <button onClick={increase}>+</button>
+              </div>
 
               <div className="flex justify-between w-full">
                 <MuiBtn
