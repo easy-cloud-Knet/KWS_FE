@@ -173,7 +173,7 @@ const VMCreateContent = () => {
                 </div>
               </div>
 
-              <div>
+              {/*<div>
                 <p className="mb-[20px] typo-pr-r-16">Shard User 공개</p>
                 <RadioGroup
                   className="flex justify-between w-[50.46082949308756%]"
@@ -195,6 +195,7 @@ const VMCreateContent = () => {
                   />
                 </RadioGroup>
               </div>
+              */}
             </section>
           </section>
           <section className="create-section w-[39%]">
