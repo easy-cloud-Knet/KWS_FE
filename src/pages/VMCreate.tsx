@@ -261,11 +261,11 @@ const VMCreateContent = () => {
                   content="isolated"
                 />
               </div>
-              <VMInfoToBeCreatedItem
+              {/*<VMInfoToBeCreatedItem
                 className="w-full"
                 title="Shared User"
                 content={openSharedUser}
-              />
+              />*/}
 
               <div className="flex justify-between w-full">
                 <MuiBtn
