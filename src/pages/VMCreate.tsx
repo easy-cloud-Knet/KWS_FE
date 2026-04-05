@@ -313,7 +313,7 @@ const VMCreateContent = () => {
                   <button onClick={increase}>+</button>
                 </div>
 
-                <p className="typo-pr-r-10 text-(--grey1) m-0">
+                <p className="typo-pr-r-8 text-(--grey1) m-0">
                   *인스턴스는 최대 10개까지만 생성 가능 합니다.
                 </p>
               </div>
