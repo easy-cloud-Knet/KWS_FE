@@ -60,7 +60,11 @@ const VMCreateContent = () => {
   const [count, setCount] = useState<number>(1);
 
   const increase = () => {
-    setCount((prev) => prev + 1);
+    setCount((prev) => {
+      if (prev < 10) {
+        return prev + 1;
+      } else return 10;
+    });
   };
 
   const decrease = () => {
@@ -71,7 +75,12 @@ const VMCreateContent = () => {
     const value = e.target.value;
 
     if (/^\d*$/.test(value)) {
-      setCount(value === "" ? 0 : Number(value));
+      const numValue = value === "" ? 0 : Number(value);
+      if (numValue <= 10) {
+        setCount(numValue);
+      } else {
+        setCount(10);
+      }
     }
   };
 
@@ -288,17 +297,25 @@ const VMCreateContent = () => {
                 content={openSharedUser}
               />*/}
 
-              <p className="typo-pr-r-16 text-(--Grey3)">
+              <p className="typo-pr-r-16 text-(--Grey3) mb-[1px]">
                 인스턴스 여러개 생성하기
               </p>
-              <div className="flex items-center gap-3 border rounded-full px-4 py-1 w-fit border-(--Grey1)">
-                <button onClick={decrease}>-</button>
-                <input
-                  type="number"
-                  value={count}
-                  onChange={handleChange}
-                ></input>
-                <button onClick={increase}>+</button>
+
+              <div className="flex items-center gap-3">
+                <div className="flex items-center gap-3 border rounded-full px-4 py-1 w-fit border-(--Grey1)">
+                  <button onClick={decrease}>-</button>
+                  <input
+                    type="text"
+                    value={count}
+                    onChange={handleChange}
+                    className="w-5 bg-transparent outline-none text-center"
+                  />
+                  <button onClick={increase}>+</button>
+                </div>
+
+                <p className="typo-pr-r-10 text-(--grey1) m-0">
+                  *인스턴스는 최대 10개까지만 생성 가능 합니다.
+                </p>
               </div>
 
               <div className="flex justify-between w-full">
