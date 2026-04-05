@@ -56,6 +56,7 @@ const VMCreateContent = () => {
   //생성버튼 누른 후 생성버튼 비활성화
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  //인스턴스 여러개 만들기
   const [count, setCount] = useState<number>(1);
 
   const increase = () => {
@@ -64,6 +65,14 @@ const VMCreateContent = () => {
 
   const decrease = () => {
     setCount((prev) => (prev > 1 ? prev - 1 : 1));
+  };
+
+  const handleChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+    const value = e.target.value;
+
+    if (/^\d*$/.test(value)) {
+      setCount(value === "" ? 0 : Number(value));
+    }
   };
 
   // ubuntu-cloud-24.04.img -> nameLabel: ubuntu, versionLabel: 24.04
@@ -279,10 +288,16 @@ const VMCreateContent = () => {
                 content={openSharedUser}
               />*/}
 
-              <p className="typo-pr-r-16 text-(--Grey3)">여러개 생성하기</p>
+              <p className="typo-pr-r-16 text-(--Grey3)">
+                인스턴스 여러개 생성하기
+              </p>
               <div className="flex items-center gap-3 border rounded-full px-4 py-1 w-fit border-(--Grey1)">
                 <button onClick={decrease}>-</button>
-                <span>{count}</span>
+                <input
+                  type="number"
+                  value={count}
+                  onChange={handleChange}
+                ></input>
                 <button onClick={increase}>+</button>
               </div>
 
