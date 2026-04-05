@@ -13,7 +13,7 @@ interface VMCreateOsImageProps {
 const VMCreateOsImage = ({ item }: VMCreateOsImageProps) => {
   const [toggle, setToggle] = useState<boolean>(false);
   const { os, osVersion } = useContext(VMCreateContext)!;
-  const isSelected = os === item.name;
+  const isSelected = os === item.name && osVersion !== "";
 
   return (
     <div
