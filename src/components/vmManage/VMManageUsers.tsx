@@ -1,4 +1,9 @@
-import { Dialog, DialogActions, DialogContent, DialogContentText } from "@mui/material";
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+} from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
 
 import deletion from "../../assets/image/vmManage/vmManageUsers/delete.svg";
@@ -10,13 +15,15 @@ import TextBtn from "../button/TextBtn";
 import ToggleList from "./ToggleList";
 
 import "./VMManageUsers.css";
+import axiosClient from "@/services/api";
 
 interface VMManageUsersProps {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  vmId: string | null;
 }
 
-const VMManageUsers = ({ open, setOpen }: VMManageUsersProps) => {
+const VMManageUsers = ({ open, setOpen, vmId }: VMManageUsersProps) => {
   const handleClose = (reason: string) => {
     if (reason === "backdropClick") {
       setOpen(false);
@@ -32,6 +39,22 @@ const VMManageUsers = ({ open, setOpen }: VMManageUsersProps) => {
       }
     }
   }, [open]);
+
+  const [sharedUsers, setSharedUsers] = useState([]);
+  useEffect(() => {
+    const fetchSharedUsers = async () => {
+      try {
+        const { data } = await axiosClient.get(`/vm/{vm_id}/shared-users`);
+        setSharedUsers(data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    if (open && vmId) {
+      fetchSharedUsers();
+    }
+  }, [open, vmId]);
 
   return (
     <Dialog
@@ -60,7 +83,11 @@ const VMManageUsers = ({ open, setOpen }: VMManageUsersProps) => {
             id="scroll-dialog-description"
             ref={descriptionElementRef}
             tabIndex={-1}
-            sx={{ paddingBottom: "12px", maxHeight: "260px", overflowY: "scroll" }}
+            sx={{
+              paddingBottom: "12px",
+              maxHeight: "260px",
+              overflowY: "scroll",
+            }}
           >
             <section className="admin-list user-list">
               <h4 className="typo-pr-r-14 text-grey1">admin</h4>
