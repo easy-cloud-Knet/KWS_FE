@@ -392,7 +392,6 @@ const VMDetailModal = ({
                   </section>
                   <section className="bottom-btn-wrap flex justify-end items-end">
                     <VMManageBtn
-                      disabled
                       className="user-manage-btn"
                       src={user}
                       onClick={() => {
