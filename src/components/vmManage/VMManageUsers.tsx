@@ -59,6 +59,9 @@ const VMManageUsers = ({ open, setOpen, vmId }: VMManageUsersProps) => {
   const inviteUser = async (email: string) => {
     try {
       await axiosClient.post(`/vm/${vmId}/shared-users?email=${email}`);
+      const { data } = await axiosClient.get(`/vm/${vmId}/shared-users`);
+      setSharedUsers(data);
+      setEmail("");
     } catch (error) {
       console.error(error);
     }
