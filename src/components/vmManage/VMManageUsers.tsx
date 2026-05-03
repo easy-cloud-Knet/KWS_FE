@@ -42,7 +42,13 @@ const VMManageUsers = ({ open, setOpen, vmId }: VMManageUsersProps) => {
 
   const [sharedUsers, setSharedUsers] = useState<{
     admin: string;
-    shared_users: string[];
+    shared_users: {
+      id: string;
+      username: string;
+      email: string;
+      status: string;
+      invited_at: string;
+    }[];
   }>({
     admin: "",
     shared_users: [],
@@ -117,14 +123,23 @@ const VMManageUsers = ({ open, setOpen, vmId }: VMManageUsersProps) => {
 
             <section className="shared-user-list user-list">
               <h4 className="typo-pr-r-14 text-grey1">shared user</h4>
-              {sharedUsers.shared_users.map((userId) => (
-                <User key={userId}>{userId}</User>
-              ))}
+              {sharedUsers.shared_users
+                .filter((user) => user.status === "accepted")
+                .map((user) => (
+                  <User key={user.id} email={user.email}>
+                    {user.username}
+                  </User>
+                ))}
             </section>
 
             <ToggleList title="대기중">
-              <p className="typo-pr-r-16">pizza1</p>
-              <p className="typo-pr-r-16">pizza2</p>
+              {sharedUsers.shared_users
+                .filter((user) => user.status === "pending")
+                .map((user) => (
+                  <p key={user.id} className="typo-pr-r-16">
+                    {user.username}
+                  </p>
+                ))}
             </ToggleList>
           </DialogContentText>
         </DialogContent>
