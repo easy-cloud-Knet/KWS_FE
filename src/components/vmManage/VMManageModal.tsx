@@ -420,7 +420,11 @@ const VMDetailModal = ({
         </Box>
       </Slide>
 
-      <VMManageUsers open={openUserManage} setOpen={setOpenUserManage} />
+      <VMManageUsers
+        open={openUserManage}
+        setOpen={setOpenUserManage}
+        vmId={vmId}
+      />
     </div>
   );
 };
