@@ -40,11 +40,28 @@ const VMManageUsers = ({ open, setOpen, vmId }: VMManageUsersProps) => {
     }
   }, [open]);
 
-  const [sharedUsers, setSharedUsers] = useState([]);
+  const [sharedUsers, setSharedUsers] = useState<{
+    admin: string;
+    shared_users: string[];
+  }>({
+    admin: "",
+    shared_users: [],
+  });
+
+  const [email, setEmail] = useState("");
+
+  const inviteUser = async (email: string) => {
+    try {
+      await axiosClient.post(`/vm/${vmId}/shared-users?email=${email}`);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   useEffect(() => {
     const fetchSharedUsers = async () => {
       try {
-        const { data } = await axiosClient.get(`/vm/{vm_id}/shared-users`);
+        const { data } = await axiosClient.get(`/vm/${vmId}/shared-users`);
         setSharedUsers(data);
       } catch (error) {
         console.error(error);
@@ -69,9 +86,13 @@ const VMManageUsers = ({ open, setOpen, vmId }: VMManageUsersProps) => {
         <p className="typo-pr-r-16">사용자 초대</p>
         <div className="input-wrap flex justify-between">
           <div className="input">
-            <AuthTextFieldV2 placeholder="이메일 아이디" />
+            <AuthTextFieldV2
+              placeholder="이메일 아이디"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
           </div>
-          <MuiBtn variant="contained" sx={{ width: "88px" }}>
+          <MuiBtn variant="contained" onClick={() => inviteUser(email)}>
             전송
           </MuiBtn>
         </div>
@@ -91,13 +112,14 @@ const VMManageUsers = ({ open, setOpen, vmId }: VMManageUsersProps) => {
           >
             <section className="admin-list user-list">
               <h4 className="typo-pr-r-14 text-grey1">admin</h4>
-              <p className="user-name typo-pr-r-16">미숫가루</p>
+              <p className="user-name typo-pr-r-16">{sharedUsers.admin}</p>
             </section>
 
             <section className="shared-user-list user-list">
               <h4 className="typo-pr-r-14 text-grey1">shared user</h4>
-              <User email="msgr@kw.ac.kr">미숫가루</User>
-              <User email="msgr@kw.ac.kr">미숫가루</User>
+              {sharedUsers.shared_users.map((userId) => (
+                <User key={userId}>{userId}</User>
+              ))}
             </section>
 
             <ToggleList title="대기중">
