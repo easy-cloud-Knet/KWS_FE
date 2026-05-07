@@ -128,7 +128,7 @@ const VMManageUsers = ({ open, setOpen, vmId }: VMManageUsersProps) => {
               <p className="user-name typo-pr-r-16">
                 {sharedUsers.admin?.username} {sharedUsers.admin?.email}{" "}
                 {sharedUsers.is_admin && (
-                  <span className="!text-Main_Blue">(나)</span>
+                  <span style={{ color: "#007bff" }}>(나)</span>
                 )}
               </p>
             </section>
