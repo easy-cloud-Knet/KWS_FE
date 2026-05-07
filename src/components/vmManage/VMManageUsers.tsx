@@ -127,6 +127,8 @@ const VMManageUsers = ({ open, setOpen, vmId }: VMManageUsersProps) => {
               <h4 className="typo-pr-r-14 text-grey1">admin</h4>
               <p className="user-name typo-pr-r-16">
                 {sharedUsers.admin.email}
+              </p>
+              <p className="user-name typo-pr-r-16">
                 {sharedUsers.admin.username}
               </p>
             </section>
