@@ -41,16 +41,20 @@ const VMManageUsers = ({ open, setOpen, vmId }: VMManageUsersProps) => {
   }, [open]);
 
   const [sharedUsers, setSharedUsers] = useState<{
-    admin: string;
+    admin: {
+      username: string;
+      email: string;
+    };
+    is_admin: boolean;
     shared_users: {
-      id: string;
       username: string;
       email: string;
       status: string;
       invited_at: string;
     }[];
   }>({
-    admin: "",
+    admin: { username: "", email: "" },
+    is_admin: false,
     shared_users: [],
   });
 
@@ -121,7 +125,10 @@ const VMManageUsers = ({ open, setOpen, vmId }: VMManageUsersProps) => {
           >
             <section className="admin-list user-list">
               <h4 className="typo-pr-r-14 text-grey1">admin</h4>
-              <p className="user-name typo-pr-r-16">{sharedUsers.admin}</p>
+              <p className="user-name typo-pr-r-16">
+                {sharedUsers.admin.email}
+                {sharedUsers.admin.username}
+              </p>
             </section>
 
             <section className="shared-user-list user-list">
@@ -129,7 +136,7 @@ const VMManageUsers = ({ open, setOpen, vmId }: VMManageUsersProps) => {
               {sharedUsers.shared_users
                 .filter((user) => user.status === "accepted")
                 .map((user) => (
-                  <User key={user.id} email={user.email}>
+                  <User key={user.email} email={user.email}>
                     {user.username}
                   </User>
                 ))}
@@ -139,7 +146,7 @@ const VMManageUsers = ({ open, setOpen, vmId }: VMManageUsersProps) => {
               {sharedUsers.shared_users
                 .filter((user) => user.status === "pending")
                 .map((user) => (
-                  <p key={user.id} className="typo-pr-r-16">
+                  <p key={user.email} className="typo-pr-r-16">
                     {user.username}
                   </p>
                 ))}
