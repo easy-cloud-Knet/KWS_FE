@@ -120,9 +120,11 @@ const NavBar = () => {
               {invitationUsers.shared_user_invitations.filter(
                 (item) => item.status === "pending",
               ).length === 0 ? (
-                <p className="text-grey1 typo-pr-m-18">
-                  초대받은 항목이 없습니다🥺
-                </p>
+                <div className="flex justify-center items-center h-full">
+                  <p className="text-grey1 typo-pr-m-18">
+                    초대받은 항목이 없습니다🥺
+                  </p>
+                </div>
               ) : (
                 invitationUsers.shared_user_invitations
                   .filter((item) => item.status === "pending") // 수락 시 pending만 필터링 하기
