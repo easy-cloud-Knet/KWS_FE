@@ -44,8 +44,9 @@ const VMManageUsers = ({ open, setOpen, vmId }: VMManageUsersProps) => {
     admin: {
       username: string;
       email: string;
+      is_me: boolean;
     };
-    is_me: boolean;
+
     shared_users: {
       username: string;
       email: string;
@@ -53,8 +54,8 @@ const VMManageUsers = ({ open, setOpen, vmId }: VMManageUsersProps) => {
       invited_at: string;
     }[];
   }>({
-    admin: { username: "", email: "" },
-    is_me: false,
+    admin: { username: "", email: "", is_me: false },
+
     shared_users: [],
   });
 
@@ -130,7 +131,7 @@ const VMManageUsers = ({ open, setOpen, vmId }: VMManageUsersProps) => {
                   {sharedUsers.admin?.username}
                 </span>{" "}
                 {sharedUsers.admin?.email}{" "}
-                {sharedUsers.is_me && (
+                {sharedUsers.admin.is_me && (
                   <span style={{ color: "#007bff" }}>(나)</span>
                 )}
               </p>
