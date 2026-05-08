@@ -117,24 +117,32 @@ const NavBar = () => {
           </button>
           {openBellDialog && ( //false만 지우면 더미데이터 생성됨
             <div className="absolute bottom-0 translate-x-[calc(-100%+36px)] translate-y-[calc(100%+16px)] py-[8px] px-[24px] w-[549px] min-h-[120px] rounded-[10px] bg-bg-blue2">
-              {invitationUsers.shared_user_invitations
-                .filter((item) => item.status === "pending") // 수락 시 pending만 필터링 하기
-                .map((item, index) => (
-                  <>
-                    <NavBarBellItem
-                      key={item.vm_id}
-                      from={`${item.owner_name} (${item.owner_email})`}
-                      content={`[${item.vm_name}] 에 초대되었습니다.`}
-                      vmId={item.vm_id}
-                      onAccept={acceptUser}
-                      onReject={rejectUser}
-                    />
-                    {index !==
-                      invitationUsers.shared_user_invitations.length - 1 && (
-                      <div className="w-full h-[0.5px] bg-[#E6E7E8]" />
-                    )}
-                  </>
-                ))}
+              {invitationUsers.shared_user_invitations.filter(
+                (item) => item.status === "pending",
+              ).length === 0 ? (
+                <p className="text-grey1 typo-pr-m-18">
+                  초대받은 항목이 없습니다🥺
+                </p>
+              ) : (
+                invitationUsers.shared_user_invitations
+                  .filter((item) => item.status === "pending") // 수락 시 pending만 필터링 하기
+                  .map((item, index) => (
+                    <>
+                      <NavBarBellItem
+                        key={item.vm_id}
+                        from={`${item.owner_name} (${item.owner_email})`}
+                        content={`[${item.vm_name}] 에 초대되었습니다.`}
+                        vmId={item.vm_id}
+                        onAccept={acceptUser}
+                        onReject={rejectUser}
+                      />
+                      {index !==
+                        invitationUsers.shared_user_invitations.length - 1 && (
+                        <div className="w-full h-[0.5px] bg-[#E6E7E8]" />
+                      )}
+                    </>
+                  ))
+              )}
             </div>
           )}
           <div className="ml-[12px] mr-[20px] w-[1px] h-[36px] bg-[#E6E7EB]" />
