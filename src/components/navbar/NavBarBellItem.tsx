@@ -28,7 +28,7 @@ const NavBarBellItem = ({
         </button>
         <button
           onClick={() => onReject(vmId)}
-          className="w-[88px] h-[48px] bg-main-blue rounded-[12px] typo-pr-r-18 text-white cursor-pointer"
+          className="w-[88px] h-[48px] bg-Red rounded-[12px] typo-pr-r-18 text-white cursor-pointer"
         >
           거절
         </button>

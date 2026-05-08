@@ -65,6 +65,8 @@ const NavBar = () => {
   const acceptUser = async (vmId: string) => {
     try {
       await axiosClient.patch(`/vm/${vmId}/shared-users/accept`);
+      const { data } = await axiosClient.get(`/vm/shared-users/invitations`);
+      setInvitationUsers(data);
     } catch (error) {
       console.error(error);
     }
@@ -73,6 +75,8 @@ const NavBar = () => {
   const rejectUser = async (vmId: string) => {
     try {
       await axiosClient.patch(`/vm/${vmId}/shared-users/reject`);
+      const { data } = await axiosClient.get(`/vm/shared-users/invitations`);
+      setInvitationUsers(data);
     } catch (error) {
       console.error(error);
     }
