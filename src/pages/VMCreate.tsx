@@ -138,7 +138,7 @@ const VMCreateContent = () => {
           os_id: selectedOsId,
           ip: "0.0.0.0",
           type_id: selectedTypeId,
-          is_public: openSharedUser === "public",
+          amount: 1,
         });
       }
 

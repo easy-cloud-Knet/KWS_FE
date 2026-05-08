@@ -45,7 +45,7 @@ const VMManageUsers = ({ open, setOpen, vmId }: VMManageUsersProps) => {
       username: string;
       email: string;
     };
-    is_admin: boolean;
+    is_me: boolean;
     shared_users: {
       username: string;
       email: string;
@@ -54,7 +54,7 @@ const VMManageUsers = ({ open, setOpen, vmId }: VMManageUsersProps) => {
     }[];
   }>({
     admin: { username: "", email: "" },
-    is_admin: false,
+    is_me: false,
     shared_users: [],
   });
 
@@ -130,7 +130,7 @@ const VMManageUsers = ({ open, setOpen, vmId }: VMManageUsersProps) => {
                   {sharedUsers.admin?.username}
                 </span>{" "}
                 {sharedUsers.admin?.email}{" "}
-                {sharedUsers.is_admin && (
+                {sharedUsers.is_me && (
                   <span style={{ color: "#007bff" }}>(나)</span>
                 )}
               </p>
@@ -152,7 +152,7 @@ const VMManageUsers = ({ open, setOpen, vmId }: VMManageUsersProps) => {
                 .filter((user) => user.status === "pending")
                 .map((user) => (
                   <p key={user.email} className="typo-pr-r-16">
-                    {user.username}
+                    {user.username} {user.email}
                   </p>
                 ))}
             </ToggleList>
