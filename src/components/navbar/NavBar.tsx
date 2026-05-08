@@ -1,6 +1,6 @@
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-
+import axiosClient from "@/services/api";
 import ic_logo from "@/assets/image/new_ic_logo.png";
 import ic_arrow_down from "@/assets/image/navbar/ic_arrow_down.svg";
 import ic_arrow_up from "@/assets/image/navbar/ic_arrow_up.svg";
@@ -12,36 +12,6 @@ import MuiBtn from "../button/MuiBtn";
 
 import NavBarBellItem from "./NavBarBellItem";
 import "./NavBar.css";
-
-type BellItemListType = "invitation" | "join" | "relinquish";
-
-interface BellItemList {
-  id: string;
-  from: string;
-  target: string;
-  type: BellItemListType;
-}
-
-const bellItemList: BellItemList[] = [
-  {
-    id: "1",
-    from: "미숫가루 (altntrkfn8282@naver.com)",
-    target: "VM1",
-    type: "invitation",
-  },
-  {
-    id: "2",
-    from: "미숫가루 (altntrkfn8282@naver.com)",
-    target: "VM1",
-    type: "join",
-  },
-  {
-    id: "3",
-    from: "미숫가루 (altntrkfn8282@naver.com)",
-    target: "VM1",
-    type: "relinquish",
-  },
-];
 
 const NavBar = () => {
   const { isAuthenticated, logout, userNickname, userEmail } =
@@ -65,14 +35,46 @@ const NavBar = () => {
     }
   };
 
-  const mapTypeToContent = (type: BellItemListType) => {
-    switch (type) {
-      case "invitation":
-        return "에 초대되었습니다.";
-      case "join":
-        return "에 합류를 요청합니다.";
-      case "relinquish":
-        return "admin 변경 요청입니다.";
+  const [invitationUsers, setInvitationUsers] = useState<{
+    shared_user_invitations: {
+      vm_id: string;
+      vm_name: string;
+      owner_name: string;
+      owner_email: string;
+      status: string;
+      invited_at: string;
+    }[];
+    admin_change_requests: [];
+  }>({
+    shared_user_invitations: [],
+    admin_change_requests: [],
+  });
+
+  useEffect(() => {
+    const fetchInvitations = async () => {
+      try {
+        const { data } = await axiosClient.get(`/vm/shared-users/invitations`);
+        setInvitationUsers(data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchInvitations();
+  }, []);
+
+  const acceptUser = async (vmId: string) => {
+    try {
+      await axiosClient.patch(`/vm/${vmId}/shared-users/accept`);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const rejectUser = async (vmId: string) => {
+    try {
+      await axiosClient.patch(`/vm/${vmId}/shared-users/reject`);
+    } catch (error) {
+      console.error(error);
     }
   };
 
@@ -111,14 +113,18 @@ const NavBar = () => {
           </button>
           {openBellDialog && ( //false만 지우면 더미데이터 생성됨
             <div className="absolute bottom-0 translate-x-[calc(-100%+36px)] translate-y-[calc(100%+16px)] py-[8px] px-[24px] w-[549px] min-h-[120px] rounded-[10px] bg-bg-blue2">
-              {bellItemList.map((item, index) => (
+              {invitationUsers.shared_user_invitations.map((item, index) => (
                 <>
                   <NavBarBellItem
-                    key={item.id}
-                    from={item.from}
-                    content={`[${item.target}] ${mapTypeToContent(item.type)}`}
+                    key={item.vm_id}
+                    from={`${item.owner_name} (${item.owner_email})`}
+                    content={`[${item.vm_name}] 에 초대되었습니다.`}
+                    vmId={item.vm_id}
+                    onAccept={acceptUser}
+                    onReject={rejectUser}
                   />
-                  {index !== bellItemList.length - 1 && (
+                  {index !==
+                    invitationUsers.shared_user_invitations.length - 1 && (
                     <div className="w-full h-[0.5px] bg-[#E6E7E8]" />
                   )}
                 </>
