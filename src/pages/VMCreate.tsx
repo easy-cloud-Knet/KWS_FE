@@ -42,7 +42,6 @@ const VMCreateContent = () => {
     osVersionImgName,
     hw,
     setHw,
-    openSharedUser,
     //setOpenSharedUser,
   } = useContext(VMCreateContext)!;
   const navigate = useNavigate();
