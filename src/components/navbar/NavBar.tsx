@@ -120,7 +120,7 @@ const NavBar = () => {
               {invitationUsers.shared_user_invitations.filter(
                 (item) => item.status === "pending",
               ).length === 0 ? (
-                <div className="flex justify-center items-center h-full">
+                <div className="flex justify-center items-center h-[120px]">
                   <p className="text-grey1 typo-pr-m-18">
                     초대받은 항목이 없습니다🥺
                   </p>

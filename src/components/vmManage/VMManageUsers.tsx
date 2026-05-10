@@ -72,6 +72,16 @@ const VMManageUsers = ({ open, setOpen, vmId }: VMManageUsersProps) => {
     }
   };
 
+  const deleteUser = async (userEmail: string) => {
+    try {
+      await axiosClient.delete(`/vm/${vmId}/shared-users/${userEmail}`);
+      const { data } = await axiosClient.get(`/vm/${vmId}/shared-users`);
+      setSharedUsers(data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   useEffect(() => {
     const fetchSharedUsers = async () => {
       try {
@@ -142,7 +152,11 @@ const VMManageUsers = ({ open, setOpen, vmId }: VMManageUsersProps) => {
               {sharedUsers.shared_users
                 .filter((user) => user.status === "accepted")
                 .map((user) => (
-                  <User key={user.email} email={user.email}>
+                  <User
+                    key={user.email}
+                    email={user.email}
+                    onDelete={deleteUser}
+                  >
                     {user.username}
                   </User>
                 ))}
@@ -174,9 +188,10 @@ export default VMManageUsers;
 interface UserProps {
   children?: React.ReactNode;
   email?: string;
+  onDelete?: (email: string) => void;
 }
 
-const User = ({ children, email }: UserProps) => {
+const User = ({ children, email, onDelete }: UserProps) => {
   const [hover, setHover] = useState(false);
   const userRef = useRef<HTMLDivElement>(null);
 
@@ -206,7 +221,7 @@ const User = ({ children, email }: UserProps) => {
         <div className="user-btn-wrap flex items-center">
           <TextBtn className="user-btn-inside-wrap flex items-center">
             <img src={deletion} alt="X" />
-            <p className="typo-pr-r-12 text-red">삭제</p>
+            <TextBtn onClick={() => onDelete?.(email!)}>삭제</TextBtn>
           </TextBtn>
 
           <TextBtn className="user-btn-inside-wrap flex items-center">
