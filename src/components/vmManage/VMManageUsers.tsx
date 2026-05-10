@@ -221,7 +221,9 @@ const User = ({ children, email, onDelete }: UserProps) => {
         <div className="user-btn-wrap flex items-center">
           <TextBtn className="user-btn-inside-wrap flex items-center">
             <img src={deletion} alt="X" />
-            <TextBtn onClick={() => onDelete?.(email!)}>삭제</TextBtn>
+            <TextBtn className="test-red" onClick={() => onDelete?.(email!)}>
+              삭제
+            </TextBtn>
           </TextBtn>
 
           <TextBtn className="user-btn-inside-wrap flex items-center">
