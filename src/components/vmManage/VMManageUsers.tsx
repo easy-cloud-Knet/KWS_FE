@@ -73,6 +73,8 @@ const VMManageUsers = ({ open, setOpen, vmId }: VMManageUsersProps) => {
     }
   };
 
+  const [isSending, setIsSending] = useState(false); //어드민 계승 버튼 누른 후 비활성화
+
   const changeAdmin = async (new_admin_email: string) => {
     try {
       await axiosClient.post(
@@ -192,6 +194,8 @@ const VMManageUsers = ({ open, setOpen, vmId }: VMManageUsersProps) => {
                     isMe={user.is_me}
                     isAdmin={sharedUsers.admin.is_me}
                     onLeave={leaveUser}
+                    isSending={isSending}
+                    setIsSending={setIsSending}
                   >
                     {user.username}
                   </User>
@@ -229,6 +233,8 @@ interface UserProps {
   isMe?: boolean;
   isAdmin?: boolean;
   onLeave?: () => void;
+  isSending?: boolean;
+  setIsSending?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const User = ({
@@ -239,11 +245,11 @@ const User = ({
   isMe,
   isAdmin,
   onLeave,
+  isSending,
+  setIsSending,
 }: UserProps) => {
   const [hover, setHover] = useState(false);
   const userRef = useRef<HTMLDivElement>(null);
-
-  const [isSending, setIsSending] = useState(false); //어드민 계승 버튼 누른 후 비활성화
 
   useEffect(() => {
     const userElement = userRef.current;
@@ -289,11 +295,11 @@ const User = ({
                   className="add disabled:opacity-50 disabled:cursor-not-allowed text-main-blue"
                   onClick={async () => {
                     if (isSending) return;
-                    setIsSending(true);
+                    setIsSending?.(true);
                     try {
                       await onChange?.(email!);
                     } finally {
-                      setIsSending(false);
+                      setIsSending?.(false);
                     }
                   }}
                 >
