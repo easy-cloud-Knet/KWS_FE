@@ -107,19 +107,28 @@ const VMManageUsers = ({ open, setOpen, vmId }: VMManageUsersProps) => {
       aria-describedby="scroll-dialog-description"
     >
       <section className="vm-manage-users-header flex flex-col">
-        <p className="typo-pr-r-16">사용자 초대</p>
-        <div className="input-wrap flex justify-between">
-          <div className="input">
-            <AuthTextFieldV2
-              placeholder="이메일 아이디"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </div>
-          <MuiBtn variant="contained" onClick={() => inviteUser(email)}>
-            전송
-          </MuiBtn>
-        </div>
+        {sharedUsers.admin.is_me ? (
+          <>
+            <p className="typo-pr-r-16">사용자 초대</p>
+            <div className="input-wrap flex justify-between">
+              <div className="input">
+                <AuthTextFieldV2
+                  placeholder="이메일 아이디"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </div>
+              <MuiBtn variant="contained" onClick={() => inviteUser(email)}>
+                전송
+              </MuiBtn>
+            </div>
+          </>
+        ) : (
+          <>
+            <p className="typo-pr-r-16">Shared user로 참여 중</p>
+            <p>*사용자 초대는 Admin 권한만 가능합니다.</p>
+          </>
+        )}
       </section>
 
       <section className="flex flex-col justify-between h-full">
@@ -189,6 +198,7 @@ interface UserProps {
   children?: React.ReactNode;
   email?: string;
   onDelete?: (email: string) => void;
+  isMe?: boolean;
 }
 
 const User = ({ children, email, onDelete }: UserProps) => {
