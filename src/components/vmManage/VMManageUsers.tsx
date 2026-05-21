@@ -76,7 +76,7 @@ const VMManageUsers = ({ open, setOpen, vmId }: VMManageUsersProps) => {
   const changeAdmin = async (new_admin_email: string) => {
     try {
       await axiosClient.post(
-        `/vm/${vmId}/admin/change-request?email=${new_admin_email}`,
+        `/vm/${vmId}/admin/change-request?new_admin_email=${new_admin_email}`,
       );
       const { data } = await axiosClient.get(`/vm/${vmId}/shared-users`);
       setSharedUsers(data);
