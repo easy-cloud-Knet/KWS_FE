@@ -125,8 +125,10 @@ const VMManageUsers = ({ open, setOpen, vmId }: VMManageUsersProps) => {
           </>
         ) : (
           <>
-            <p className="typo-pr-r-16">Shared user로 참여 중</p>
-            <p>*사용자 초대는 Admin 권한만 가능합니다.</p>
+            <p className="typo-pr-r-21 font-semibold">Shared user로 참여 중</p>
+            <p className="flex flex-col mt-[20px] typo-pr-r-18 text-grey1 ">
+              *사용자 초대는 Admin 권한만 가능합니다.
+            </p>
           </>
         )}
       </section>
