@@ -245,6 +245,8 @@ const User = ({
   const [hover, setHover] = useState(false);
   const userRef = useRef<HTMLDivElement>(null);
 
+  const [isSending, setIsSending] = useState(false); //어드민 계승 버튼 누른 후 비활성화
+
   useEffect(() => {
     const userElement = userRef.current;
     const handleMouseEnter = () => {
@@ -285,8 +287,17 @@ const User = ({
               <TextBtn className="user-btn-inside-wrap flex items-center">
                 <img src={succession} alt="->" />
                 <TextBtn
-                  className="text-main-blue"
-                  onClick={() => onChange?.(email!)}
+                  disabled={isSending}
+                  className="add disabled:opacity-50 disabled:cursor-not-allowed text-main-blue"
+                  onClick={async () => {
+                    if (isSending) return;
+                    setIsSending(true);
+                    try {
+                      await onChange?.(email!);
+                    } finally {
+                      setIsSending(false);
+                    }
+                  }}
                 >
                   admin 계승
                 </TextBtn>
