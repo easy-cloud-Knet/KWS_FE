@@ -73,6 +73,16 @@ const VMManageUsers = ({ open, setOpen, vmId }: VMManageUsersProps) => {
     }
   };
 
+  const changeAdmin = async (email: string) => {
+    try {
+      await axiosClient.post(`/vm/${vmId}/admin/change-request?email=${email}`);
+      const { data } = await axiosClient.get(`/vm/${vmId}/shared-users`);
+      setSharedUsers(data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const deleteUser = async (userEmail: string) => {
     try {
       await axiosClient.delete(`/vm/${vmId}/shared-users/${userEmail}`);
@@ -178,6 +188,7 @@ const VMManageUsers = ({ open, setOpen, vmId }: VMManageUsersProps) => {
                     key={user.email}
                     email={user.email}
                     onDelete={deleteUser}
+                    onChange={changeAdmin}
                     isMe={user.is_me}
                     isAdmin={sharedUsers.admin.is_me}
                     onLeave={leaveUser}
@@ -214,6 +225,7 @@ interface UserProps {
   children?: React.ReactNode;
   email?: string;
   onDelete?: (email: string) => void;
+  onChange?: (email: string) => void;
   isMe?: boolean;
   isAdmin?: boolean;
   onLeave?: () => void;
@@ -223,6 +235,7 @@ const User = ({
   children,
   email,
   onDelete,
+  onChange,
   isMe,
   isAdmin,
   onLeave,
@@ -250,7 +263,7 @@ const User = ({
     <div className="user flex justify-between items-center" ref={userRef}>
       <div className="flex">
         <p className="user-name typo-pr-r-16 text-black">{children}</p>
-        <p className="user-name typo-pr-r-16 text-grey1">{email}</p>{" "}
+        <p className="user-name typo-pr-r-16 text-grey1">{email} </p>
         {isMe && <span style={{ color: "#007bff" }}>(나)</span>}
       </div>
       {isAdmin ? (
@@ -269,7 +282,12 @@ const User = ({
 
               <TextBtn className="user-btn-inside-wrap flex items-center">
                 <img src={succession} alt="->" />
-                <p className="typo-pr-r-12 text-main-blue">admin 계승</p>
+                <TextBtn
+                  className="text-main-blue"
+                  onClick={() => onChange?.(email!)}
+                >
+                  admin 계승
+                </TextBtn>
               </TextBtn>
             </div>
           )}
