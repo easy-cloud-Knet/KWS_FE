@@ -52,6 +52,7 @@ const VMManageUsers = ({ open, setOpen, vmId }: VMManageUsersProps) => {
       email: string;
       status: string;
       invited_at: string;
+      is_me: boolean;
     }[];
   }>({
     admin: { username: "", email: "", is_me: false },
@@ -167,6 +168,7 @@ const VMManageUsers = ({ open, setOpen, vmId }: VMManageUsersProps) => {
                     key={user.email}
                     email={user.email}
                     onDelete={deleteUser}
+                    isMe={user.is_me}
                   >
                     {user.username}
                   </User>
