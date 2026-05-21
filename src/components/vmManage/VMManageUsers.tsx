@@ -276,7 +276,7 @@ const User = ({
         </>
       ) : (
         <>
-          {hover && (
+          {hover && isMe && (
             <div className="user-btn-wrap flex items-center">
               <TextBtn className="user-btn-inside-wrap flex items-center">
                 <TextBtn className="test-grey1 underline" onClick={onLeave}>
