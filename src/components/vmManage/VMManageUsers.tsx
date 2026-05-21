@@ -299,7 +299,7 @@ const User = ({
                     }
                   }}
                 >
-                  admin 계승
+                  {isSending ? "email 전송중" : "admin 계승"}
                 </TextBtn>
               </TextBtn>
             </div>
