@@ -83,6 +83,16 @@ const VMManageUsers = ({ open, setOpen, vmId }: VMManageUsersProps) => {
     }
   };
 
+  const leaveUser = async () => {
+    try {
+      await axiosClient.delete(`/vm/${vmId}/shared-users/leave`);
+      const { data } = await axiosClient.get(`/vm/${vmId}/shared-users`);
+      setSharedUsers(data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   useEffect(() => {
     const fetchSharedUsers = async () => {
       try {
@@ -169,6 +179,8 @@ const VMManageUsers = ({ open, setOpen, vmId }: VMManageUsersProps) => {
                     email={user.email}
                     onDelete={deleteUser}
                     isMe={user.is_me}
+                    isAdmin={sharedUsers.admin.is_me}
+                    onLeave={leaveUser}
                   >
                     {user.username}
                   </User>
@@ -203,9 +215,18 @@ interface UserProps {
   email?: string;
   onDelete?: (email: string) => void;
   isMe?: boolean;
+  isAdmin?: boolean;
+  onLeave?: () => void;
 }
 
-const User = ({ children, email, onDelete, isMe }: UserProps) => {
+const User = ({
+  children,
+  email,
+  onDelete,
+  isMe,
+  isAdmin,
+  onLeave,
+}: UserProps) => {
   const [hover, setHover] = useState(false);
   const userRef = useRef<HTMLDivElement>(null);
 
@@ -229,23 +250,42 @@ const User = ({ children, email, onDelete, isMe }: UserProps) => {
     <div className="user flex justify-between items-center" ref={userRef}>
       <div className="flex">
         <p className="user-name typo-pr-r-16 text-black">{children}</p>
-        <p className="user-name typo-pr-r-16 text-grey1">{email}</p>
+        <p className="user-name typo-pr-r-16 text-grey1">{email}</p>{" "}
         {isMe && <span style={{ color: "#007bff" }}>(나)</span>}
       </div>
-      {hover && (
-        <div className="user-btn-wrap flex items-center">
-          <TextBtn className="user-btn-inside-wrap flex items-center">
-            <img src={deletion} alt="X" />
-            <TextBtn className="test-red" onClick={() => onDelete?.(email!)}>
-              삭제
-            </TextBtn>
-          </TextBtn>
+      {isAdmin ? (
+        <>
+          {hover && (
+            <div className="user-btn-wrap flex items-center">
+              <TextBtn className="user-btn-inside-wrap flex items-center">
+                <img src={deletion} alt="X" />
+                <TextBtn
+                  className="text-red"
+                  onClick={() => onDelete?.(email!)}
+                >
+                  삭제
+                </TextBtn>
+              </TextBtn>
 
-          <TextBtn className="user-btn-inside-wrap flex items-center">
-            <img src={succession} alt="->" />
-            <p className="typo-pr-r-12 text-main-blue">admin 계승</p>
-          </TextBtn>
-        </div>
+              <TextBtn className="user-btn-inside-wrap flex items-center">
+                <img src={succession} alt="->" />
+                <p className="typo-pr-r-12 text-main-blue">admin 계승</p>
+              </TextBtn>
+            </div>
+          )}
+        </>
+      ) : (
+        <>
+          {hover && (
+            <div className="user-btn-wrap flex items-center">
+              <TextBtn className="user-btn-inside-wrap flex items-center">
+                <TextBtn className="test-grey1 underline" onClick={onLeave}>
+                  인스턴스 탈퇴
+                </TextBtn>
+              </TextBtn>
+            </div>
+          )}
+        </>
       )}
     </div>
   );
