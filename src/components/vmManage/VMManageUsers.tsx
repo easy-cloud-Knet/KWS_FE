@@ -205,7 +205,7 @@ interface UserProps {
   isMe?: boolean;
 }
 
-const User = ({ children, email, onDelete }: UserProps) => {
+const User = ({ children, email, onDelete, isMe }: UserProps) => {
   const [hover, setHover] = useState(false);
   const userRef = useRef<HTMLDivElement>(null);
 
@@ -228,8 +228,9 @@ const User = ({ children, email, onDelete }: UserProps) => {
   return (
     <div className="user flex justify-between items-center" ref={userRef}>
       <div className="flex">
-        <p className="user-name typo-pr-r-16">{children}</p>
+        <p className="user-name typo-pr-r-16 text-black">{children}</p>
         <p className="user-name typo-pr-r-16 text-grey1">{email}</p>
+        {isMe && <span style={{ color: "#007bff" }}>(나)</span>}
       </div>
       {hover && (
         <div className="user-btn-wrap flex items-center">
