@@ -276,7 +276,7 @@ const User = ({
       </div>
       {isAdmin ? (
         <>
-          {hover && (
+          {(hover || isSending) && (
             <div className="user-btn-wrap flex items-center">
               <TextBtn className="user-btn-inside-wrap flex items-center">
                 <img src={deletion} alt="X" />
