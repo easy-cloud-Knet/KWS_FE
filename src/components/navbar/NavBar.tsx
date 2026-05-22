@@ -44,7 +44,9 @@ const NavBar = () => {
       status: string;
       invited_at: string;
     }[];
-    admin_change_requests: [];
+    admin_change_requests: {
+      msg: string;
+    }[];
   }>({
     shared_user_invitations: [],
     admin_change_requests: [],
@@ -75,6 +77,26 @@ const NavBar = () => {
   const rejectUser = async (vmId: string) => {
     try {
       await axiosClient.patch(`/vm/${vmId}/shared-users/reject`);
+      const { data } = await axiosClient.get(`/vm/shared-users/invitations`);
+      setInvitationUsers(data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const verifyAdmin = async (vmId: string) => {
+    try {
+      await axiosClient.post(`/vm/${vmId}/admin/verify`);
+      const { data } = await axiosClient.get(`/vm/shared-users/invitations`);
+      setInvitationUsers(data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const rejectAdmin = async (vmId: string) => {
+    try {
+      await axiosClient.patch(`/vm/${vmId}/admin/reject`);
       const { data } = await axiosClient.get(`/vm/shared-users/invitations`);
       setInvitationUsers(data);
     } catch (error) {
@@ -133,10 +155,25 @@ const NavBar = () => {
                       <NavBarBellItem
                         key={item.vm_id}
                         from={`${item.owner_name} (${item.owner_email})`}
-                        content={`[${item.vm_name}] 에 초대되었습니다.`}
+                        content={
+                          invitationUsers.admin_change_requests.length > 0
+                            ? `[${item.vm_name}] 어드민 변경 요청입니다.`
+                            : `[${item.vm_name}] 에 초대되었습니다.`
+                        }
                         vmId={item.vm_id}
-                        onAccept={acceptUser}
-                        onReject={rejectUser}
+                        onAccept={
+                          invitationUsers.admin_change_requests.length > 0
+                            ? verifyAdmin
+                            : acceptUser
+                        }
+                        onReject={
+                          invitationUsers.admin_change_requests.length > 0
+                            ? rejectAdmin
+                            : rejectUser
+                        }
+                        isAdminChange={
+                          invitationUsers.admin_change_requests.length > 0
+                        }
                       />
                       {index !==
                         invitationUsers.shared_user_invitations.length - 1 && (

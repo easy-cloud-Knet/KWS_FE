@@ -272,7 +272,7 @@ const User = ({
       <div className="flex">
         <p className="user-name typo-pr-r-16 text-black">{children}</p>
         <p className="user-name typo-pr-r-16 text-grey1">{email} </p>
-        {isMe && <span style={{ color: "#007bff" }}>(나)</span>}
+        {isMe && <span style={{ color: "#007bff" }}> (나)</span>}
       </div>
       {isAdmin ? (
         <>
