@@ -7,6 +7,7 @@ import ic_arrow_up from "@/assets/image/navbar/ic_arrow_up.svg";
 import ic_bell from "@/assets/image/navbar/ic_bell.svg";
 import ic_bell_with_alarm from "@/assets/image/navbar/ic_bell_with_alarm.svg";
 import AuthContext from "@/contexts/AuthContext";
+import Cookies from "js-cookie";
 
 import MuiBtn from "../button/MuiBtn";
 
@@ -20,20 +21,8 @@ const NavBar = () => {
   const location = useLocation();
 
   const [openBellDialog, setOpenBellDialog] = useState(false);
-  const [isAlarmExist] = useState(false);
+  const [isAlarmExist, setIsAlarmExist] = useState(false); // 수정
   const [openLogoutDialog, setOpenLogoutDialog] = useState(false);
-
-  const onClickLink = (
-    event: React.MouseEvent<HTMLAnchorElement>,
-    path: string,
-  ): void => {
-    if (location.pathname === path) {
-      event.preventDefault(); // 링크 기본 동작 block
-      window.location.reload(); // 새로고침 수행
-    } else {
-      navigate(path);
-    }
-  };
 
   const [invitationUsers, setInvitationUsers] = useState<{
     shared_user_invitations: {
@@ -52,17 +41,59 @@ const NavBar = () => {
     admin_change_requests: [],
   });
 
+  const onClickLink = (
+    event: React.MouseEvent<HTMLAnchorElement>,
+    path: string,
+  ): void => {
+    if (location.pathname === path) {
+      event.preventDefault();
+      window.location.reload();
+    } else {
+      navigate(path);
+    }
+  };
+
+  // fetchInvitations를 useEffect 밖으로 꺼냄 (SSE에서도 호출해야 하니까)
+  const fetchInvitations = async () => {
+    try {
+      const { data } = await axiosClient.get(`/vm/shared-users/invitations`);
+      setInvitationUsers(data);
+      // pending 항목 있으면 벨 아이콘 활성화
+      setIsAlarmExist(
+        data.shared_user_invitations.some(
+          (item: { status: string }) => item.status === "pending",
+        ),
+      );
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   useEffect(() => {
-    const fetchInvitations = async () => {
-      try {
-        const { data } = await axiosClient.get(`/vm/shared-users/invitations`);
-        setInvitationUsers(data);
-      } catch (error) {
-        console.error(error);
+    if (!isAuthenticated) return;
+
+    fetchInvitations();
+
+    // 쿠키에서 직접 꺼내기
+    const accessToken = Cookies.get("accessToken");
+
+    const eventSource = new EventSource(
+      `/api/vm/shared-users/invitations/stream?token=${accessToken}`,
+    );
+
+    eventSource.onmessage = (e) => {
+      const data = JSON.parse(e.data);
+      if (data.type === "admin_change_request" || data.type === "invitation") {
+        fetchInvitations();
       }
     };
-    fetchInvitations();
-  }, []);
+
+    eventSource.onerror = () => {
+      eventSource.close();
+    };
+
+    return () => eventSource.close();
+  }, [isAuthenticated]);
 
   const acceptUser = async (vmId: string) => {
     try {

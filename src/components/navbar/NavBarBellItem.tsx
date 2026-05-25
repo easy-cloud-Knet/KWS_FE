@@ -52,7 +52,9 @@ const NavBarBellItem = ({
               <button
                 className="w-full h-[48px] bg-grey2 rounded-[8px] mt-[24px]"
                 onClick={() => {
+                  if (!code.trim()) return; // 빈 값 체크
                   onAccept(vmId);
+                  setCode("");
                   setOpenModal(false);
                 }}
               >
