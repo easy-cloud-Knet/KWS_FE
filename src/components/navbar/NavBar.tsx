@@ -57,17 +57,22 @@ const NavBar = () => {
     }
   };
 
+  const updateAlarmState = (data: {
+    pending_requests: PendingRequestItem[];
+  }) => {
+    setInvitationUsers(data);
+    const hasAlarm = data.pending_requests?.some(
+      (item) =>
+        item.request_type === "admin_change_request" ||
+        item.status === "pending",
+    );
+    setIsAlarmExist(hasAlarm || false);
+  };
+
   const fetchInvitations = async () => {
     try {
       const { data } = await axiosClient.get(`/vm/shared-users/invitations`);
-      setInvitationUsers(data);
-
-      const hasAlarm = data.pending_requests?.some(
-        (item: PendingRequestItem) =>
-          item.request_type === "admin_change_request" ||
-          item.status === "pending",
-      );
-      setIsAlarmExist(hasAlarm || false);
+      updateAlarmState(data);
     } catch (error) {
       console.error(error);
     }
@@ -100,10 +105,10 @@ const NavBar = () => {
   // API 호출 후 목록 갱신 공통 함수
   const refreshInvitations = async () => {
     const { data } = await axiosClient.get(`/vm/shared-users/invitations`);
-    setInvitationUsers(data);
+    updateAlarmState(data);
   };
 
-  const acceptUser = async (vmId: string) => {
+  const acceptUser = async (vmId: string, _code?: string) => {
     try {
       await axiosClient.patch(`/vm/${vmId}/shared-users/accept`);
       await refreshInvitations();
@@ -121,9 +126,9 @@ const NavBar = () => {
     }
   };
 
-  const verifyAdmin = async (vmId: string) => {
+  const verifyAdmin = async (vmId: string, code?: string) => {
     try {
-      await axiosClient.post(`/vm/${vmId}/admin/verify`);
+      await axiosClient.post(`/vm/${vmId}/admin/verify`, { code });
       await refreshInvitations();
     } catch (error) {
       console.error(error);
@@ -175,51 +180,61 @@ const NavBar = () => {
 
           {openBellDialog && (
             <div className="absolute bottom-0 translate-x-[calc(-100%+36px)] translate-y-[calc(100%+16px)] py-[8px] px-[24px] w-[549px] min-h-[120px] rounded-[10px] bg-bg-blue2 z-50">
-              {(invitationUsers.pending_requests || []).length === 0 ? (
-                <div className="flex justify-center items-center h-[120px]">
-                  <p className="text-grey1 typo-pr-m-18">
-                    받은 알림이 없습니다🥺
-                  </p>
-                </div>
-              ) : (
-                (invitationUsers.pending_requests || []).map(
-                  (item, index, array) => {
-                    const isAdminChange =
-                      item.request_type === "admin_change_request";
+              {(() => {
+                const activeRequests = (
+                  invitationUsers.pending_requests || []
+                ).filter((item) => {
+                  if (item.request_type === "shared_user_invitation") {
+                    return item.status === "pending";
+                  }
+                  if (item.request_type === "admin_change_request") {
+                    return true;
+                  }
+                  return false;
+                });
 
-                    const fromText = isAdminChange
-                      ? `${item.old_admin_name} (${item.old_admin_email})`
-                      : `${item.owner_name} (${item.owner_email})`;
+                if (activeRequests.length === 0) {
+                  return (
+                    <div className="flex justify-center items-center h-[120px]">
+                      <p className="text-grey1 typo-pr-m-18">
+                        받은 알림이 없습니다🥺
+                      </p>
+                    </div>
+                  );
+                }
 
-                    const contentText = isAdminChange
-                      ? `[${item.vm_name}] 어드민 변경 요청입니다.`
-                      : `[${item.vm_name}] 에 초대되었습니다.`;
+                return activeRequests.map((item, index, array) => {
+                  const isAdminChange =
+                    item.request_type === "admin_change_request";
 
-                    const handleAccept = isAdminChange
-                      ? verifyAdmin
-                      : acceptUser;
-                    const handleReject = isAdminChange
-                      ? rejectAdmin
-                      : rejectUser;
+                  const fromText = isAdminChange
+                    ? `${item.old_admin_name} (${item.old_admin_email})`
+                    : `${item.owner_name} (${item.owner_email})`;
 
-                    return (
-                      <div key={`${item.vm_id}-${index}`}>
-                        <NavBarBellItem
-                          from={fromText}
-                          content={contentText}
-                          onAccept={handleAccept}
-                          onReject={handleReject}
-                          isAdminChange={isAdminChange}
-                          vmId={item.vm_id}
-                        />
-                        {index !== array.length - 1 && (
-                          <div className="w-full h-[0.5px] bg-[#E6E7E8]" />
-                        )}
-                      </div>
-                    );
-                  },
-                )
-              )}
+                  const contentText = isAdminChange
+                    ? `[${item.vm_name}] 어드민 변경 요청입니다.`
+                    : `[${item.vm_name}] 에 초대되었습니다.`;
+
+                  const handleAccept = isAdminChange ? verifyAdmin : acceptUser;
+                  const handleReject = isAdminChange ? rejectAdmin : rejectUser;
+
+                  return (
+                    <div key={`${item.vm_id}-${index}`}>
+                      <NavBarBellItem
+                        from={fromText}
+                        content={contentText}
+                        onAccept={handleAccept}
+                        onReject={handleReject}
+                        isAdminChange={isAdminChange}
+                        vmId={item.vm_id}
+                      />
+                      {index !== array.length - 1 && (
+                        <div className="w-full h-[0.5px] bg-[#E6E7E8]" />
+                      )}
+                    </div>
+                  );
+                });
+              })()}
             </div>
           )}
 
