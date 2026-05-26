@@ -14,6 +14,21 @@ import MuiBtn from "../button/MuiBtn";
 import NavBarBellItem from "./NavBarBellItem";
 import "./NavBar.css";
 
+interface PendingRequestItem {
+  request_type: "shared_user_invitation" | "admin_change_request";
+  vm_id: string;
+  vm_name: string;
+  status?: string;
+
+  owner_name?: string;
+  owner_email?: string;
+  invited_at?: string;
+
+  old_admin_name?: string;
+  old_admin_email?: string;
+  requested_at?: string;
+}
+
 const NavBar = () => {
   const { isAuthenticated, logout, userNickname, userEmail } =
     useContext(AuthContext)!;
@@ -21,24 +36,13 @@ const NavBar = () => {
   const location = useLocation();
 
   const [openBellDialog, setOpenBellDialog] = useState(false);
-  const [isAlarmExist, setIsAlarmExist] = useState(false); // 수정
+  const [isAlarmExist, setIsAlarmExist] = useState(false);
   const [openLogoutDialog, setOpenLogoutDialog] = useState(false);
 
   const [invitationUsers, setInvitationUsers] = useState<{
-    shared_user_invitations: {
-      vm_id: string;
-      vm_name: string;
-      owner_name: string;
-      owner_email: string;
-      status: string;
-      invited_at: string;
-    }[];
-    admin_change_requests: {
-      msg: string;
-    }[];
+    pending_requests: PendingRequestItem[];
   }>({
-    shared_user_invitations: [],
-    admin_change_requests: [],
+    pending_requests: [],
   });
 
   const onClickLink = (
@@ -53,17 +57,17 @@ const NavBar = () => {
     }
   };
 
-  // fetchInvitations를 useEffect 밖으로 꺼냄 (SSE에서도 호출해야 하니까)
   const fetchInvitations = async () => {
     try {
       const { data } = await axiosClient.get(`/vm/shared-users/invitations`);
       setInvitationUsers(data);
-      // pending 항목 있으면 벨 아이콘 활성화
-      setIsAlarmExist(
-        data.shared_user_invitations.some(
-          (item: { status: string }) => item.status === "pending",
-        ),
+
+      const hasAlarm = data.pending_requests?.some(
+        (item: PendingRequestItem) =>
+          item.request_type === "admin_change_request" ||
+          item.status === "pending",
       );
+      setIsAlarmExist(hasAlarm || false);
     } catch (error) {
       console.error(error);
     }
@@ -74,9 +78,7 @@ const NavBar = () => {
 
     fetchInvitations();
 
-    // 쿠키에서 직접 꺼내기
     const accessToken = Cookies.get("accessToken");
-
     const eventSource = new EventSource(
       `/api/vm/shared-users/invitations/stream?token=${accessToken}`,
     );
@@ -95,11 +97,16 @@ const NavBar = () => {
     return () => eventSource.close();
   }, [isAuthenticated]);
 
+  // API 호출 후 목록 갱신 공통 함수
+  const refreshInvitations = async () => {
+    const { data } = await axiosClient.get(`/vm/shared-users/invitations`);
+    setInvitationUsers(data);
+  };
+
   const acceptUser = async (vmId: string) => {
     try {
       await axiosClient.patch(`/vm/${vmId}/shared-users/accept`);
-      const { data } = await axiosClient.get(`/vm/shared-users/invitations`);
-      setInvitationUsers(data);
+      await refreshInvitations();
     } catch (error) {
       console.error(error);
     }
@@ -108,8 +115,7 @@ const NavBar = () => {
   const rejectUser = async (vmId: string) => {
     try {
       await axiosClient.patch(`/vm/${vmId}/shared-users/reject`);
-      const { data } = await axiosClient.get(`/vm/shared-users/invitations`);
-      setInvitationUsers(data);
+      await refreshInvitations();
     } catch (error) {
       console.error(error);
     }
@@ -118,8 +124,7 @@ const NavBar = () => {
   const verifyAdmin = async (vmId: string) => {
     try {
       await axiosClient.post(`/vm/${vmId}/admin/verify`);
-      const { data } = await axiosClient.get(`/vm/shared-users/invitations`);
-      setInvitationUsers(data);
+      await refreshInvitations();
     } catch (error) {
       console.error(error);
     }
@@ -128,8 +133,7 @@ const NavBar = () => {
   const rejectAdmin = async (vmId: string) => {
     try {
       await axiosClient.patch(`/vm/${vmId}/admin/reject`);
-      const { data } = await axiosClient.get(`/vm/shared-users/invitations`);
-      setInvitationUsers(data);
+      await refreshInvitations();
     } catch (error) {
       console.error(error);
     }
@@ -168,59 +172,64 @@ const NavBar = () => {
           >
             <img src={!isAlarmExist ? ic_bell : ic_bell_with_alarm} alt="" />
           </button>
-          {openBellDialog && ( //false만 지우면 더미데이터 생성됨
-            <div className="absolute bottom-0 translate-x-[calc(-100%+36px)] translate-y-[calc(100%+16px)] py-[8px] px-[24px] w-[549px] min-h-[120px] rounded-[10px] bg-bg-blue2">
-              {invitationUsers.shared_user_invitations.filter(
-                (item) => item.status === "pending",
-              ).length === 0 ? (
+
+          {openBellDialog && (
+            <div className="absolute bottom-0 translate-x-[calc(-100%+36px)] translate-y-[calc(100%+16px)] py-[8px] px-[24px] w-[549px] min-h-[120px] rounded-[10px] bg-bg-blue2 z-50">
+              {(invitationUsers.pending_requests || []).length === 0 ? (
                 <div className="flex justify-center items-center h-[120px]">
                   <p className="text-grey1 typo-pr-m-18">
-                    초대받은 항목이 없습니다🥺
+                    받은 알림이 없습니다🥺
                   </p>
                 </div>
               ) : (
-                invitationUsers.shared_user_invitations
-                  .filter((item) => item.status === "pending") // 수락 시 pending만 필터링 하기
-                  .map((item, index) => (
-                    <>
-                      <NavBarBellItem
-                        key={item.vm_id}
-                        from={`${item.owner_name} (${item.owner_email})`}
-                        content={
-                          invitationUsers.admin_change_requests.length > 0
-                            ? `[${item.vm_name}] 어드민 변경 요청입니다.`
-                            : `[${item.vm_name}] 에 초대되었습니다.`
-                        }
-                        vmId={item.vm_id}
-                        onAccept={
-                          invitationUsers.admin_change_requests.length > 0
-                            ? verifyAdmin
-                            : acceptUser
-                        }
-                        onReject={
-                          invitationUsers.admin_change_requests.length > 0
-                            ? rejectAdmin
-                            : rejectUser
-                        }
-                        isAdminChange={
-                          invitationUsers.admin_change_requests.length > 0
-                        }
-                      />
-                      {index !==
-                        invitationUsers.shared_user_invitations.length - 1 && (
-                        <div className="w-full h-[0.5px] bg-[#E6E7E8]" />
-                      )}
-                    </>
-                  ))
+                (invitationUsers.pending_requests || []).map(
+                  (item, index, array) => {
+                    const isAdminChange =
+                      item.request_type === "admin_change_request";
+
+                    const fromText = isAdminChange
+                      ? `${item.old_admin_name} (${item.old_admin_email})`
+                      : `${item.owner_name} (${item.owner_email})`;
+
+                    const contentText = isAdminChange
+                      ? `[${item.vm_name}] 어드민 변경 요청입니다.`
+                      : `[${item.vm_name}] 에 초대되었습니다.`;
+
+                    const handleAccept = isAdminChange
+                      ? verifyAdmin
+                      : acceptUser;
+                    const handleReject = isAdminChange
+                      ? rejectAdmin
+                      : rejectUser;
+
+                    return (
+                      <div key={`${item.vm_id}-${index}`}>
+                        <NavBarBellItem
+                          from={fromText}
+                          content={contentText}
+                          onAccept={handleAccept}
+                          onReject={handleReject}
+                          isAdminChange={isAdminChange}
+                          vmId={item.vm_id}
+                        />
+                        {index !== array.length - 1 && (
+                          <div className="w-full h-[0.5px] bg-[#E6E7E8]" />
+                        )}
+                      </div>
+                    );
+                  },
+                )
               )}
             </div>
           )}
+
           <div className="ml-[12px] mr-[20px] w-[1px] h-[36px] bg-[#E6E7EB]" />
-          <p className="typo-pr-m-18 text-text1 flex">
-            환영합니다,&nbsp;<p className="text-blue-black">{userNickname}</p>
+          <div className="typo-pr-m-18 text-text1 flex items-center">
+            환영합니다,&nbsp;
+            <span className="text-blue-black">{userNickname}</span>
             &nbsp;
             {userEmail}&nbsp;님!
-          </p>
+          </div>
           <button
             className="ml-[8px] size-[24px] cursor-pointer"
             onClick={() => {
@@ -233,7 +242,6 @@ const NavBar = () => {
             <button
               className="absolute top-0 right-0 translate-y-[100%] w-[127px] h-[45px] bg-grey2 rounded-b-[4px] text-[18px] font-medium text-blue-black cursor-pointer"
               onClick={() => {
-                // context 호출
                 logout();
                 navigate("/");
               }}
