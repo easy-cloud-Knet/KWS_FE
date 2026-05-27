@@ -90,8 +90,32 @@ const NavBar = () => {
 
     eventSource.onmessage = (e) => {
       const data = JSON.parse(e.data);
-      if (data.type === "admin_change_request" || data.type === "invitation") {
-        fetchInvitations();
+      if (data.type === "admin_change_request") {
+        setInvitationUsers((prev) => {
+          // 같은 vm_id의 admin_change_request가 이미 있으면 무시
+          const alreadyExists = prev.pending_requests.some(
+            (item) =>
+              item.request_type === "admin_change_request" &&
+              item.vm_id === data.vm_id,
+          );
+          if (alreadyExists) return prev;
+
+          const updated = {
+            pending_requests: [
+              ...prev.pending_requests,
+              {
+                request_type: "admin_change_request" as const,
+                vm_id: data.vm_id,
+                vm_name: data.vm_name,
+                old_admin_name: data.old_admin_name,
+                old_admin_email: data.old_admin_email,
+                requested_at: data.requested_at,
+              },
+            ],
+          };
+          setIsAlarmExist(true);
+          return updated;
+        });
       }
     };
 
