@@ -77,9 +77,9 @@ const VMManageUsers = ({ open, setOpen, vmId }: VMManageUsersProps) => {
 
   const changeAdmin = async (new_admin_email: string) => {
     try {
-      await axiosClient.post(`/vm/${vmId}/admin/change-request`, {
-        new_admin_email,
-      });
+      await axiosClient.post(
+        `/vm/${vmId}/admin/change-request?new_admin_email=${new_admin_email}`,
+      );
     } catch (error) {
       console.error(error);
     }
