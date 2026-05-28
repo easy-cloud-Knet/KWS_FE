@@ -153,7 +153,7 @@ const NavBar = () => {
 
   const verifyAdmin = async (vmId: string, code?: string) => {
     try {
-      await axiosClient.post(`/vm/${vmId}/admin/verify`, { code });
+      await axiosClient.post(`/vm/${vmId}/admin/verify?code=${code}`);
       await refreshInvitations();
     } catch (error) {
       console.error(error);
