@@ -1,47 +1,33 @@
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-
+import axiosClient from "@/services/api";
 import ic_logo from "@/assets/image/new_ic_logo.png";
 import ic_arrow_down from "@/assets/image/navbar/ic_arrow_down.svg";
 import ic_arrow_up from "@/assets/image/navbar/ic_arrow_up.svg";
 import ic_bell from "@/assets/image/navbar/ic_bell.svg";
 import ic_bell_with_alarm from "@/assets/image/navbar/ic_bell_with_alarm.svg";
 import AuthContext from "@/contexts/AuthContext";
+import Cookies from "js-cookie";
 
 import MuiBtn from "../button/MuiBtn";
 
 import NavBarBellItem from "./NavBarBellItem";
 import "./NavBar.css";
 
-type BellItemListType = "invitation" | "join" | "relinquish";
+interface PendingRequestItem {
+  request_type: "shared_user_invitation" | "admin_change_request";
+  vm_id: string;
+  vm_name: string;
+  status?: string;
 
-interface BellItemList {
-  id: string;
-  from: string;
-  target: string;
-  type: BellItemListType;
+  owner_name?: string;
+  owner_email?: string;
+  invited_at?: string;
+
+  old_admin_name?: string;
+  old_admin_email?: string;
+  requested_at?: string;
 }
-
-const bellItemList: BellItemList[] = [
-  {
-    id: "1",
-    from: "미숫가루 (altntrkfn8282@naver.com)",
-    target: "VM1",
-    type: "invitation",
-  },
-  {
-    id: "2",
-    from: "미숫가루 (altntrkfn8282@naver.com)",
-    target: "VM1",
-    type: "join",
-  },
-  {
-    id: "3",
-    from: "미숫가루 (altntrkfn8282@naver.com)",
-    target: "VM1",
-    type: "relinquish",
-  },
-];
 
 const NavBar = () => {
   const { isAuthenticated, logout, userNickname, userEmail } =
@@ -50,29 +36,135 @@ const NavBar = () => {
   const location = useLocation();
 
   const [openBellDialog, setOpenBellDialog] = useState(false);
-  const [isAlarmExist] = useState(false);
+  const [isAlarmExist, setIsAlarmExist] = useState(false);
   const [openLogoutDialog, setOpenLogoutDialog] = useState(false);
+
+  const [invitationUsers, setInvitationUsers] = useState<{
+    pending_requests: PendingRequestItem[];
+  }>({
+    pending_requests: [],
+  });
 
   const onClickLink = (
     event: React.MouseEvent<HTMLAnchorElement>,
     path: string,
   ): void => {
     if (location.pathname === path) {
-      event.preventDefault(); // 링크 기본 동작 block
-      window.location.reload(); // 새로고침 수행
+      event.preventDefault();
+      window.location.reload();
     } else {
       navigate(path);
     }
   };
 
-  const mapTypeToContent = (type: BellItemListType) => {
-    switch (type) {
-      case "invitation":
-        return "에 초대되었습니다.";
-      case "join":
-        return "에 합류를 요청합니다.";
-      case "relinquish":
-        return "admin 변경 요청입니다.";
+  const updateAlarmState = (data: {
+    pending_requests: PendingRequestItem[];
+  }) => {
+    setInvitationUsers(data);
+    const hasAlarm = data.pending_requests?.some(
+      (item) =>
+        item.request_type === "admin_change_request" ||
+        item.status === "pending",
+    );
+    setIsAlarmExist(hasAlarm || false);
+  };
+
+  const fetchInvitations = async () => {
+    try {
+      const { data } = await axiosClient.get(`/vm/shared-users/invitations`);
+      updateAlarmState(data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    if (!isAuthenticated) return;
+
+    fetchInvitations();
+
+    const accessToken = Cookies.get("accessToken");
+    const eventSource = new EventSource(
+      `/api/vm/shared-users/invitations/stream?token=${accessToken}`,
+    );
+
+    eventSource.onmessage = (e) => {
+      const data = JSON.parse(e.data);
+      if (data.type === "admin_change_request") {
+        setInvitationUsers((prev) => {
+          // 같은 vm_id의 admin_change_request가 이미 있으면 무시
+          const alreadyExists = prev.pending_requests.some(
+            (item) =>
+              item.request_type === "admin_change_request" &&
+              item.vm_id === data.vm_id,
+          );
+          if (alreadyExists) return prev;
+
+          const updated = {
+            pending_requests: [
+              ...prev.pending_requests,
+              {
+                request_type: "admin_change_request" as const,
+                vm_id: data.vm_id,
+                vm_name: data.vm_name,
+                old_admin_name: data.old_admin_name,
+                old_admin_email: data.old_admin_email,
+                requested_at: data.requested_at,
+              },
+            ],
+          };
+          setIsAlarmExist(true);
+          return updated;
+        });
+      }
+    };
+
+    eventSource.onerror = () => {
+      eventSource.close();
+    };
+
+    return () => eventSource.close();
+  }, [isAuthenticated]);
+
+  // API 호출 후 목록 갱신 공통 함수
+  const refreshInvitations = async () => {
+    const { data } = await axiosClient.get(`/vm/shared-users/invitations`);
+    updateAlarmState(data);
+  };
+
+  const acceptUser = async (vmId: string, _code?: string) => {
+    try {
+      await axiosClient.patch(`/vm/${vmId}/shared-users/accept`);
+      await refreshInvitations();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const rejectUser = async (vmId: string) => {
+    try {
+      await axiosClient.patch(`/vm/${vmId}/shared-users/reject`);
+      await refreshInvitations();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const verifyAdmin = async (vmId: string, code?: string) => {
+    try {
+      await axiosClient.post(`/vm/${vmId}/admin/verify?code=${code}`);
+      await refreshInvitations();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const rejectAdmin = async (vmId: string) => {
+    try {
+      await axiosClient.patch(`/vm/${vmId}/admin/reject`);
+      await refreshInvitations();
+    } catch (error) {
+      console.error(error);
     }
   };
 
@@ -109,29 +201,74 @@ const NavBar = () => {
           >
             <img src={!isAlarmExist ? ic_bell : ic_bell_with_alarm} alt="" />
           </button>
-          {false &&
-            openBellDialog && ( //false만 지우면 더미데이터 생성됨
-              <div className="absolute bottom-0 translate-x-[calc(-100%+36px)] translate-y-[calc(100%+16px)] py-[8px] px-[24px] w-[549px] min-h-[120px] rounded-[10px] bg-bg-blue2">
-                {bellItemList.map((item, index) => (
-                  <>
-                    <NavBarBellItem
-                      key={item.id}
-                      from={item.from}
-                      content={`[${item.target}] ${mapTypeToContent(item.type)}`}
-                    />
-                    {index !== bellItemList.length - 1 && (
-                      <div className="w-full h-[0.5px] bg-[#E6E7E8]" />
-                    )}
-                  </>
-                ))}
-              </div>
-            )}
+
+          {openBellDialog && (
+            <div className="absolute bottom-0 translate-x-[calc(-100%+36px)] translate-y-[calc(100%+16px)] py-[8px] px-[24px] w-[549px] min-h-[120px] rounded-[10px] bg-bg-blue2 z-50">
+              {(() => {
+                const activeRequests = (
+                  invitationUsers.pending_requests || []
+                ).filter((item) => {
+                  if (item.request_type === "shared_user_invitation") {
+                    return item.status === "pending";
+                  }
+                  if (item.request_type === "admin_change_request") {
+                    return true;
+                  }
+                  return false;
+                });
+
+                if (activeRequests.length === 0) {
+                  return (
+                    <div className="flex justify-center items-center h-[120px]">
+                      <p className="text-grey1 typo-pr-m-18">
+                        받은 알림이 없습니다🥺
+                      </p>
+                    </div>
+                  );
+                }
+
+                return activeRequests.map((item, index, array) => {
+                  const isAdminChange =
+                    item.request_type === "admin_change_request";
+
+                  const fromText = isAdminChange
+                    ? `${item.old_admin_name} (${item.old_admin_email})`
+                    : `${item.owner_name} (${item.owner_email})`;
+
+                  const contentText = isAdminChange
+                    ? `[${item.vm_name}] 어드민 변경 요청입니다.`
+                    : `[${item.vm_name}] 에 초대되었습니다.`;
+
+                  const handleAccept = isAdminChange ? verifyAdmin : acceptUser;
+                  const handleReject = isAdminChange ? rejectAdmin : rejectUser;
+
+                  return (
+                    <div key={`${item.vm_id}-${index}`}>
+                      <NavBarBellItem
+                        from={fromText}
+                        content={contentText}
+                        onAccept={handleAccept}
+                        onReject={handleReject}
+                        isAdminChange={isAdminChange}
+                        vmId={item.vm_id}
+                      />
+                      {index !== array.length - 1 && (
+                        <div className="w-full h-[0.5px] bg-[#E6E7E8]" />
+                      )}
+                    </div>
+                  );
+                });
+              })()}
+            </div>
+          )}
+
           <div className="ml-[12px] mr-[20px] w-[1px] h-[36px] bg-[#E6E7EB]" />
-          <p className="typo-pr-m-18 text-text1 flex">
-            환영합니다,&nbsp;<p className="text-blue-black">{userNickname}</p>
+          <div className="typo-pr-m-18 text-text1 flex items-center">
+            환영합니다,&nbsp;
+            <span className="text-blue-black">{userNickname}</span>
             &nbsp;
             {userEmail}&nbsp;님!
-          </p>
+          </div>
           <button
             className="ml-[8px] size-[24px] cursor-pointer"
             onClick={() => {
@@ -144,7 +281,6 @@ const NavBar = () => {
             <button
               className="absolute top-0 right-0 translate-y-[100%] w-[127px] h-[45px] bg-grey2 rounded-b-[4px] text-[18px] font-medium text-blue-black cursor-pointer"
               onClick={() => {
-                // context 호출
                 logout();
                 navigate("/");
               }}

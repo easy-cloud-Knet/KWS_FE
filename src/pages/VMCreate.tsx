@@ -1,4 +1,4 @@
-import { FormControlLabel, Radio, RadioGroup } from "@mui/material";
+//import { FormControlLabel, Radio, RadioGroup } from "@mui/material";
 import { AxiosError } from "axios";
 import { useContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
@@ -42,8 +42,7 @@ const VMCreateContent = () => {
     osVersionImgName,
     hw,
     setHw,
-    openSharedUser,
-    setOpenSharedUser,
+    //setOpenSharedUser,
   } = useContext(VMCreateContext)!;
   const navigate = useNavigate();
 
@@ -55,6 +54,34 @@ const VMCreateContent = () => {
 
   //생성버튼 누른 후 생성버튼 비활성화
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  //인스턴스 여러개 만들기
+  const [count, setCount] = useState<number>(1);
+
+  const increase = () => {
+    setCount((prev) => {
+      if (prev < 10) {
+        return prev + 1;
+      } else return 10;
+    });
+  };
+
+  const decrease = () => {
+    setCount((prev) => (prev > 1 ? prev - 1 : 1));
+  };
+
+  const handleChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+    const value = e.target.value;
+
+    if (/^\d*$/.test(value)) {
+      const numValue = value === "" ? 0 : Number(value);
+      if (numValue <= 10) {
+        setCount(numValue);
+      } else {
+        setCount(10);
+      }
+    }
+  };
 
   // ubuntu-cloud-24.04.img -> nameLabel: ubuntu, versionLabel: 24.04
   const computedOsList: OsList[] = osOptions.map((o) => {
@@ -104,13 +131,15 @@ const VMCreateContent = () => {
         return;
       }
 
-      await axiosClient.post("/vm/", {
-        name: vmName.value,
-        os_id: selectedOsId,
-        ip: "0.0.0.0",
-        type_id: selectedTypeId,
-        is_public: openSharedUser === "public",
-      });
+      for (let i = 0; i < count; i++) {
+        await axiosClient.post("/vm/", {
+          name: vmName.value,
+          os_id: selectedOsId,
+          ip: "0.0.0.0",
+          type_id: selectedTypeId,
+          amount: 1,
+        });
+      }
 
       navigate("/manage");
     } catch (error) {
@@ -173,7 +202,7 @@ const VMCreateContent = () => {
                 </div>
               </div>
 
-              <div>
+              {/*<div>
                 <p className="mb-[20px] typo-pr-r-16">Shard User 공개</p>
                 <RadioGroup
                   className="flex justify-between w-[50.46082949308756%]"
@@ -195,6 +224,7 @@ const VMCreateContent = () => {
                   />
                 </RadioGroup>
               </div>
+              */}
             </section>
           </section>
           <section className="create-section w-[39%]">
@@ -260,11 +290,32 @@ const VMCreateContent = () => {
                   content="isolated"
                 />
               </div>
-              <VMInfoToBeCreatedItem
+              {/*<VMInfoToBeCreatedItem
                 className="w-full"
                 title="Shared User"
                 content={openSharedUser}
-              />
+              />*/}
+
+              <p className="typo-pr-r-16 text-(--Grey3) mb-[1px]">
+                인스턴스 여러개 생성하기
+              </p>
+
+              <div className="flex items-center gap-3">
+                <div className="flex items-center gap-3 border rounded-full px-4 py-1 w-fit border-(--Grey1)">
+                  <button onClick={decrease}>-</button>
+                  <input
+                    type="text"
+                    value={count}
+                    onChange={handleChange}
+                    className="w-5 bg-transparent outline-none text-center"
+                  />
+                  <button onClick={increase}>+</button>
+                </div>
+
+                <p className="typo-pr-r-8 text-(--grey1) m-0">
+                  *인스턴스는 최대 10개까지만 생성 가능 합니다.
+                </p>
+              </div>
 
               <div className="flex justify-between w-full">
                 <MuiBtn

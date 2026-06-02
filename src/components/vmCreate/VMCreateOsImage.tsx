@@ -12,7 +12,6 @@ interface VMCreateOsImageProps {
 
 const VMCreateOsImage = ({ item }: VMCreateOsImageProps) => {
   const [toggle, setToggle] = useState<boolean>(false);
-
   const { os, osVersion } = useContext(VMCreateContext)!;
   const isSelected = os === item.name;
 
@@ -21,7 +20,7 @@ const VMCreateOsImage = ({ item }: VMCreateOsImageProps) => {
       key={item.name}
       className={twJoin(
         "relative border-[1px] rounded-[10px] w-[160px] h-[151px] flex flex-col items-center justify-center",
-        isSelected ? "border-main-blue" : "border-line",
+        isSelected && "border-blue-500",
       )}
     >
       <img src={item.img} alt={item.name} className="h-[48px] my-[15px]" />

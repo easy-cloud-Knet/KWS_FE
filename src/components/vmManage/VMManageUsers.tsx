@@ -1,4 +1,9 @@
-import { Dialog, DialogActions, DialogContent, DialogContentText } from "@mui/material";
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+} from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
 
 import deletion from "../../assets/image/vmManage/vmManageUsers/delete.svg";
@@ -10,13 +15,15 @@ import TextBtn from "../button/TextBtn";
 import ToggleList from "./ToggleList";
 
 import "./VMManageUsers.css";
+import axiosClient from "@/services/api";
 
 interface VMManageUsersProps {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  vmId: string | null;
 }
 
-const VMManageUsers = ({ open, setOpen }: VMManageUsersProps) => {
+const VMManageUsers = ({ open, setOpen, vmId }: VMManageUsersProps) => {
   const handleClose = (reason: string) => {
     if (reason === "backdropClick") {
       setOpen(false);
@@ -33,6 +40,86 @@ const VMManageUsers = ({ open, setOpen }: VMManageUsersProps) => {
     }
   }, [open]);
 
+  const [sharedUsers, setSharedUsers] = useState<{
+    admin: {
+      username: string;
+      email: string;
+      is_me: boolean;
+    };
+
+    shared_users: {
+      username: string;
+      email: string;
+      status: string;
+      invited_at: string;
+      is_me: boolean;
+    }[];
+  }>({
+    admin: { username: "", email: "", is_me: false },
+
+    shared_users: [],
+  });
+
+  const [email, setEmail] = useState("");
+
+  const inviteUser = async (email: string) => {
+    try {
+      await axiosClient.post(`/vm/${vmId}/shared-users?email=${email}`);
+      const { data } = await axiosClient.get(`/vm/${vmId}/shared-users`);
+      setSharedUsers(data);
+      setEmail("");
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const [isSending, setIsSending] = useState(false); //어드민 계승 버튼 누른 후 비활성화
+
+  const changeAdmin = async (new_admin_email: string) => {
+    try {
+      await axiosClient.post(
+        `/vm/${vmId}/admin/change-request?new_admin_email=${new_admin_email}`,
+      );
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const deleteUser = async (userEmail: string) => {
+    try {
+      await axiosClient.delete(`/vm/${vmId}/shared-users/${userEmail}`);
+      const { data } = await axiosClient.get(`/vm/${vmId}/shared-users`);
+      setSharedUsers(data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const leaveUser = async () => {
+    try {
+      await axiosClient.delete(`/vm/${vmId}/shared-users/leave`);
+      const { data } = await axiosClient.get(`/vm/${vmId}/shared-users`);
+      setSharedUsers(data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    const fetchSharedUsers = async () => {
+      try {
+        const { data } = await axiosClient.get(`/vm/${vmId}/shared-users`);
+        setSharedUsers(data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    if (open && vmId) {
+      fetchSharedUsers();
+    }
+  }, [open, vmId]);
+
   return (
     <Dialog
       className="vm-manage-users"
@@ -43,15 +130,30 @@ const VMManageUsers = ({ open, setOpen }: VMManageUsersProps) => {
       aria-describedby="scroll-dialog-description"
     >
       <section className="vm-manage-users-header flex flex-col">
-        <p className="typo-pr-r-16">사용자 초대</p>
-        <div className="input-wrap flex justify-between">
-          <div className="input">
-            <AuthTextFieldV2 placeholder="이메일 아이디" />
-          </div>
-          <MuiBtn variant="contained" sx={{ width: "88px" }}>
-            전송
-          </MuiBtn>
-        </div>
+        {sharedUsers.admin.is_me ? (
+          <>
+            <p className="typo-pr-r-16">사용자 초대</p>
+            <div className="input-wrap flex justify-between">
+              <div className="input">
+                <AuthTextFieldV2
+                  placeholder="이메일 아이디"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </div>
+              <MuiBtn variant="contained" onClick={() => inviteUser(email)}>
+                전송
+              </MuiBtn>
+            </div>
+          </>
+        ) : (
+          <>
+            <p className="typo-pr-r-21 font-semibold">Shared user로 참여 중</p>
+            <p className="flex flex-col mt-[20px] typo-pr-r-18 text-grey1 ">
+              *사용자 초대는 Admin 권한만 가능합니다.
+            </p>
+          </>
+        )}
       </section>
 
       <section className="flex flex-col justify-between h-full">
@@ -60,22 +162,54 @@ const VMManageUsers = ({ open, setOpen }: VMManageUsersProps) => {
             id="scroll-dialog-description"
             ref={descriptionElementRef}
             tabIndex={-1}
-            sx={{ paddingBottom: "12px", maxHeight: "260px", overflowY: "scroll" }}
+            sx={{
+              paddingBottom: "12px",
+              maxHeight: "260px",
+              overflowY: "scroll",
+            }}
           >
             <section className="admin-list user-list">
               <h4 className="typo-pr-r-14 text-grey1">admin</h4>
-              <p className="user-name typo-pr-r-16">미숫가루</p>
+              <p className="user-name typo-pr-r-16">
+                <span style={{ color: "#000000" }}>
+                  {sharedUsers.admin?.username}
+                </span>{" "}
+                {sharedUsers.admin?.email}{" "}
+                {sharedUsers.admin.is_me && (
+                  <span style={{ color: "#007bff" }}>(나)</span>
+                )}
+              </p>
             </section>
 
             <section className="shared-user-list user-list">
               <h4 className="typo-pr-r-14 text-grey1">shared user</h4>
-              <User email="msgr@kw.ac.kr">미숫가루</User>
-              <User email="msgr@kw.ac.kr">미숫가루</User>
+              {sharedUsers.shared_users
+                .filter((user) => user.status === "accepted")
+                .map((user) => (
+                  <User
+                    key={user.email}
+                    email={user.email}
+                    onDelete={deleteUser}
+                    onChange={changeAdmin}
+                    isMe={user.is_me}
+                    isAdmin={sharedUsers.admin.is_me}
+                    onLeave={leaveUser}
+                    isSending={isSending}
+                    setIsSending={setIsSending}
+                  >
+                    {user.username}
+                  </User>
+                ))}
             </section>
 
             <ToggleList title="대기중">
-              <p className="typo-pr-r-16">pizza1</p>
-              <p className="typo-pr-r-16">pizza2</p>
+              {sharedUsers.shared_users
+                .filter((user) => user.status === "pending")
+                .map((user) => (
+                  <p key={user.email} className="typo-pr-r-16">
+                    {user.username} {user.email}
+                  </p>
+                ))}
             </ToggleList>
           </DialogContentText>
         </DialogContent>
@@ -94,9 +228,26 @@ export default VMManageUsers;
 interface UserProps {
   children?: React.ReactNode;
   email?: string;
+  onDelete?: (email: string) => void;
+  onChange?: (email: string) => void;
+  isMe?: boolean;
+  isAdmin?: boolean;
+  onLeave?: () => void;
+  isSending?: boolean;
+  setIsSending?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const User = ({ children, email }: UserProps) => {
+const User = ({
+  children,
+  email,
+  onDelete,
+  onChange,
+  isMe,
+  isAdmin,
+  onLeave,
+  isSending,
+  setIsSending,
+}: UserProps) => {
   const [hover, setHover] = useState(false);
   const userRef = useRef<HTMLDivElement>(null);
 
@@ -119,21 +270,57 @@ const User = ({ children, email }: UserProps) => {
   return (
     <div className="user flex justify-between items-center" ref={userRef}>
       <div className="flex">
-        <p className="user-name typo-pr-r-16">{children}</p>
-        <p className="user-name typo-pr-r-16 text-grey1">{email}</p>
+        <p className="user-name typo-pr-r-16 text-black">{children}</p>
+        <p className="user-name typo-pr-r-16 text-grey1">{email} </p>
+        {isMe && <span style={{ color: "#007bff" }}> (나)</span>}
       </div>
-      {hover && (
-        <div className="user-btn-wrap flex items-center">
-          <TextBtn className="user-btn-inside-wrap flex items-center">
-            <img src={deletion} alt="X" />
-            <p className="typo-pr-r-12 text-red">삭제</p>
-          </TextBtn>
+      {isAdmin ? (
+        <>
+          {(hover || isSending) && (
+            <div className="user-btn-wrap flex items-center">
+              <TextBtn className="user-btn-inside-wrap flex items-center">
+                <img src={deletion} alt="X" />
+                <TextBtn
+                  className="text-red"
+                  onClick={() => onDelete?.(email!)}
+                >
+                  삭제
+                </TextBtn>
+              </TextBtn>
 
-          <TextBtn className="user-btn-inside-wrap flex items-center">
-            <img src={succession} alt="->" />
-            <p className="typo-pr-r-12 text-main-blue">admin 계승</p>
-          </TextBtn>
-        </div>
+              <TextBtn className="user-btn-inside-wrap flex items-center">
+                <img src={succession} alt="->" />
+                <TextBtn
+                  disabled={isSending}
+                  className="add disabled:opacity-50 disabled:cursor-not-allowed text-main-blue"
+                  onClick={async () => {
+                    if (isSending) return;
+                    setIsSending?.(true);
+                    try {
+                      await onChange?.(email!);
+                    } finally {
+                      setIsSending?.(false);
+                    }
+                  }}
+                >
+                  {isSending ? "email 전송중" : "admin 계승"}
+                </TextBtn>
+              </TextBtn>
+            </div>
+          )}
+        </>
+      ) : (
+        <>
+          {hover && isMe && (
+            <div className="user-btn-wrap flex items-center">
+              <TextBtn className="user-btn-inside-wrap flex items-center">
+                <TextBtn className="test-grey1 underline" onClick={onLeave}>
+                  인스턴스 탈퇴
+                </TextBtn>
+              </TextBtn>
+            </div>
+          )}
+        </>
       )}
     </div>
   );

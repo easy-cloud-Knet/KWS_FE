@@ -8,6 +8,7 @@ const axiosClient = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
+  withCredentials: true,
 });
 
 axiosClient.interceptors.request.use(
@@ -20,7 +21,7 @@ axiosClient.interceptors.request.use(
   },
   (error) => {
     return Promise.reject(error);
-  }
+  },
 );
 
 export default axiosClient;
