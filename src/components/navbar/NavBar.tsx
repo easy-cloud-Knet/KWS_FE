@@ -84,7 +84,6 @@ const NavBar = () => {
     fetchInvitations();
 
     const accessToken = Cookies.get("accessToken");
-    console.log("accessToken:", accessToken);
     const eventSource = new EventSource(
       `/api/vm/shared-users/invitations/stream?token=${accessToken}`,
     );
